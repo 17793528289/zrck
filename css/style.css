@@ -484,9 +484,9 @@ body {
     text-align: center;
 }
 
-/* 登录模态框样式 */
+/* 确保模态框样式正确 */
 .modal {
-    display: none;
+    display: none; /* 初始隐藏 */
     position: fixed;
     z-index: 2000;
     left: 0;
@@ -499,117 +499,34 @@ body {
 .modal-content {
     background-color: #fefefe;
     margin: 10% auto;
-    padding: 0;
-    border-radius: 15px;
+    padding: 2rem;
+    border-radius: 10px;
     width: 90%;
     max-width: 400px;
     position: relative;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+/* 确保按钮样式 */
+.login-btn, .guest-btn {
     cursor: pointer;
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    z-index: 1;
 }
 
-.close:hover {
-    color: #000;
-}
-
-.modal-header {
-    padding: 2rem 2rem 1rem;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-}
-
-.modal-header h2 {
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-}
-
-.modal-header p {
-    color: #7f8c8d;
-}
-
-.login-form {
-    padding: 1.5rem 2rem;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
+/* 用户菜单悬停效果 */
+.user-menu:hover .user-dropdown {
     display: block;
-    margin-bottom: 0.5rem;
-    color: #555;
-    font-weight: 500;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: all 0.3s;
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-width: 120px;
+    z-index: 1000;
 }
-
-.form-group input:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-}
-
-.form-options {
-    margin-bottom: 1.5rem;
-}
-
-.remember-me {
-    display: flex;
-    align-items: center;
-    color: #7f8c8d;
-    font-size: 0.9rem;
-}
-
-.remember-me input {
-    margin-right: 0.5rem;
-}
-
-.modal-footer {
-    padding: 1rem 2rem 2rem;
-    text-align: center;
-    border-top: 1px solid #eee;
-}
-
-.modal-footer p {
-    color: #7f8c8d;
-    margin-bottom: 1rem;
-}
-
-.modal-footer a {
-    color: #3498db;
-    text-decoration: none;
-}
-
-.modal-footer a:hover {
-    text-decoration: underline;
-}
-
-.test-accounts {
-    background: #f8f9fa;
-    padding: 0.75rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-}
-
 /* 消息提示 */
 .message {
     padding: 0.75rem;
