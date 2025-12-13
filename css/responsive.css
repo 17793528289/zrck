@@ -1,0 +1,77 @@
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background-color: white;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-menu li {
+        margin: 0;
+    }
+
+    .nav-menu a {
+        padding: 20px;
+        display: block;
+        border-bottom: 1px solid #eee;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .banner-content h1 {
+        font-size: 2rem;
+    }
+
+    .banner-content p {
+        font-size: 1rem;
+    }
+
+    .feature-grid,
+    .activity-grid,
+    .teachers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .features,
+    .latest-activities,
+    .about-content {
+        padding: 60px 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .banner {
+        padding: 120px 0 80px;
+    }
+
+    .banner-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .feature-item,
+    .activity-card,
+    .teacher-card {
+        padding: 20px 15px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
