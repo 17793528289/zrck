@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录测试</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .test-area { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>管理员登录问题诊断</h1>
+    
+    <div class="test-area">
+        <h3>测试1：直接验证逻辑</h3>
+        <button onclick="testBasicAuth()">测试基础验证</button>
+        <div id="testResult1"></div>
+    </div>
+
+    <div class="test-area">
+        <h3>测试2：模拟登录流程</h3>
+        <input type="text" id="testUsername" placeholder="输入用户名" value="admin">
+        <input type="password" id="testPassword" placeholder="输入密码" value="admin123">
+        <button onclick="testLoginFlow()">测试登录</button>
+        <div id="testResult2"></div>
+    </div>
+
+    <script>
+        // 管理员账户数据
+        const adminAccounts = {
+            'admin': { password: 'admin123', name: '系统管理员' },
+            'teacher': { password: 'teacher123', name: '教师' },
+            'test': { password: 'test123', name: '测试账户' }
+        };
+
+        function testBasicAuth() {
+            const result1 = adminAccounts['admin'] && adminAccounts['admin'].password === 'admin123';
+            const result2 = adminAccounts['teacher'] && adminAccounts['teacher'].password === 'teacher123';
+            const result3 = adminAccounts['test'] && adminAccounts['test'].password === 'test123';
+            
+            document.getElementById('testResult1').innerHTML = `
+                <p>admin/admin123: ${result1 ? '✓ 正确' : '✗ 错误'}</p>
+                <p>teacher/teacher123: ${result2 ? '✓ 正确' : '✗ 错误'}</p>
+                <p>test/test123: ${result3 ? '✓ 正确' : '✗ 错误'}</p>
+            `;
+        }
+
+        function testLoginFlow() {
+            const username = document.getElementById('testUsername').value;
+            const password = document.getElementById('testPassword').value;
+            
+            const user = adminAccounts[username];
+            const isValid = user && user.password === password;
+            
+            document.getElementById('testResult2').innerHTML = `
+                <p>输入的用户名: ${username}</p>
+                <p>输入的密码: ${password}</p>
+                <p>验证结果: ${isValid ? '✓ 登录成功' : '✗ 登录失败'}</p>
+                ${isValid ? `<p>欢迎 ${user.name}</p>` : ''}
+            `;
+        }
+
+        // 页面加载时自动测试
+        testBasicAuth();
+    </script>
+</body>
+</html>
