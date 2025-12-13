@@ -1,277 +1,42 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>会员中心 - 卓然创客社团</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-            background: #f5f5f5;
-            color: #333;
-        }
-        
-        .navbar {
-            background: #2c3e50;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .nav-logo h2 {
-            color: white;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .logout-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 80px auto 20px;
-            padding: 0 20px;
-        }
-        
-        .welcome-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        
-        .welcome-banner h1 {
-            margin-bottom: 0.5rem;
-        }
-        
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #3498db;
-            display: block;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .feature-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .feature-card h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .resource-list {
-            list-style: none;
-        }
-        
-        .resource-list li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .resource-list li:last-child {
-            border-bottom: none;
-        }
-        
-        .btn {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-top: 1rem;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-            background: #2c3e50;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="nav-logo">
-            <h2><a href="index.html" style="color: white; text-decoration: none;">卓然创客社团</a></h2>
-        </div>
-        <div class="user-info">
-            <span id="userWelcome">欢迎，会员</span>
-            <button class="logout-btn" onclick="logout()">退出登录</button>
-        </div>
-    </nav>
+<script>
+// 会员页面登录检查
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('会员页面加载...');
+    
+    // 检查登录状态
+    const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+    
+    if (!currentUser) {
+        alert('请先登录！');
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    const user = JSON.parse(currentUser);
+    const username = sessionStorage.getItem('username') || localStorage.getItem('username');
+    
+    console.log('欢迎用户:', user.name);
+    
+    // 更新页面显示
+    document.getElementById('userWelcome').textContent = `欢迎，${user.name}`;
+    document.getElementById('mainWelcome').textContent = `欢迎回来，${user.name}！`;
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userGrade').textContent = user.grade;
+    
+    // 如果是管理员，显示管理入口
+    if (user.role === 'admin' || user.role === 'teacher') {
+        document.getElementById('adminAccess').innerHTML = 
+            '<a href="admin-panel.html" class="btn btn-warning">⚙️ 管理后台</a>';
+    }
+});
 
-    <!-- 主要内容 -->
-    <div class="container">
-        <!-- 欢迎横幅 -->
-        <div class="welcome-banner">
-            <h1 id="mainWelcome">欢迎回到卓然创客社团</h1>
-            <p>专属会员平台，开启创新之旅</p>
-        </div>
-        
-        <!-- 快速统计 -->
-        <div class="quick-stats">
-            <div class="stat-card">
-                <span class="stat-number">3</span>
-                <span>进行中项目</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">5</span>
-                <span>可参与活动</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">12</span>
-                <span>学习资源</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">85</span>
-                <span>学习积分</span>
-            </div>
-        </div>
-        
-        <!-- 功能区域 -->
-        <div class="features-grid">
-            <!-- 学习资源 -->
-            <div class="feature-card">
-                <h3>📚 学习资源</h3>
-                <ul class="resource-list">
-                    <li>Python编程入门教程</li>
-                    <li>Arduino实战指南</li>
-                    <li>3D建模技巧视频</li>
-                    <li>机器人编程手册</li>
-                    <li>物联网开发文档</li>
-                </ul>
-                <a href="#" class="btn">查看全部资源</a>
-            </div>
-            
-            <!-- 我的项目 -->
-            <div class="feature-card">
-                <h3>💼 我的项目</h3>
-                <ul class="resource-list">
-                    <li>智能温控系统 (进行中 - 75%)</li>
-                    <li>机器人避障算法 (规划中)</li>
-                    <li>智能家居控制 (已完成)</li>
-                </ul>
-                <a href="#" class="btn">管理我的项目</a>
-            </div>
-            
-            <!-- 近期活动 -->
-            <div class="feature-card">
-                <h3>🎯 近期活动</h3>
-                <ul class="resource-list">
-                    <li>12月15日：3D打印工作坊</li>
-                    <li>12月20日：机器人编程培训</li>
-                    <li>12月25日：创客作品展示</li>
-                    <li>1月5日：技术分享会</li>
-                </ul>
-                <a href="#" class="btn">查看活动日历</a>
-            </div>
-            
-            <!-- 会员特权 -->
-            <div class="feature-card">
-                <h3>⭐ 会员特权</h3>
-                <ul class="resource-list">
-                    <li>✅ 专属学习资源访问</li>
-                    <li>✅ 导师一对一指导</li>
-                    <li>✅ 项目设备优先使用</li>
-                    <li>✅ 竞赛报名优先权</li>
-                    <li>✅ 技术培训参与资格</li>
-                </ul>
-                <a href="index.html" class="btn">返回社团首页</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 页脚 -->
-    <footer class="footer">
-        <p>武威第十八中学卓然创客社团 &copy; 2025</p>
-        <p>会员专属平台</p>
-    </footer>
-
-    <script>
-        // 获取URL参数
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                user: params.get('user')
-            };
-        }
-        
-        // 显示用户信息
-        function displayUserInfo() {
-            const params = getUrlParams();
-            const username = params.user || '会员';
-            
-            document.getElementById('userWelcome').textContent = `欢迎，${username}`;
-            document.getElementById('mainWelcome').textContent = `欢迎回来，${username}！`;
-        }
-        
-        // 退出登录
-        function logout() {
-            if (confirm('确定要退出登录吗？')) {
-                window.location.href = 'index.html';
-            }
-        }
-        
-        // 页面加载时执行
-        document.addEventListener('DOMContentLoaded', function() {
-            displayUserInfo();
-            console.log('会员页面加载完成');
-        });
-    </script>
-</body>
-</html>
+// 退出登录
+function logout() {
+    if (confirm('确定要退出登录吗？')) {
+        sessionStorage.clear();
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('username');
+        window.location.href = 'index.html';
+    }
+}
+</script>
