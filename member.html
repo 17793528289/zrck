@@ -1,102 +1,285 @@
-<script>
-// 会员页面登录检查
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('会员页面加载...');
-    
-    try {
-        // 检查登录状态
-        const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
-        
-        if (!currentUser) {
-            redirectToLogin();
-            return;
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员中心 - 武威第十八中学卓然创客社团</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .member-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
         
-        // 安全解析用户数据
-        const user = safelyParseUser(currentUser);
-        if (!user) {
-            redirectToLogin();
-            return;
+        .member-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
         }
         
-        // 验证用户数据完整性
-        if (!validateUserData(user)) {
-            redirectToLogin();
-            return;
+        .user-info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
         }
         
-        console.log('欢迎用户:', user.name);
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
         
-        // 安全更新页面显示
-        safelyUpdateUI(user);
+        .info-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
         
-    } catch (error) {
-        console.error('页面初始化错误:', error);
-        redirectToLogin();
-    }
-});
-
-// 安全解析用户数据
-function safelyParseUser(userData) {
-    try {
-        const user = JSON.parse(userData);
-        return user;
-    } catch (error) {
-        console.error('解析用户数据失败:', error);
-        return null;
-    }
-}
-
-// 验证用户数据完整性
-function validateUserData(user) {
-    const requiredFields = ['name'];
-    return requiredFields.every(field => user.hasOwnProperty(field));
-}
-
-// 安全更新UI
-function safelyUpdateUI(user) {
-    try {
-        const elementsToUpdate = [
-            { id: 'userWelcome', text: `欢迎，${user.name}` },
-            { id: 'mainWelcome', text: `欢迎回来，${user.name}！` },
-            { id: 'userName', text: user.name },
-            { id: 'userGrade', text: user.grade || '' }
-        ];
+        .member-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
         
-        elementsToUpdate.forEach(item => {
-            const element = document.getElementById(item.id);
-            if (element) {
-                element.textContent = item.text;
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><a href="index.html" style="color: white; text-decoration: none;">卓然创客</a></h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="about.html">关于我们</a></li>
+                <li><a href="activities.html">活动展示</a></li>
+                <li><a href="projects.html">项目成果</a></li>
+                <li><a href="join.html">加入我们</a></li>
+                <li class="user-menu">
+                    <span id="userWelcome">欢迎访问</span>
+                    <div class="user-dropdown">
+                        <button onclick="logout()" class="logout-btn">退出登录</button>
+                    </div>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 会员中心内容 -->
+    <div class="member-container">
+        <div class="member-header">
+            <h1 id="mainWelcome">欢迎来到会员中心</h1>
+            <p>专属资源 · 个性服务 · 成长记录</p>
+        </div>
+
+        <!-- 用户信息 -->
+        <div class="user-info-card">
+            <h2>个人信息</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>姓名：</strong>
+                    <span id="userName">加载中...</span>
+                </div>
+                <div class="info-item">
+                    <strong>班级：</strong>
+                    <span id="userGrade">加载中...</span>
+                </div>
+                <div class="info-item">
+                    <strong>角色：</strong>
+                    <span id="userRole">加载中...</span>
+                </div>
+                <div class="info-item">
+                    <strong>登录时间：</strong>
+                    <span id="loginTime">加载中...</span>
+                </div>
+            </div>
+            
+            <div id="adminAccess" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- 会员专属功能 -->
+        <div class="member-features">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>学习资源</h3>
+                <p>访问专属教程、项目资料和竞赛指南</p>
+                <button class="btn btn-primary" onclick="accessResources()">进入资源库</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>项目管理</h3>
+                <p>管理个人项目，跟踪进度，获得指导</p>
+                <button class="btn btn-primary" onclick="manageProjects()">我的项目</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>成长记录</h3>
+                <p>查看参与活动、获得成就和技能成长</p>
+                <button class="btn btn-primary" onclick="viewProgress()">查看记录</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>卓然创客社团</h3>
+                    <p>武威第十八中学</p>
+                    <p>地址：甘肃省武威市凉州区凤凰路163号</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                        <li><a href="activities.html">活动展示</a></li>
+                        <li><a href="projects.html">项目成果</a></li>
+                        <li><a href="join.html">加入我们</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p>邮箱：2959665467@qq.com</p>
+                    <p>电话：17793528289</p>
+                    <p>指导老师：张老师</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 武威第十八中学卓然创客社团. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 会员页面登录检查
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('会员页面加载...');
+            
+            // 检查登录状态
+            const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+            
+            if (!currentUser) {
+                alert('请先登录！');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(currentUser);
+                const username = sessionStorage.getItem('username') || localStorage.getItem('username');
+                const loginTime = sessionStorage.getItem('loginTime') || localStorage.getItem('loginTime');
+                
+                console.log('欢迎用户:', user.name);
+                
+                // 安全更新页面显示
+                updateElementText('userWelcome', `欢迎，${user.name}`);
+                updateElementText('mainWelcome', `欢迎回来，${user.name}！`);
+                updateElementText('userName', user.name || '未设置');
+                updateElementText('userGrade', user.grade || '未设置');
+                updateElementText('userRole', user.role === 'admin' ? '管理员' : 
+                                 user.role === 'teacher' ? '教师' : '学生');
+                updateElementText('loginTime', loginTime || '刚刚');
+                
+                // 如果是管理员，显示管理入口
+                if (user.role === 'admin' || user.role === 'teacher') {
+                    updateElementHTML('adminAccess', 
+                        '<a href="admin-panel.html" class="btn btn-warning">⚙️ 管理后台</a>');
+                }
+            } catch (error) {
+                console.error('处理用户数据时出错:', error);
+                alert('用户数据异常，请重新登录！');
+                window.location.href = 'index.html';
             }
         });
-        
-        // 管理员入口处理
-        const adminAccess = document.getElementById('adminAccess');
-        if (adminAccess && (user.role === 'admin' || user.role === 'teacher')) {
-            adminAccess.innerHTML = '<a href="admin-panel.html" class="btn btn-warning">⚙️ 管理后台</a>';
+
+        // 安全更新元素文本内容
+        function updateElementText(elementId, text) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = text;
+            } else {
+                console.warn(`元素 #${elementId} 不存在`);
+            }
         }
-    } catch (error) {
-        console.error('更新UI失败:', error);
-    }
-}
 
-// 跳转到登录页
-function redirectToLogin() {
-    alert('请先登录！');
-    window.location.href = 'index.html';
-}
+        // 安全更新元素HTML内容
+        function updateElementHTML(elementId, html) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = html;
+            } else {
+                console.warn(`元素 #${elementId} 不存在`);
+            }
+        }
 
-// 退出登录
-function logout() {
-    if (confirm('确定要退出登录吗？')) {
-        // 清除所有相关存储数据
-        sessionStorage.clear();
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('username');
-        localStorage.removeItem('loginTime');
-        
-        // 跳转回首页
-        window.location.href = 'index.html';
-    }
-}
-</script>
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                sessionStorage.clear();
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('username');
+                localStorage.removeItem('loginTime');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // 会员功能函数（示例）
+        function accessResources() {
+            alert('资源库功能开发中...');
+        }
+
+        function manageProjects() {
+            alert('项目管理功能开发中...');
+        }
+
+        function viewProgress() {
+            alert('成长记录功能开发中...');
+        }
+    </script>
+</body>
+</html>
