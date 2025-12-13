@@ -20,7 +20,13 @@
                 <li><a href="activities.html">活动展示</a></li>
                 <li><a href="projects.html">项目成果</a></li>
                 <li><a href="join.html">加入我们</a></li>
-                <li><button id="loginBtn" class="login-btn">登录</button></li>
+                <li class="user-menu">
+                    <span id="userGreeting">欢迎访客</span>
+                    <div class="user-dropdown">
+                        <button id="loginBtn" class="login-btn">会员登录</button>
+                        <button id="guestBtn" class="guest-btn">访客模式</button>
+                    </div>
+                </li>
             </ul>
             <div class="nav-toggle">
                 <span></span>
@@ -30,12 +36,21 @@
         </div>
     </nav>
 
+    <!-- 访客提示条 -->
+    <div id="guestBanner" class="guest-banner">
+        <span>您当前处于访客模式，<a href="#" id="loginLink">登录</a>可访问更多内容</span>
+        <button id="closeGuestBanner" class="close-banner">&times;</button>
+    </div>
+
     <!-- 横幅 -->
     <section class="banner">
         <div class="banner-content">
             <h1>武威第十八中学卓然创客社团</h1>
             <p>创新 · 实践 · 分享 · 成长</p>
-            <a href="join.html" class="btn">立即加入</a>
+            <div class="banner-buttons">
+                <a href="join.html" class="btn">立即加入</a>
+                <button id="quickVisit" class="btn-secondary">快速体验</button>
+            </div>
         </div>
     </section>
 
@@ -63,35 +78,103 @@
         </div>
     </section>
 
+    <!-- 内容区域（访客和会员不同内容） -->
+    <section class="content-section">
+        <div class="container">
+            <!-- 公共内容 -->
+            <div class="public-content">
+                <h2>欢迎来到卓然创客社团</h2>
+                <p>我们致力于培养学生的创新思维和实践能力</p>
+            </div>
+
+            <!-- 会员专属内容 -->
+            <div id="memberContent" class="member-content" style="display: none;">
+                <div class="member-badge">会员专属</div>
+                <h3>内部资源</h3>
+                <div class="member-resources">
+                    <div class="resource-item">
+                        <h4>📚 学习资料</h4>
+                        <p>编程教程、项目文档、技术手册</p>
+                    </div>
+                    <div class="resource-item">
+                        <h4>🎥 教学视频</h4>
+                        <p>内部培训视频、项目演示</p>
+                    </div>
+                    <div class="resource-item">
+                        <h4>👨‍🏫 导师指导</h4>
+                        <p>专业老师一对一指导</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 访客提示内容 -->
+            <div id="guestContent" class="guest-content">
+                <div class="guest-prompt">
+                    <h3>想了解更多？</h3>
+                    <p>登录后可查看完整内容，包括内部资料、项目详情等</p>
+                    <button id="promptLogin" class="btn">立即登录</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 最新活动 -->
     <section class="latest-activities">
         <div class="container">
             <h2>最新活动</h2>
             <div class="activity-grid">
-                <div class="activity-card">
-                    <div class="activity-image">
-                        
-                    </div>
+                <div class="activity-card public-activity">
+                    <div class="activity-image"></div>
                     <div class="activity-content">
                         <h3>3D打印创意工作坊</h3>
                         <p>学习3D建模与打印技术，创造属于自己的作品</p>
                         <span class="activity-date">2025年12月15日</span>
                     </div>
                 </div>
-                <div class="activity-card">
-                    <div class="activity-image">
-                        
-                    </div>
+                <div class="activity-card member-activity" style="display: none;">
+                    <div class="activity-image"></div>
                     <div class="activity-content">
-                        <h3>机器人编程挑战赛</h3>
-                        <p>动手搭建机器人，学习编程控制</p>
-                        <span class="activity-date">2025年12月20日</span>
+                        <h3>内部技术培训</h3>
+                        <p>高级编程技巧与项目实战（会员专属）</p>
+                        <span class="activity-date">2025年12月18日</span>
                     </div>
                 </div>
             </div>
             <a href="activities.html" class="btn-secondary">查看更多活动</a>
         </div>
     </section>
+
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>社团成员登录</h2>
+            <div class="login-options">
+                <button class="option-btn active" data-type="member">会员登录</button>
+                <button class="option-btn" data-type="visitor">访客体验</button>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">学号/用户名:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn">登录</button>
+            </form>
+
+            <div id="visitorPanel" class="visitor-panel" style="display: none;">
+                <h3>访客模式体验</h3>
+                <p>以访客身份浏览公开内容，部分功能受限</p>
+                <button id="startVisit" class="btn-secondary">开始体验</button>
+            </div>
+            
+            <div id="loginMessage" class="message"></div>
+        </div>
+    </div>
 
     <!-- 页脚 -->
     <footer class="footer">
@@ -123,5 +206,6 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
