@@ -3,68 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>卓然创客社团 - 武威第十八中学</title>
+    <title>武威第十八中学卓然创客社团</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
     <!-- 导航栏 -->
     <nav class="navbar">
-        <div class="container">
-            <a href="index.html" class="logo">
-                <img src="images/logo.png" alt="卓然创客社团">
-                <span>卓然创客社团</span>
-            </a>
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>卓然创客</h2>
+            </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="active"><i class="fas fa-home"></i> 首页</a></li>
-                <li><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
-                <li><a href="activities.html"><i class="fas fa-calendar-alt"></i> 活动展示</a></li>
-                <li><a href="projects.html"><i class="fas fa-project-diagram"></i> 项目成果</a></li>
-                <li><a href="join.html"><i class="fas fa-user-plus"></i> 加入我们</a></li>
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="about.html">关于我们</a></li>
+                <li><a href="activities.html">活动展示</a></li>
+                <li><a href="projects.html">项目成果</a></li>
+                <li><a href="join.html">加入我们</a></li>
             </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
 
     <!-- 横幅 -->
-    <header class="banner">
+    <section class="banner">
         <div class="banner-content">
-            <h1>创新 · 实践 · 分享</h1>
-            <p>武威第十八中学卓然创客社团</p>
-            <a href="#about" class="btn">了解更多</a>
+            <h1>武威第十八中学卓然创客社团</h1>
+            <p>创新 · 实践 · 分享 · 成长</p>
+            <a href="join.html" class="btn">立即加入</a>
         </div>
-    </header>
+    </section>
 
-    <!-- 主要内容 -->
-    <main class="container">
-        <section id="about" class="section">
-            <h2>欢迎来到卓然创客社团</h2>
-            <p>我们是一个致力于培养学生创新思维和实践能力的学生社团。通过丰富的创客活动，激发同学们的科技兴趣，提升动手能力和团队协作精神。</p>
-        </section>
+    <!-- 特色介绍 -->
+    <section class="features">
+        <div class="container">
+            <h2>社团特色</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <h3>创新实践</h3>
+                    <p>结合最新科技，开展创新项目实践</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">👥</div>
+                    <h3>团队协作</h3>
+                    <p>培养团队合作精神，共同解决问题</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💡</div>
+                    <h3>创意分享</h3>
+                    <p>定期举办创意分享会，交流学习</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section class="features">
-            <div class="feature-card">
-                <i class="fas fa-lightbulb"></i>
-                <h3>创新思维</h3>
-                <p>培养解决问题的创新思维</p>
+    <!-- 最新活动 -->
+    <section class="latest-activities">
+        <div class="container">
+            <h2>最新活动</h2>
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <div class="activity-image">
+                        
+                    </div>
+                    <div class="activity-content">
+                        <h3>3D打印创意工作坊</h3>
+                        <p>学习3D建模与打印技术，创造属于自己的作品</p>
+                        <span class="activity-date">2025年12月15日</span>
+                    </div>
+                </div>
+                <div class="activity-card">
+                    <div class="activity-image">
+                        
+                    </div>
+                    <div class="activity-content">
+                        <h3>机器人编程挑战赛</h3>
+                        <p>动手搭建机器人，学习编程控制</p>
+                        <span class="activity-date">2025年12月20日</span>
+                    </div>
+                </div>
             </div>
-            <div class="feature-card">
-                <i class="fas fa-tools"></i>
-                <h3>动手实践</h3>
-                <p>从想法到实现的全过程体验</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-users"></i>
-                <h3>团队协作</h3>
-                <p>在合作中共同成长进步</p>
-            </div>
-        </section>
-    </main>
+            <a href="activities.html" class="btn-secondary">查看更多活动</a>
+        </div>
+    </section>
 
     <!-- 页脚 -->
-    <footer>
+    <footer class="footer">
         <div class="container">
-            <p>© 2024 武威第十八中学卓然创客社团 版权所有</p>
-            <p>地址：甘肃省武威市第十八中学 | 邮箱：chuangke@ww18z.com</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>卓然创客社团</h3>
+                    <p>武威第十八中学</p>
+                    <p>地址：甘肃省武威市凉州区</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                        <li><a href="activities.html">活动展示</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p>邮箱：zrck@ww18z.com</p>
+                    <p>电话：0936-XXXXXXX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 武威第十八中学卓然创客社团. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
