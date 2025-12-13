@@ -4,308 +4,274 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>会员中心 - 卓然创客社团</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/member.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-logo h2 {
+            color: white;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 20px;
+            padding: 0 20px;
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .welcome-banner h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .resource-list {
+            list-style: none;
+        }
+        
+        .resource-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .resource-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            background: #2c3e50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <!-- 导航栏 -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2><a href="index.html" style="color: white; text-decoration: none;">卓然创客</a></h2>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="member.html" class="active">会员中心</a></li>
-                <li><a href="projects.html">项目成果</a></li>
-                <li><a href="activities.html">活动展示</a></li>
-                <li class="user-menu">
-                    <span id="userGreeting">欢迎，用户</span>
-                    <div class="user-dropdown">
-                        <a href="profile.html">个人资料</a>
-                        <a href="my-projects.html">我的项目</a>
-                        <a href="resources.html">学习资源</a>
-                        <button onclick="auth.logout()">退出登录</button>
-                    </div>
-                </li>
-            </ul>
+        <div class="nav-logo">
+            <h2><a href="index.html" style="color: white; text-decoration: none;">卓然创客社团</a></h2>
+        </div>
+        <div class="user-info">
+            <span id="userWelcome">欢迎，会员</span>
+            <button class="logout-btn" onclick="logout()">退出登录</button>
         </div>
     </nav>
 
-    <!-- 会员欢迎横幅 -->
-    <div class="member-banner">
-        <div class="container">
-            <div class="welcome-info">
-                <h1 id="memberWelcome">欢迎回来！</h1>
-                <p id="memberStats">今日有 <strong>3</strong> 个新活动，<strong>5</strong> 个新资源更新</p>
+    <!-- 主要内容 -->
+    <div class="container">
+        <!-- 欢迎横幅 -->
+        <div class="welcome-banner">
+            <h1 id="mainWelcome">欢迎回到卓然创客社团</h1>
+            <p>专属会员平台，开启创新之旅</p>
+        </div>
+        
+        <!-- 快速统计 -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <span class="stat-number">3</span>
+                <span>进行中项目</span>
             </div>
-            <div class="quick-actions">
-                <button class="quick-btn" onclick="location.href='resources.html'">
-                    <span>📚</span>
-                    <span>学习资源</span>
-                </button>
-                <button class="quick-btn" onclick="location.href='projects.html'">
-                    <span>💼</span>
-                    <span>我的项目</span>
-                </button>
-                <button class="quick-btn" onclick="location.href='activities.html'">
-                    <span>🎯</span>
-                    <span>活动报名</span>
-                </button>
+            <div class="stat-card">
+                <span class="stat-number">5</span>
+                <span>可参与活动</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">12</span>
+                <span>学习资源</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">85</span>
+                <span>学习积分</span>
             </div>
         </div>
-    </div>
-
-    <!-- 主要内容区域 -->
-    <div class="member-container">
-        <!-- 侧边栏 -->
-        <aside class="member-sidebar">
-            <div class="user-card">
-                <div class="avatar">👤</div>
-                <h3 id="userName">用户名称</h3>
-                <p id="userGrade">班级信息</p>
-                <div class="user-level">
-                    <span class="level-badge">初级创客</span>
-                </div>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="member.html" class="nav-item active">
-                    <span>🏠</span> 会员首页
-                </a>
-                <a href="resources.html" class="nav-item">
-                    <span>📚</span> 学习资源
-                    <span class="badge">12</span>
-                </a>
-                <a href="projects.html" class="nav-item">
-                    <span>💼</span> 我的项目
-                    <span class="badge">3</span>
-                </a>
-                <a href="activities.html" class="nav-item">
-                    <span>🎯</span> 活动中心
-                    <span class="badge">5</span>
-                </a>
-                <a href="messages.html" class="nav-item">
-                    <span>✉️</span> 消息通知
-                    <span class="badge new">2</span>
-                </a>
-                <a href="profile.html" class="nav-item">
-                    <span>⚙️</span> 个人设置
-                </a>
-            </nav>
-        </aside>
-
-        <!-- 主内容区 -->
-        <main class="member-main">
-            <!-- 快速状态 -->
-            <section class="status-cards">
-                <div class="status-card">
-                    <div class="status-icon">📊</div>
-                    <div class="status-info">
-                        <h3>项目进度</h3>
-                        <p>3个进行中项目</p>
-                    </div>
-                    <div class="status-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 65%"></div>
-                        </div>
-                        <span>65%</span>
-                    </div>
-                </div>
-
-                <div class="status-card">
-                    <div class="status-icon">🎯</div>
-                    <div class="status-info">
-                        <h3>活动参与</h3>
-                        <p>本月参与2次活动</p>
-                    </div>
-                    <div class="status-badge">活跃</div>
-                </div>
-
-                <div class="status-card">
-                    <div class="status-icon">📚</div>
-                    <div class="status-info">
-                        <h3>学习进度</h3>
-                        <p>已完成8个课程</p>
-                    </div>
-                    <div class="status-score">85分</div>
-                </div>
-            </section>
-
-            <!-- 最新活动 -->
-            <section class="activity-section">
-                <div class="section-header">
-                    <h2>近期活动</h2>
-                    <a href="activities.html" class="view-all">查看全部</a>
-                </div>
-                <div class="activity-list">
-                    <div class="activity-item urgent">
-                        <div class="activity-date">
-                            <span class="date-day">15</span>
-                            <span class="date-month">12月</span>
-                        </div>
-                        <div class="activity-content">
-                            <h3>3D打印创意工作坊</h3>
-                            <p>学习3D建模与打印技术，创造属于自己的作品</p>
-                            <div class="activity-meta">
-                                <span>⏰ 下午4:00-6:00</span>
-                                <span>📍 创客实验室</span>
-                                <span class="status registered">已报名</span>
-                            </div>
-                        </div>
-                        <button class="action-btn">查看详情</button>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-date">
-                            <span class="date-day">20</span>
-                            <span class="date-month">12月</span>
-                        </div>
-                        <div class="activity-content">
-                            <h3>机器人编程进阶培训</h3>
-                            <p>深入学习机器人控制算法和传感器应用</p>
-                            <div class="activity-meta">
-                                <span>⏰ 下午3:00-5:30</span>
-                                <span>📍 计算机教室</span>
-                                <span class="status open">可报名</span>
-                            </div>
-                        </div>
-                        <button class="action-btn primary">立即报名</button>
-                    </div>
-                </div>
-            </section>
-
+        
+        <!-- 功能区域 -->
+        <div class="features-grid">
             <!-- 学习资源 -->
-            <section class="resources-section">
-                <div class="section-header">
-                    <h2>推荐资源</h2>
-                    <a href="resources.html" class="view-all">更多资源</a>
-                </div>
-                <div class="resources-grid">
-                    <div class="resource-item">
-                        <div class="resource-icon">🎥</div>
-                        <h3>Python编程入门</h3>
-                        <p>从零开始学习Python基础语法和项目实战</p>
-                        <div class="resource-meta">
-                            <span>📊 初级</span>
-                            <span>⏱️ 2小时</span>
-                        </div>
-                        <div class="resource-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 30%"></div>
-                            </div>
-                            <span>30% 已完成</span>
-                        </div>
-                        <button class="action-btn">继续学习</button>
-                    </div>
-
-                    <div class="resource-item new">
-                        <div class="resource-icon">📖</div>
-                        <h3>Arduino实战指南</h3>
-                        <p>物联网开发基础与传感器应用案例</p>
-                        <div class="resource-meta">
-                            <span>📊 中级</span>
-                            <span>⏱️ 3.5小时</span>
-                        </div>
-                        <div class="resource-badge">新</div>
-                        <button class="action-btn primary">开始学习</button>
-                    </div>
-
-                    <div class="resource-item">
-                        <div class="resource-icon">🔧</div>
-                        <h3>3D建模技巧</h3>
-                        <p>使用Fusion 360进行三维建模设计</p>
-                        <div class="resource-meta">
-                            <span>📊 初级</span>
-                            <span>⏱️ 1.5小时</span>
-                        </div>
-                        <button class="action-btn">查看教程</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 项目进展 -->
-            <section class="projects-section">
-                <div class="section-header">
-                    <h2>我的项目</h2>
-                    <a href="projects.html" class="view-all">管理项目</a>
-                </div>
-                <div class="projects-list">
-                    <div class="project-card">
-                        <div class="project-header">
-                            <h3>智能温控系统</h3>
-                            <span class="project-status in-progress">进行中</span>
-                        </div>
-                        <p>基于Arduino的智能温度监控与自动调节系统</p>
-                        <div class="project-progress">
-                            <div class="progress-info">
-                                <span>进度</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 75%"></div>
-                            </div>
-                        </div>
-                        <div class="project-team">
-                            <span>👥 团队成员：张三、李四</span>
-                            <span>📅 截止：2025-12-30</span>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-header">
-                            <h3>机器人避障算法</h3>
-                            <span class="project-status planning">规划中</span>
-                        </div>
-                        <p>基于超声波传感器的智能避障算法优化</p>
-                        <div class="project-progress">
-                            <div class="progress-info">
-                                <span>进度</span>
-                                <span>20%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 20%"></div>
-                            </div>
-                        </div>
-                        <div class="project-team">
-                            <span>👥 个人项目</span>
-                            <span>📅 截止：2026-01-15</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+            <div class="feature-card">
+                <h3>📚 学习资源</h3>
+                <ul class="resource-list">
+                    <li>Python编程入门教程</li>
+                    <li>Arduino实战指南</li>
+                    <li>3D建模技巧视频</li>
+                    <li>机器人编程手册</li>
+                    <li>物联网开发文档</li>
+                </ul>
+                <a href="#" class="btn">查看全部资源</a>
+            </div>
+            
+            <!-- 我的项目 -->
+            <div class="feature-card">
+                <h3>💼 我的项目</h3>
+                <ul class="resource-list">
+                    <li>智能温控系统 (进行中 - 75%)</li>
+                    <li>机器人避障算法 (规划中)</li>
+                    <li>智能家居控制 (已完成)</li>
+                </ul>
+                <a href="#" class="btn">管理我的项目</a>
+            </div>
+            
+            <!-- 近期活动 -->
+            <div class="feature-card">
+                <h3>🎯 近期活动</h3>
+                <ul class="resource-list">
+                    <li>12月15日：3D打印工作坊</li>
+                    <li>12月20日：机器人编程培训</li>
+                    <li>12月25日：创客作品展示</li>
+                    <li>1月5日：技术分享会</li>
+                </ul>
+                <a href="#" class="btn">查看活动日历</a>
+            </div>
+            
+            <!-- 会员特权 -->
+            <div class="feature-card">
+                <h3>⭐ 会员特权</h3>
+                <ul class="resource-list">
+                    <li>✅ 专属学习资源访问</li>
+                    <li>✅ 导师一对一指导</li>
+                    <li>✅ 项目设备优先使用</li>
+                    <li>✅ 竞赛报名优先权</li>
+                    <li>✅ 技术培训参与资格</li>
+                </ul>
+                <a href="index.html" class="btn">返回社团首页</a>
+            </div>
+        </div>
     </div>
 
     <!-- 页脚 -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>卓然创客社团</h3>
-                    <p>武威第十八中学</p>
-                    <p>会员专属平台</p>
-                </div>
-                <div class="footer-section">
-                    <h3>快速链接</h3>
-                    <ul>
-                        <li><a href="index.html">社团首页</a></li>
-                        <li><a href="member.html">会员中心</a></li>
-                        <li><a href="resources.html">学习资源</a></li>
-                        <li><a href="activities.html">活动中心</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>技术支持</h3>
-                    <p>邮箱：2959665467@qq.com</p>
-                    <p>电话：17793528289</p>
-                    <p>指导老师：张老师</p>
-                </div>
-            </div>
-        </div>
+        <p>武威第十八中学卓然创客社团 &copy; 2025</p>
+        <p>会员专属平台</p>
     </footer>
 
-    <script src="js/auth.js"></script>
-    <script src="js/member.js"></script>
+    <script>
+        // 获取URL参数
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                user: params.get('user')
+            };
+        }
+        
+        // 显示用户信息
+        function displayUserInfo() {
+            const params = getUrlParams();
+            const username = params.user || '会员';
+            
+            document.getElementById('userWelcome').textContent = `欢迎，${username}`;
+            document.getElementById('mainWelcome').textContent = `欢迎回来，${username}！`;
+        }
+        
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', function() {
+            displayUserInfo();
+            console.log('会员页面加载完成');
+        });
+    </script>
 </body>
 </html>
