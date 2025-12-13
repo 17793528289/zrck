@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员面板 - 卓然创客社团</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: #1890ff;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #ff4d4f;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>管理员控制台</h1>
+        <p>欢迎使用卓然创客社团管理系统</p>
+        <button onclick="logout()" class="btn-danger">退出登录</button>
+    </div>
+    
+    <div class="panel">
+        <h3>批量导入学生账号</h3>
+        <textarea id="studentData" rows="10" cols="50" placeholder="每行格式：学号,姓名,班级
+例如：
+2023001,张三,高一(1)班
+2023002,李四,高一(2)班"></textarea>
+        <br>
+        <button onclick="importStudents()" class="btn-primary">导入账号</button>
+    </div>
+    
+    <div class="panel">
+        <h3>用户管理</h3>
+        <div id="userList"></div>
+    </div>
+
+    <script>
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                window.location.href = 'admin-simple.html';
+            }
+        }
+        
+        function importStudents() {
+            const data = document.getElementById('studentData').value;
+            alert('导入功能开发中...\n' + data);
+        }
+        
+        // 显示当前登录状态
+        console.log('管理员面板加载完成');
+    </script>
+</body>
+</html>
