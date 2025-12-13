@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员中心 - 卓然创客社团</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/member.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><a href="index.html" style="color: white; text-decoration: none;">卓然创客</a></h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="member.html" class="active">会员中心</a></li>
+                <li><a href="projects.html">项目成果</a></li>
+                <li><a href="activities.html">活动展示</a></li>
+                <li class="user-menu">
+                    <span id="userGreeting">欢迎，用户</span>
+                    <div class="user-dropdown">
+                        <a href="profile.html">个人资料</a>
+                        <a href="my-projects.html">我的项目</a>
+                        <a href="resources.html">学习资源</a>
+                        <button onclick="auth.logout()">退出登录</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 会员欢迎横幅 -->
+    <div class="member-banner">
+        <div class="container">
+            <div class="welcome-info">
+                <h1 id="memberWelcome">欢迎回来！</h1>
+                <p id="memberStats">今日有 <strong>3</strong> 个新活动，<strong>5</strong> 个新资源更新</p>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="location.href='resources.html'">
+                    <span>📚</span>
+                    <span>学习资源</span>
+                </button>
+                <button class="quick-btn" onclick="location.href='projects.html'">
+                    <span>💼</span>
+                    <span>我的项目</span>
+                </button>
+                <button class="quick-btn" onclick="location.href='activities.html'">
+                    <span>🎯</span>
+                    <span>活动报名</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="member-container">
+        <!-- 侧边栏 -->
+        <aside class="member-sidebar">
+            <div class="user-card">
+                <div class="avatar">👤</div>
+                <h3 id="userName">用户名称</h3>
+                <p id="userGrade">班级信息</p>
+                <div class="user-level">
+                    <span class="level-badge">初级创客</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="member.html" class="nav-item active">
+                    <span>🏠</span> 会员首页
+                </a>
+                <a href="resources.html" class="nav-item">
+                    <span>📚</span> 学习资源
+                    <span class="badge">12</span>
+                </a>
+                <a href="projects.html" class="nav-item">
+                    <span>💼</span> 我的项目
+                    <span class="badge">3</span>
+                </a>
+                <a href="activities.html" class="nav-item">
+                    <span>🎯</span> 活动中心
+                    <span class="badge">5</span>
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <span>✉️</span> 消息通知
+                    <span class="badge new">2</span>
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <span>⚙️</span> 个人设置
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="member-main">
+            <!-- 快速状态 -->
+            <section class="status-cards">
+                <div class="status-card">
+                    <div class="status-icon">📊</div>
+                    <div class="status-info">
+                        <h3>项目进度</h3>
+                        <p>3个进行中项目</p>
+                    </div>
+                    <div class="status-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        <span>65%</span>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-icon">🎯</div>
+                    <div class="status-info">
+                        <h3>活动参与</h3>
+                        <p>本月参与2次活动</p>
+                    </div>
+                    <div class="status-badge">活跃</div>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-icon">📚</div>
+                    <div class="status-info">
+                        <h3>学习进度</h3>
+                        <p>已完成8个课程</p>
+                    </div>
+                    <div class="status-score">85分</div>
+                </div>
+            </section>
+
+            <!-- 最新活动 -->
+            <section class="activity-section">
+                <div class="section-header">
+                    <h2>近期活动</h2>
+                    <a href="activities.html" class="view-all">查看全部</a>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item urgent">
+                        <div class="activity-date">
+                            <span class="date-day">15</span>
+                            <span class="date-month">12月</span>
+                        </div>
+                        <div class="activity-content">
+                            <h3>3D打印创意工作坊</h3>
+                            <p>学习3D建模与打印技术，创造属于自己的作品</p>
+                            <div class="activity-meta">
+                                <span>⏰ 下午4:00-6:00</span>
+                                <span>📍 创客实验室</span>
+                                <span class="status registered">已报名</span>
+                            </div>
+                        </div>
+                        <button class="action-btn">查看详情</button>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-date">
+                            <span class="date-day">20</span>
+                            <span class="date-month">12月</span>
+                        </div>
+                        <div class="activity-content">
+                            <h3>机器人编程进阶培训</h3>
+                            <p>深入学习机器人控制算法和传感器应用</p>
+                            <div class="activity-meta">
+                                <span>⏰ 下午3:00-5:30</span>
+                                <span>📍 计算机教室</span>
+                                <span class="status open">可报名</span>
+                            </div>
+                        </div>
+                        <button class="action-btn primary">立即报名</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 学习资源 -->
+            <section class="resources-section">
+                <div class="section-header">
+                    <h2>推荐资源</h2>
+                    <a href="resources.html" class="view-all">更多资源</a>
+                </div>
+                <div class="resources-grid">
+                    <div class="resource-item">
+                        <div class="resource-icon">🎥</div>
+                        <h3>Python编程入门</h3>
+                        <p>从零开始学习Python基础语法和项目实战</p>
+                        <div class="resource-meta">
+                            <span>📊 初级</span>
+                            <span>⏱️ 2小时</span>
+                        </div>
+                        <div class="resource-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 30%"></div>
+                            </div>
+                            <span>30% 已完成</span>
+                        </div>
+                        <button class="action-btn">继续学习</button>
+                    </div>
+
+                    <div class="resource-item new">
+                        <div class="resource-icon">📖</div>
+                        <h3>Arduino实战指南</h3>
+                        <p>物联网开发基础与传感器应用案例</p>
+                        <div class="resource-meta">
+                            <span>📊 中级</span>
+                            <span>⏱️ 3.5小时</span>
+                        </div>
+                        <div class="resource-badge">新</div>
+                        <button class="action-btn primary">开始学习</button>
+                    </div>
+
+                    <div class="resource-item">
+                        <div class="resource-icon">🔧</div>
+                        <h3>3D建模技巧</h3>
+                        <p>使用Fusion 360进行三维建模设计</p>
+                        <div class="resource-meta">
+                            <span>📊 初级</span>
+                            <span>⏱️ 1.5小时</span>
+                        </div>
+                        <button class="action-btn">查看教程</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 项目进展 -->
+            <section class="projects-section">
+                <div class="section-header">
+                    <h2>我的项目</h2>
+                    <a href="projects.html" class="view-all">管理项目</a>
+                </div>
+                <div class="projects-list">
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>智能温控系统</h3>
+                            <span class="project-status in-progress">进行中</span>
+                        </div>
+                        <p>基于Arduino的智能温度监控与自动调节系统</p>
+                        <div class="project-progress">
+                            <div class="progress-info">
+                                <span>进度</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="project-team">
+                            <span>👥 团队成员：张三、李四</span>
+                            <span>📅 截止：2025-12-30</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>机器人避障算法</h3>
+                            <span class="project-status planning">规划中</span>
+                        </div>
+                        <p>基于超声波传感器的智能避障算法优化</p>
+                        <div class="project-progress">
+                            <div class="progress-info">
+                                <span>进度</span>
+                                <span>20%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 20%"></div>
+                            </div>
+                        </div>
+                        <div class="project-team">
+                            <span>👥 个人项目</span>
+                            <span>📅 截止：2026-01-15</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>卓然创客社团</h3>
+                    <p>武威第十八中学</p>
+                    <p>会员专属平台</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="index.html">社团首页</a></li>
+                        <li><a href="member.html">会员中心</a></li>
+                        <li><a href="resources.html">学习资源</a></li>
+                        <li><a href="activities.html">活动中心</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>技术支持</h3>
+                    <p>邮箱：2959665467@qq.com</p>
+                    <p>电话：17793528289</p>
+                    <p>指导老师：张老师</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/member.js"></script>
+</body>
+</html>
