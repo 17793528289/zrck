@@ -12,7 +12,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <h2>卓然创客</h2>
+                <h2><a href="index.html" style="color: white; text-decoration: none;">卓然创客</a></h2>
             </div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="active">首页</a></li>
@@ -21,10 +21,10 @@
                 <li><a href="projects.html">项目成果</a></li>
                 <li><a href="join.html">加入我们</a></li>
                 <li class="user-menu">
-                    <span id="userGreeting">欢迎访客</span>
+                    <span id="userGreeting">欢迎访问</span>
                     <div class="user-dropdown">
                         <button id="loginBtn" class="login-btn">会员登录</button>
-                        <button id="guestBtn" class="guest-btn">访客模式</button>
+                        <button id="viewModeBtn" class="guest-btn">访客浏览</button>
                     </div>
                 </li>
             </ul>
@@ -36,10 +36,13 @@
         </div>
     </nav>
 
-    <!-- 访客提示条 -->
-    <div id="guestBanner" class="guest-banner">
-        <span>您当前处于访客模式，<a href="#" id="loginLink">登录</a>可访问更多内容</span>
-        <button id="closeGuestBanner" class="close-banner">&times;</button>
+    <!-- 模式状态提示 -->
+    <div id="modeBanner" class="mode-banner guest-mode">
+        <div class="banner-content">
+            <span class="banner-icon">👤</span>
+            <span>您当前处于访客浏览模式</span>
+            <button id="switchToLogin" class="banner-action">登录解锁更多内容</button>
+        </div>
     </div>
 
     <!-- 横幅 -->
@@ -47,73 +50,106 @@
         <div class="banner-content">
             <h1>武威第十八中学卓然创客社团</h1>
             <p>创新 · 实践 · 分享 · 成长</p>
-            <div class="banner-buttons">
-                <a href="join.html" class="btn">立即加入</a>
-                <button id="quickVisit" class="btn-secondary">快速体验</button>
+            <div class="banner-actions">
+                <a href="join.html" class="btn btn-primary">立即加入社团</a>
+                <a href="#features" class="btn btn-secondary">了解社团特色</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 社团介绍 -->
+    <section class="intro-section">
+        <div class="container">
+            <div class="intro-content">
+                <h2>欢迎来到卓然创客社团</h2>
+                <p>我们是一个充满活力的学生科技社团，致力于培养学生的创新思维、实践能力和团队协作精神。在这里，创意与科技相遇，梦想与现实接轨。</p>
+                
+                <div class="intro-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">活跃成员</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">20+</span>
+                        <span class="stat-label">成功项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">专业导师</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- 特色介绍 -->
-    <section class="features">
+    <section id="features" class="features">
         <div class="container">
-            <h2>社团特色</h2>
+            <h2>社团特色与优势</h2>
             <div class="feature-grid">
                 <div class="feature-item">
                     <div class="feature-icon">🚀</div>
-                    <h3>创新实践</h3>
-                    <p>结合最新科技，开展创新项目实践</p>
+                    <h3>前沿技术实践</h3>
+                    <p>接触3D打印、机器人编程、物联网等前沿技术，将理论知识转化为实际项目</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">👥</div>
-                    <h3>团队协作</h3>
-                    <p>培养团队合作精神，共同解决问题</p>
+                    <h3>团队协作培养</h3>
+                    <p>在项目合作中学习沟通技巧，培养领导能力和团队协作精神</p>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">💡</div>
-                    <h3>创意分享</h3>
-                    <p>定期举办创意分享会，交流学习</p>
+                    <h3>创意孵化平台</h3>
+                    <p>为你的创意想法提供技术支持和完善的孵化环境</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 内容区域（访客和会员不同内容） -->
-    <section class="content-section">
+    <!-- 资源展示 -->
+    <section class="resources-section">
         <div class="container">
-            <!-- 公共内容 -->
-            <div class="public-content">
-                <h2>欢迎来到卓然创客社团</h2>
-                <p>我们致力于培养学生的创新思维和实践能力</p>
-            </div>
-
-            <!-- 会员专属内容 -->
-            <div id="memberContent" class="member-content" style="display: none;">
-                <div class="member-badge">会员专属</div>
-                <h3>内部资源</h3>
-                <div class="member-resources">
-                    <div class="resource-item">
-                        <h4>📚 学习资料</h4>
-                        <p>编程教程、项目文档、技术手册</p>
-                    </div>
-                    <div class="resource-item">
-                        <h4>🎥 教学视频</h4>
-                        <p>内部培训视频、项目演示</p>
-                    </div>
-                    <div class="resource-item">
-                        <h4>👨‍🏫 导师指导</h4>
-                        <p>专业老师一对一指导</p>
-                    </div>
+            <h2>丰富的学习资源</h2>
+            <p class="section-subtitle">加入社团即可解锁完整资源库</p>
+            
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📚</div>
+                    <h3>系统学习资料</h3>
+                    <ul>
+                        <li>编程入门教程</li>
+                        <li>电子技术手册</li>
+                        <li>项目开发文档</li>
+                        <li>竞赛指导资料</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon">🎥</div>
+                    <h3>视频教学资源</h3>
+                    <ul>
+                        <li>技术操作演示</li>
+                        <li>项目实战录像</li>
+                        <li>专家讲座回放</li>
+                        <li>作品展示视频</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon">👨‍🏫</div>
+                    <h3>专业导师指导</h3>
+                    <ul>
+                        <li>一对一技术指导</li>
+                        <li>定期技术培训</li>
+                        <li>项目进度跟踪</li>
+                        <li>职业规划建议</li>
+                    </ul>
                 </div>
             </div>
-
-            <!-- 访客提示内容 -->
-            <div id="guestContent" class="guest-content">
-                <div class="guest-prompt">
-                    <h3>想了解更多？</h3>
-                    <p>登录后可查看完整内容，包括内部资料、项目详情等</p>
-                    <button id="promptLogin" class="btn">立即登录</button>
-                </div>
+            
+            <div class="resources-cta">
+                <p>立即加入社团，开启你的创客之旅！</p>
+                <a href="join.html" class="btn btn-primary">马上加入</a>
             </div>
         </div>
     </section>
@@ -121,26 +157,34 @@
     <!-- 最新活动 -->
     <section class="latest-activities">
         <div class="container">
-            <h2>最新活动</h2>
+            <h2>近期活动安排</h2>
             <div class="activity-grid">
-                <div class="activity-card public-activity">
-                    <div class="activity-image"></div>
+                <div class="activity-card">
+                    <div class="activity-date">
+                        <span class="date-day">15</span>
+                        <span class="date-month">12月</span>
+                    </div>
                     <div class="activity-content">
                         <h3>3D打印创意工作坊</h3>
-                        <p>学习3D建模与打印技术，创造属于自己的作品</p>
-                        <span class="activity-date">2025年12月15日</span>
+                        <p>学习3D建模基础，亲手设计并打印个性化作品</p>
+                        <span class="activity-time">下午4:00-6:00 · 创客实验室</span>
                     </div>
                 </div>
-                <div class="activity-card member-activity" style="display: none;">
-                    <div class="activity-image"></div>
+                <div class="activity-card">
+                    <div class="activity-date">
+                        <span class="date-day">20</span>
+                        <span class="date-month">12月</span>
+                    </div>
                     <div class="activity-content">
-                        <h3>内部技术培训</h3>
-                        <p>高级编程技巧与项目实战（会员专属）</p>
-                        <span class="activity-date">2025年12月18日</span>
+                        <h3>机器人编程入门</h3>
+                        <p>从零开始学习机器人控制编程，体验人机交互乐趣</p>
+                        <span class="activity-time">下午4:00-6:00 · 计算机教室</span>
                     </div>
                 </div>
             </div>
-            <a href="activities.html" class="btn-secondary">查看更多活动</a>
+            <div class="activities-cta">
+                <a href="activities.html" class="btn btn-secondary">查看完整活动日历</a>
+            </div>
         </div>
     </section>
 
@@ -148,28 +192,35 @@
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>社团成员登录</h2>
-            <div class="login-options">
-                <button class="option-btn active" data-type="member">会员登录</button>
-                <button class="option-btn" data-type="visitor">访客体验</button>
+            <div class="modal-header">
+                <h2>社团成员登录</h2>
+                <p>请输入您的账号信息访问会员资源</p>
             </div>
             
             <form id="loginForm" class="login-form">
                 <div class="form-group">
-                    <label for="username">学号/用户名:</label>
-                    <input type="text" id="username" name="username" required>
+                    <label for="username">学号/用户名</label>
+                    <input type="text" id="username" name="username" placeholder="请输入学号或用户名" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">密码:</label>
-                    <input type="password" id="password" name="password" required>
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
                 </div>
-                <button type="submit" class="btn">登录</button>
+                
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember"> 记住登录状态
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary full-width">登录</button>
             </form>
 
-            <div id="visitorPanel" class="visitor-panel" style="display: none;">
-                <h3>访客模式体验</h3>
-                <p>以访客身份浏览公开内容，部分功能受限</p>
-                <button id="startVisit" class="btn-secondary">开始体验</button>
+            <div class="modal-footer">
+                <p>还没有账号？ <a href="join.html">立即申请加入社团</a></p>
+                <div class="test-accounts">
+                    <p><strong>测试账户：</strong> 2023001 / 123456</p>
+                </div>
             </div>
             
             <div id="loginMessage" class="message"></div>
@@ -191,12 +242,15 @@
                         <li><a href="index.html">首页</a></li>
                         <li><a href="about.html">关于我们</a></li>
                         <li><a href="activities.html">活动展示</a></li>
+                        <li><a href="projects.html">项目成果</a></li>
+                        <li><a href="join.html">加入我们</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>联系我们</h3>
                     <p>邮箱：2959665467@qq.com</p>
                     <p>电话：17793528289</p>
+                    <p>指导老师：张老师</p>
                 </div>
             </div>
             <div class="footer-bottom">
