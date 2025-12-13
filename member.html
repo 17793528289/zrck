@@ -3,39 +3,99 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('会员页面加载...');
     
-    // 检查登录状态
-    const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
-    
-    if (!currentUser) {
-        alert('请先登录！');
-        window.location.href = 'index.html';
-        return;
-    }
-    
-    const user = JSON.parse(currentUser);
-    const username = sessionStorage.getItem('username') || localStorage.getItem('username');
-    
-    console.log('欢迎用户:', user.name);
-    
-    // 更新页面显示
-    document.getElementById('userWelcome').textContent = `欢迎，${user.name}`;
-    document.getElementById('mainWelcome').textContent = `欢迎回来，${user.name}！`;
-    document.getElementById('userName').textContent = user.name;
-    document.getElementById('userGrade').textContent = user.grade;
-    
-    // 如果是管理员，显示管理入口
-    if (user.role === 'admin' || user.role === 'teacher') {
-        document.getElementById('adminAccess').innerHTML = 
-            '<a href="admin-panel.html" class="btn btn-warning">⚙️ 管理后台</a>';
+    try {
+        // 检查登录状态
+        const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+        
+        if (!currentUser) {
+            redirectToLogin();
+            return;
+        }
+        
+        // 安全解析用户数据
+        const user = safelyParseUser(currentUser);
+        if (!user) {
+            redirectToLogin();
+            return;
+        }
+        
+        // 验证用户数据完整性
+        if (!validateUserData(user)) {
+            redirectToLogin();
+            return;
+        }
+        
+        console.log('欢迎用户:', user.name);
+        
+        // 安全更新页面显示
+        safelyUpdateUI(user);
+        
+    } catch (error) {
+        console.error('页面初始化错误:', error);
+        redirectToLogin();
     }
 });
+
+// 安全解析用户数据
+function safelyParseUser(userData) {
+    try {
+        const user = JSON.parse(userData);
+        return user;
+    } catch (error) {
+        console.error('解析用户数据失败:', error);
+        return null;
+    }
+}
+
+// 验证用户数据完整性
+function validateUserData(user) {
+    const requiredFields = ['name'];
+    return requiredFields.every(field => user.hasOwnProperty(field));
+}
+
+// 安全更新UI
+function safelyUpdateUI(user) {
+    try {
+        const elementsToUpdate = [
+            { id: 'userWelcome', text: `欢迎，${user.name}` },
+            { id: 'mainWelcome', text: `欢迎回来，${user.name}！` },
+            { id: 'userName', text: user.name },
+            { id: 'userGrade', text: user.grade || '' }
+        ];
+        
+        elementsToUpdate.forEach(item => {
+            const element = document.getElementById(item.id);
+            if (element) {
+                element.textContent = item.text;
+            }
+        });
+        
+        // 管理员入口处理
+        const adminAccess = document.getElementById('adminAccess');
+        if (adminAccess && (user.role === 'admin' || user.role === 'teacher')) {
+            adminAccess.innerHTML = '<a href="admin-panel.html" class="btn btn-warning">⚙️ 管理后台</a>';
+        }
+    } catch (error) {
+        console.error('更新UI失败:', error);
+    }
+}
+
+// 跳转到登录页
+function redirectToLogin() {
+    alert('请先登录！');
+    window.location.href = 'index.html';
+}
 
 // 退出登录
 function logout() {
     if (confirm('确定要退出登录吗？')) {
+        // 清除所有相关存储数据
         sessionStorage.clear();
         localStorage.removeItem('currentUser');
         localStorage.removeItem('username');
+        localStorage.removeItem('loginTime');
+        
+        // 跳转回首页
         window.location.href = 'index.html';
     }
 }
