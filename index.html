@@ -261,5 +261,113 @@
 
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
+    <!-- 在页脚之后，script标签之前添加这个内联脚本 -->
+<script>
+// 简单的登录功能实现
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('页面加载完成，开始初始化登录功能');
+    
+    // 获取元素
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeBtn = document.querySelector('.close');
+    const loginForm = document.getElementById('loginForm');
+    
+    console.log('找到的元素:', {loginBtn, loginModal, closeBtn, loginForm});
+    
+    // 登录按钮点击事件
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('登录按钮被点击');
+            if (loginModal) {
+                loginModal.style.display = 'block';
+                console.log('显示登录模态框');
+            }
+        });
+    }
+    
+    // 关闭按钮点击事件
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            console.log('关闭按钮被点击');
+            if (loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+    }
+    
+    // 点击模态框外部关闭
+    if (loginModal) {
+        loginModal.addEventListener('click', function(e) {
+            if (e.target === loginModal) {
+                console.log('点击模态框外部');
+                loginModal.style.display = 'none';
+            }
+        });
+    }
+    
+    // 登录表单提交
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('登录表单提交');
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('用户名:', username, '密码:', password);
+            
+            // 简单的用户验证
+            const users = {
+                '2023001': '123456',
+                '2023002': '123456', 
+                'teacher': 'teacher123'
+            };
+            
+            if (users[username] && users[username] === password) {
+                alert('登录成功！欢迎 ' + username);
+                loginModal.style.display = 'none';
+                // 更新UI显示登录状态
+                document.getElementById('userGreeting').textContent = '欢迎，用户' + username;
+            } else {
+                alert('用户名或密码错误！');
+            }
+        });
+    }
+    
+    // 访客模式按钮
+    const guestBtn = document.getElementById('viewModeBtn');
+    if (guestBtn) {
+        guestBtn.addEventListener('click', function() {
+            alert('已切换到访客浏览模式');
+            document.getElementById('userGreeting').textContent = '欢迎访问';
+        });
+    }
+    
+    // 横幅登录按钮
+    const switchToLogin = document.getElementById('switchToLogin');
+    if (switchToLogin) {
+        switchToLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'block';
+        });
+    }
+    
+    console.log('所有事件监听器已设置');
+});
+
+// 确保模态框初始状态为隐藏
+window.addEventListener('load', function() {
+    const modal = document.getElementById('loginModal');
+    if (modal) {
+        modal.style.display = 'none';
+        console.log('登录模态框已隐藏');
+    }
+});
+</script>
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
 </body>
 </html>
