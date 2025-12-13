@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录 - 卓然创客社团</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1890ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #40a9ff;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .success {
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #52c41a;
+        }
+        
+        .error {
+            background: #fff2f0;
+            border: 1px solid #ffccc7;
+            color: #ff4d4f;
+        }
+        
+        .test-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>管理员登录</h1>
+        
+        <div class="input-group">
+            <label for="username">用户名：</label>
+            <input type="text" id="username" value="admin">
+        </div>
+        
+        <div class="input-group">
+            <label for="password">密码：</label>
+            <input type="password" id="password" value="admin123">
+        </div>
+        
+        <button onclick="login()">登录</button>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="test-info">
+            <strong>测试账户：</strong><br>
+            用户名: admin, 密码: admin123<br>
+            用户名: teacher, 密码: teacher123<br>
+            用户名: test, 密码: test123
+        </div>
+    </div>
+
+    <script>
+        // 最简单的账户验证
+        const accounts = {
+            'admin': 'admin123',
+            'teacher': 'teacher123', 
+            'test': 'test123'
+        };
+        
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            console.log('尝试登录:', username, password);
+            console.log('可用账户:', Object.keys(accounts));
+            
+            // 清空之前的结果
+            resultDiv.innerHTML = '';
+            resultDiv.className = 'result';
+            
+            if (!username || !password) {
+                showResult('请输入用户名和密码', 'error');
+                return;
+            }
+            
+            if (accounts[username] === password) {
+                showResult('登录成功！正在跳转...', 'success');
+                // 2秒后跳转
+                setTimeout(() => {
+                    window.location.href = 'admin-panel.html';
+                }, 2000);
+            } else {
+                showResult('用户名或密码错误', 'error');
+                console.log('期望密码:', accounts[username]);
+                console.log('实际密码:', password);
+            }
+        }
+        
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = `result ${type}`;
+        }
+        
+        // 按回车键也可以登录
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+        
+        console.log('页面加载完成，可以开始测试');
+    </script>
+</body>
+</html>
