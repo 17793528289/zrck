@@ -39,10 +39,6 @@
             margin-bottom: 0.5rem;
         }
         
-        .login-header p {
-            color: #7f8c8d;
-        }
-        
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -76,11 +72,6 @@
             border-radius: 5px;
             font-size: 1rem;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .btn:hover {
-            background: #2980b9;
         }
         
         .message {
@@ -96,14 +87,18 @@
             border: 1px solid #f5c6cb;
         }
         
-        .back-link {
-            text-align: center;
-            margin-top: 1rem;
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
         
-        .back-link a {
-            color: #3498db;
-            text-decoration: none;
+        .test-accounts {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -120,69 +115,108 @@
             <div class="form-group">
                 <label for="adminUsername">管理员账号</label>
                 <input type="text" id="adminUsername" name="username" required 
-                       placeholder="请输入管理员账号">
+                       placeholder="请输入管理员账号" value="admin">
             </div>
             
             <div class="form-group">
                 <label for="adminPassword">密码</label>
                 <input type="password" id="adminPassword" name="password" required 
-                       placeholder="请输入密码">
+                       placeholder="请输入密码" value="admin123">
             </div>
             
             <button type="submit" class="btn">登录</button>
         </form>
         
-        <div class="back-link">
-            <p><a href="index.html">返回首页</a></p>
+        <div class="test-accounts">
+            <p><strong>测试账户：</strong></p>
+            <p>账号: admin | 密码: admin123</p>
+            <p>账号: teacher | 密码: teacher123</p>
+            <p>账号: test | 密码: test123</p>
         </div>
     </div>
 
     <script>
-        // 管理员账号信息
+        // 简化版的管理员账户验证
+        console.log('管理员登录页面加载完成');
+        
+        // 管理员账户数据
         const adminAccounts = {
-            'admin': {
-                password: 'admin123',
+            'admin': { 
+                password: 'admin123', 
                 name: '系统管理员',
                 role: 'superadmin'
             },
-            'teacher_admin': {
-                password: 'teacher123',
+            'teacher': { 
+                password: 'teacher123', 
                 name: '教师管理员',
                 role: 'admin'
             },
-            'zhanglaoshi': {
-                password: 'zhang123',
-                name: '张老师',
+            'test': { 
+                password: 'test123', 
+                name: '测试账户',
                 role: 'admin'
             }
         };
 
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('adminUsername').value;
-            const password = document.getElementById('adminPassword').value;
-            
-            if (adminAccounts[username] && adminAccounts[username].password === password) {
-                // 登录成功，保存管理员信息
-                const adminInfo = adminAccounts[username];
-                sessionStorage.setItem('adminUser', JSON.stringify(adminInfo));
-                sessionStorage.setItem('adminUsername', username);
-                sessionStorage.setItem('adminLoginTime', new Date().toLocaleString());
-                
-                // 跳转到管理后台
-                window.location.href = 'admin.html';
-            } else {
-                showMessage('管理员账号或密码错误！', 'error');
-            }
-        });
-        
+        // 获取表单元素
+        const loginForm = document.getElementById('adminLoginForm');
+        const messageEl = document.getElementById('message');
+
+        // 显示消息函数
         function showMessage(text, type) {
-            const messageEl = document.getElementById('message');
             messageEl.textContent = text;
             messageEl.className = `message ${type}`;
             messageEl.style.display = 'block';
+            console.log(`${type}: ${text}`);
         }
+
+        // 表单提交事件
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('表单提交事件触发');
+                
+                const username = document.getElementById('adminUsername').value.trim();
+                const password = document.getElementById('adminPassword').value;
+                
+                console.log('输入的用户名:', username);
+                console.log('输入的密码:', password);
+                console.log('可用的账户:', Object.keys(adminAccounts));
+                
+                // 验证账户
+                if (adminAccounts[username]) {
+                    console.log('找到用户:', adminAccounts[username]);
+                    
+                    if (adminAccounts[username].password === password) {
+                        showMessage('登录成功！正在跳转...', 'success');
+                        console.log('密码验证成功');
+                        
+                        // 保存登录状态
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        sessionStorage.setItem('adminUser', JSON.stringify(adminAccounts[username]));
+                        sessionStorage.setItem('adminUsername', username);
+                        
+                        // 跳转到管理页面
+                        setTimeout(() => {
+                            window.location.href = 'admin.html';
+                        }, 1000);
+                        
+                    } else {
+                        showMessage('密码错误！', 'error');
+                        console.log('密码错误，期望:', adminAccounts[username].password, '实际:', password);
+                    }
+                } else {
+                    showMessage('管理员账号不存在！', 'error');
+                    console.log('用户不存在');
+                }
+            });
+        }
+
+        // 页面加载完成提示
+        window.addEventListener('load', function() {
+            console.log('页面完全加载完成');
+            showMessage('请输入管理员账号和密码', 'success');
+        });
     </script>
 </body>
 </html>
