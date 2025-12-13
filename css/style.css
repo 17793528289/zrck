@@ -322,3 +322,178 @@ body {
     color: #2c3e50;
     margin: 20px 0 10px;
 }
+/* 用户菜单样式 */
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.user-menu:hover .user-dropdown {
+    display: block;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-width: 120px;
+    z-index: 1000;
+}
+
+.user-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.user-dropdown button:hover {
+    background: #f8f9fa;
+}
+
+.guest-btn {
+    color: #7f8c8d;
+}
+
+/* 访客提示条 */
+.guest-banner {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    position: relative;
+    display: none;
+}
+
+.guest-banner a {
+    color: #1565c0;
+    text-decoration: underline;
+}
+
+.close-banner {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #666;
+}
+
+/* 横幅按钮组 */
+.banner-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+/* 内容区域样式 */
+.content-section {
+    padding: 4rem 0;
+    background: #f8f9fa;
+}
+
+.member-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+    position: relative;
+    border-left: 4px solid #3498db;
+}
+
+.member-badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: #3498db;
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+
+.member-resources {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.resource-item {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 3px solid #3498db;
+}
+
+.guest-content {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    margin-top: 2rem;
+}
+
+.guest-prompt {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* 登录选项样式 */
+.login-options {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.option-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+}
+
+.option-btn.active {
+    border-bottom-color: #3498db;
+    color: #3498db;
+    font-weight: bold;
+}
+
+.visitor-panel {
+    text-align: center;
+    padding: 1rem;
+}
+
+/* 活动卡片区分 */
+.member-activity {
+    border: 2px solid #3498db;
+    position: relative;
+}
+
+.member-activity::before {
+    content: "会员专属";
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: #3498db;
+    color: white;
+    padding: 0.2rem 0.8rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    }
