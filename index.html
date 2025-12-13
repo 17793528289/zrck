@@ -369,5 +369,75 @@ window.addEventListener('load', function() {
 
 <script src="js/main.js"></script>
 <script src="js/auth.js"></script>
+<script>
+// 简单的登录功能
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('页面加载完成');
+    
+    // 获取元素
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeBtn = document.querySelector('.close');
+    const loginForm = document.getElementById('loginForm');
+    
+    // 确保模态框初始隐藏
+    if (loginModal) {
+        loginModal.style.display = 'none';
+    }
+    
+    // 登录按钮点击事件
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('登录按钮点击');
+            if (loginModal) {
+                loginModal.style.display = 'block';
+            }
+        });
+    }
+    
+    // 关闭按钮
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            if (loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+    }
+    
+    // 点击外部关闭
+    if (loginModal) {
+        loginModal.addEventListener('click', function(e) {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+    }
+    
+    // 登录表单提交
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // 简单验证
+            const users = {
+                '2023001': '123456',
+                '2023002': '123456',
+                'admin': 'admin123'
+            };
+            
+            if (users[username] && users[username] === password) {
+                // 登录成功，跳转到会员页面
+                window.location.href = 'member.html?user=' + username;
+            } else {
+                alert('用户名或密码错误！');
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
