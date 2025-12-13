@@ -189,44 +189,276 @@
     </section>
 
     <!-- 登录模态框 -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-header">
-                <h2>社团成员登录</h2>
-                <p>请输入您的账号信息访问会员资源</p>
-            </div>
-            
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="username">学号/用户名</label>
-                    <input type="text" id="username" name="username" placeholder="请输入学号或用户名" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">密码</label>
-                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
-                </div>
-                
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" name="remember"> 记住登录状态
-                    </label>
-                </div>
-                
-                <button type="submit" class="btn btn-primary full-width">登录</button>
-            </form>
-
-            <div class="modal-footer">
-                <p>还没有账号？ <a href="join.html">立即申请加入社团</a></p>
-                <div class="test-accounts">
-                    <p><strong>测试账户：</strong> 2023001 / 123456</p>
-                </div>
-            </div>
-            
-            <div id="loginMessage" class="message"></div>
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-header">
+            <h2>社团成员登录</h2>
+            <p>请输入您的账号信息访问会员资源</p>
         </div>
-    </div>
+        
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="username">学号/用户名:</label>
+                <input type="text" id="username" name="username" placeholder="请输入学号或用户名" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码:</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
+            </div>
+            
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember"> 记住登录状态
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary full-width">登录</button>
+        </form>
 
+        <div class="modal-footer">
+            <p>还没有账号？ <a href="register.html">立即申请加入社团</a></p>
+            <p>管理员请 <a href="admin-login.html">点击这里登录</a></p>
+            <div class="test-accounts">
+                <p><strong>测试账户：</strong> 2023001 / 123456</p>
+            </div>
+        </div>
+        
+        <div id="loginMessage" class="message"></div>
+    </div>
+</div>
+
+<script>
+// 首页登录功能
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('首页登录功能初始化...');
+    
+    // 获取元素
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeBtn = document.querySelector('.close');
+    const loginForm = document.getElementById('loginForm');
+    
+    // 确保模态框初始隐藏
+    if (loginModal) {
+        loginModal.style.display = 'none';
+        console.log('登录模态框初始化完成');
+    }
+    
+    // 登录按钮点击事件
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('登录按钮被点击');
+            if (loginModal) {
+                loginModal.style.display = 'block';
+                console.log('显示登录模态框');
+            }
+        });
+    }
+    
+    // 关闭按钮
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            console.log('关闭按钮被点击');
+            if (loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+    }
+    
+    // 点击模态框外部关闭
+    if (loginModal) {
+        loginModal.addEventListener('click', function(e) {
+            if (e.target === loginModal) {
+                console.log('点击模态框外部');
+                loginModal.style.display = 'none';
+            }
+        });
+    }
+    
+    // 登录表单提交
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('登录表单提交');
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            console.log('用户名:', username, '密码:', password);
+            
+            // 调用登录验证函数
+            const loginResult = validateLogin(username, password);
+            
+            if (loginResult.success) {
+                showLoginMessage('登录成功！正在跳转...', 'success');
+                console.log('登录成功:', loginResult.user);
+                
+                // 保存登录状态
+                saveLoginState(loginResult.user, username);
+                
+                // 2秒后跳转到会员页面
+                setTimeout(() => {
+                    window.location.href = 'member.html';
+                }, 2000);
+                
+            } else {
+                showLoginMessage(loginResult.message, 'error');
+                console.log('登录失败:', loginResult.message);
+            }
+        });
+    }
+    
+    // 检查是否已经登录
+    checkExistingLogin();
+});
+
+// 验证登录信息
+function validateLogin(username, password) {
+    // 首先检查管理员账户（特殊处理）
+    const adminAccounts = {
+        'admin': { password: 'admin123', name: '系统管理员', role: 'admin' },
+        'teacher': { password: 'teacher123', name: '教师', role: 'teacher' }
+    };
+    
+    // 检查是否是管理员账户
+    if (adminAccounts[username]) {
+        if (adminAccounts[username].password === password) {
+            return {
+                success: true,
+                user: adminAccounts[username],
+                message: '管理员登录成功'
+            };
+        } else {
+            return {
+                success: false,
+                message: '密码错误'
+            };
+        }
+    }
+    
+    // 然后检查普通用户（从localStorage）
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
+    
+    if (registeredUsers[username]) {
+        if (registeredUsers[username].password === password) {
+            return {
+                success: true,
+                user: registeredUsers[username],
+                message: '登录成功'
+            };
+        } else {
+            return {
+                success: false,
+                message: '密码错误'
+            };
+        }
+    }
+    
+    // 最后检查预设的测试账户
+    const testAccounts = {
+        '2023001': { password: '123456', name: '张三', grade: '高一(1)班', role: 'student' },
+        '2023002': { password: '123456', name: '李四', grade: '高一(3)班', role: 'student' }
+    };
+    
+    if (testAccounts[username]) {
+        if (testAccounts[username].password === password) {
+            return {
+                success: true,
+                user: testAccounts[username],
+                message: '登录成功'
+            };
+        } else {
+            return {
+                success: false,
+                message: '密码错误'
+            };
+        }
+    }
+    
+    return {
+        success: false,
+        message: '用户名不存在'
+    };
+}
+
+// 显示登录消息
+function showLoginMessage(text, type) {
+    const messageEl = document.getElementById('loginMessage');
+    if (messageEl) {
+        messageEl.textContent = text;
+        messageEl.className = `message ${type}`;
+        messageEl.style.display = 'block';
+        
+        // 3秒后自动隐藏
+        setTimeout(() => {
+            messageEl.style.display = 'none';
+        }, 3000);
+    }
+}
+
+// 保存登录状态
+function saveLoginState(user, username) {
+    // 保存到sessionStorage（浏览器关闭后清除）
+    sessionStorage.setItem('currentUser', JSON.stringify(user));
+    sessionStorage.setItem('username', username);
+    sessionStorage.setItem('loginTime', new Date().toLocaleString());
+    
+    // 如果选择了"记住我"，保存到localStorage
+    const rememberMe = document.querySelector('input[name="remember"]').checked;
+    if (rememberMe) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        localStorage.setItem('username', username);
+    }
+}
+
+// 检查是否已经登录
+function checkExistingLogin() {
+    const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+    if (currentUser) {
+        const user = JSON.parse(currentUser);
+        console.log('检测到已登录用户:', user.name);
+        
+        // 更新页面显示
+        const userGreeting = document.getElementById('userGreeting');
+        if (userGreeting) {
+            userGreeting.textContent = `欢迎，${user.name}`;
+        }
+        
+        // 如果是管理员，显示管理员入口
+        if (user.role === 'admin') {
+            showAdminAccess();
+        }
+    }
+}
+
+// 显示管理员访问入口
+function showAdminAccess() {
+    // 在导航栏添加管理员入口
+    const navMenu = document.querySelector('.nav-menu');
+    if (navMenu) {
+        const adminLink = document.createElement('li');
+        adminLink.innerHTML = '<a href="admin-panel.html" style="color: #e74c3c;">⚙️ 管理后台</a>';
+        navMenu.appendChild(adminLink);
+    }
+}
+
+// 退出登录函数（供其他页面使用）
+function logout() {
+    if (confirm('确定要退出登录吗？')) {
+        // 清除登录状态
+        sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('username');
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('username');
+        
+        // 跳转回首页
+        window.location.href = 'index.html';
+    }
+}
+</script>
+    
     <!-- 页脚 -->
     <footer class="footer">
         <div class="container">
