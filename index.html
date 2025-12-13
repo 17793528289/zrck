@@ -3,9 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>会员中心 - 卓然创客社团</title>
+    <title>武威第十八中学卓然创客社团</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/member.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 1rem;
+            top: 0.5rem;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h2 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .form-options {
+            margin-bottom: 1.5rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+        
+        .modal-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .message {
+            padding: 0.75rem;
+            border-radius: 5px;
+            text-align: center;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .test-accounts {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        
+        /* 模式状态提示 */
+        .mode-banner {
+            padding: 0.75rem 0;
+            text-align: center;
+            margin-top: 70px;
+            transition: all 0.3s;
+        }
+        
+        .mode-banner.guest-mode {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .mode-banner.member-mode {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .banner-action {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 1rem;
+        }
+    </style>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -15,27 +178,597 @@
                 <h2><a href="index.html" style="color: white; text-decoration: none;">卓然创客</a></h2>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="member.html" class="active">会员中心</a></li>
-                <li><a href="projects.html">项目成果</a></li>
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="about.html">关于我们</a></li>
                 <li><a href="activities.html">活动展示</a></li>
+                <li><a href="projects.html">项目成果</a></li>
                 <li><a href="join.html">加入我们</a></li>
                 <li class="user-menu">
-                    <span id="userGreeting">欢迎，会员</span>
-                    <button onclick="logout()" class="logout-btn">退出登录</button>
+                    <span id="userGreeting">欢迎访问</span>
+                    <div class="user-dropdown">
+                        <button id="loginBtn" class="login-btn">会员登录</button>
+                        <button id="viewModeBtn" class="guest-btn">访客浏览</button>
+                    </div>
                 </li>
             </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
 
-    <!-- 会员内容 -->
-    <div class="member-container">
-        <h1 id="memberWelcome">欢迎回到会员中心</h1>
-        <div class="member-content">
-            <!-- 会员专属内容 -->
+    <!-- 模式状态提示 -->
+    <div id="modeBanner" class="mode-banner guest-mode" style="display: none;">
+        <div class="banner-content">
+            <span class="banner-icon">👤</span>
+            <span id="bannerText">您当前处于访客浏览模式</span>
+            <button id="switchToLogin" class="banner-action">登录解锁更多内容</button>
         </div>
     </div>
 
-    <script src="js/member.js"></script>
+    <!-- 横幅 -->
+    <section class="banner">
+        <div class="banner-content">
+            <h1>武威第十八中学卓然创客社团</h1>
+            <p>创新 · 实践 · 分享 · 成长</p>
+            <div class="banner-actions">
+                <a href="join.html" class="btn btn-primary">立即加入社团</a>
+                <a href="#features" class="btn btn-secondary">了解社团特色</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 社团介绍 -->
+    <section class="intro-section">
+        <div class="container">
+            <div class="intro-content">
+                <h2>欢迎来到卓然创客社团</h2>
+                <p>我们是一个充满活力的学生科技社团，致力于培养学生的创新思维、实践能力和团队协作精神。在这里，创意与科技相遇，梦想与现实接轨。</p>
+                
+                <div class="intro-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">活跃成员</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">20+</span>
+                        <span class="stat-label">成功项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">专业导师</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特色介绍 -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>社团特色与优势</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <h3>前沿技术实践</h3>
+                    <p>接触3D打印、机器人编程、物联网等前沿技术，将理论知识转化为实际项目</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">👥</div>
+                    <h3>团队协作培养</h3>
+                    <p>在项目合作中学习沟通技巧，培养领导能力和团队协作精神</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💡</div>
+                    <h3>创意孵化平台</h3>
+                    <p>为你的创意想法提供技术支持和完善的孵化环境</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 资源展示 -->
+    <section class="resources-section">
+        <div class="container">
+            <h2>丰富的学习资源</h2>
+            <p class="section-subtitle">加入社团即可解锁完整资源库</p>
+            
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📚</div>
+                    <h3>系统学习资料</h3>
+                    <ul>
+                        <li>编程入门教程</li>
+                        <li>电子技术手册</li>
+                        <li>项目开发文档</li>
+                        <li>竞赛指导资料</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon">🎥</div>
+                    <h3>视频教学资源</h3>
+                    <ul>
+                        <li>技术操作演示</li>
+                        <li>项目实战录像</li>
+                        <li>专家讲座回放</li>
+                        <li>作品展示视频</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon">👨‍🏫</div>
+                    <h3>专业导师指导</h3>
+                    <ul>
+                        <li>一对一技术指导</li>
+                        <li>定期技术培训</li>
+                        <li>项目进度跟踪</li>
+                        <li>职业规划建议</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="resources-cta">
+                <p>立即加入社团，开启你的创客之旅！</p>
+                <a href="join.html" class="btn btn-primary">马上加入</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最新活动 -->
+    <section class="latest-activities">
+        <div class="container">
+            <h2>近期活动安排</h2>
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <div class="activity-date">
+                        <span class="date-day">15</span>
+                        <span class="date-month">12月</span>
+                    </div>
+                    <div class="activity-content">
+                        <h3>3D打印创意工作坊</h3>
+                        <p>学习3D建模基础，亲手设计并打印个性化作品</p>
+                        <span class="activity-time">下午4:00-6:00 · 创客实验室</span>
+                    </div>
+                </div>
+                <div class="activity-card">
+                    <div class="activity-date">
+                        <span class="date-day">20</span>
+                        <span class="date-month">12月</span>
+                    </div>
+                    <div class="activity-content">
+                        <h3>机器人编程入门</h3>
+                        <p>从零开始学习机器人控制编程，体验人机交互乐趣</p>
+                        <span class="activity-time">下午4:00-6:00 · 计算机教室</span>
+                    </div>
+                </div>
+            </div>
+            <div class="activities-cta">
+                <a href="activities.html" class="btn btn-secondary">查看完整活动日历</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <h2>社团成员登录</h2>
+                <p>请输入您的账号信息访问会员资源</p>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">学号/用户名:</label>
+                    <input type="text" id="username" name="username" placeholder="请输入学号或用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码:</label>
+                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                </div>
+                
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember"> 记住登录状态
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary full-width">登录</button>
+            </form>
+
+            <div class="modal-footer">
+                <p>还没有账号？ <a href="join.html">立即申请加入社团</a></p>
+                <p>管理员请 <a href="admin-login.html">点击这里登录</a></p>
+                <div class="test-accounts">
+                    <p><strong>测试账户：</strong> 2023001 / 123456</p>
+                </div>
+            </div>
+            
+            <div id="loginMessage" class="message"></div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>卓然创客社团</h3>
+                    <p>武威第十八中学</p>
+                    <p>地址：甘肃省武威市凉州区凤凰路163号</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                        <li><a href="activities.html">活动展示</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p>邮箱：2959665467@qq.com</p>
+                    <p>电话：17793528289</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 武威第十八中学卓然创客社团. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 首页登录功能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('首页登录功能初始化...');
+            
+            // 获取元素
+            const loginBtn = document.getElementById('loginBtn');
+            const loginModal = document.getElementById('loginModal');
+            const closeBtn = document.querySelector('.close');
+            const loginForm = document.getElementById('loginForm');
+            const modeBanner = document.getElementById('modeBanner');
+            const switchToLogin = document.getElementById('switchToLogin');
+            const viewModeBtn = document.getElementById('viewModeBtn');
+            
+            // 确保模态框初始隐藏
+            if (loginModal) {
+                loginModal.style.display = 'none';
+                console.log('登录模态框初始化完成');
+            }
+            
+            // 登录按钮点击事件
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('登录按钮被点击');
+                    if (loginModal) {
+                        loginModal.style.display = 'block';
+                        console.log('显示登录模态框');
+                    }
+                });
+            }
+            
+            // 关闭按钮
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    console.log('关闭按钮被点击');
+                    if (loginModal) {
+                        loginModal.style.display = 'none';
+                        clearLoginMessage();
+                    }
+                });
+            }
+            
+            // 点击模态框外部关闭
+            if (loginModal) {
+                loginModal.addEventListener('click', function(e) {
+                    if (e.target === loginModal) {
+                        console.log('点击模态框外部');
+                        loginModal.style.display = 'none';
+                        clearLoginMessage();
+                    }
+                });
+            }
+            
+            // 登录表单提交
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('登录表单提交');
+                    
+                    const username = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value;
+                    
+                    console.log('用户名:', username, '密码:', password);
+                    
+                    // 调用登录验证函数
+                    const loginResult = validateLogin(username, password);
+                    
+                    if (loginResult.success) {
+                        showLoginMessage('登录成功！正在跳转...', 'success');
+                        console.log('登录成功:', loginResult.user);
+                        
+                        // 保存登录状态
+                        saveLoginState(loginResult.user, username);
+                        
+                        // 更新UI
+                        updateUIAfterLogin(loginResult.user);
+                        
+                        // 2秒后跳转到会员页面
+                        setTimeout(() => {
+                            window.location.href = 'member.html';
+                        }, 2000);
+                        
+                    } else {
+                        showLoginMessage(loginResult.message, 'error');
+                        console.log('登录失败:', loginResult.message);
+                    }
+                });
+            }
+            
+            // 访客模式按钮
+            if (viewModeBtn) {
+                viewModeBtn.addEventListener('click', function() {
+                    console.log('切换到访客模式');
+                    setGuestMode();
+                });
+            }
+            
+            // 横幅登录按钮
+            if (switchToLogin) {
+                switchToLogin.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('横幅登录按钮点击');
+                    if (loginModal) {
+                        loginModal.style.display = 'block';
+                    }
+                });
+            }
+            
+            // 检查是否已经登录
+            checkExistingLogin();
+        });
+
+        // 验证登录信息
+        function validateLogin(username, password) {
+            console.log('开始验证登录:', username);
+            
+            // 1. 首先检查管理员账户
+            const adminAccounts = {
+                'admin': { 
+                    password: 'admin123', 
+                    name: '系统管理员', 
+                    role: 'admin',
+                    grade: '系统管理'
+                },
+                'teacher': { 
+                    password: 'teacher123', 
+                    name: '教师', 
+                    role: 'teacher',
+                    grade: '指导教师'
+                }
+            };
+            
+            // 检查是否是管理员账户
+            if (adminAccounts[username]) {
+                console.log('检测到管理员账户:', username);
+                if (adminAccounts[username].password === password) {
+                    return {
+                        success: true,
+                        user: adminAccounts[username],
+                        message: '管理员登录成功'
+                    };
+                } else {
+                    return {
+                        success: false,
+                        message: '密码错误'
+                    };
+                }
+            }
+            
+            // 2. 然后检查普通用户（从localStorage）
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
+            
+            if (registeredUsers[username]) {
+                console.log('检测到注册用户:', username);
+                if (registeredUsers[username].password === password) {
+                    return {
+                        success: true,
+                        user: registeredUsers[username],
+                        message: '登录成功'
+                    };
+                } else {
+                    return {
+                        success: false,
+                        message: '密码错误'
+                    };
+                }
+            }
+            
+            // 3. 最后检查预设的测试账户
+            const testAccounts = {
+                '2023001': { 
+                    password: '123456', 
+                    name: '张三', 
+                    grade: '高一(1)班', 
+                    role: 'student' 
+                },
+                '2023002': { 
+                    password: '123456', 
+                    name: '李四', 
+                    grade: '高一(3)班', 
+                    role: 'student' 
+                }
+            };
+            
+            if (testAccounts[username]) {
+                console.log('检测到测试账户:', username);
+                if (testAccounts[username].password === password) {
+                    return {
+                        success: true,
+                        user: testAccounts[username],
+                        message: '登录成功'
+                    };
+                } else {
+                    return {
+                        success: false,
+                        message: '密码错误'
+                    };
+                }
+            }
+            
+            console.log('未找到用户:', username);
+            return {
+                success: false,
+                message: '用户名不存在'
+            };
+        }
+
+        // 显示登录消息
+        function showLoginMessage(text, type) {
+            const messageEl = document.getElementById('loginMessage');
+            if (messageEl) {
+                messageEl.textContent = text;
+                messageEl.className = `message ${type}`;
+                messageEl.style.display = 'block';
+                
+                // 3秒后自动隐藏
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // 清除登录消息
+        function clearLoginMessage() {
+            const messageEl = document.getElementById('loginMessage');
+            if (messageEl) {
+                messageEl.style.display = 'none';
+            }
+        }
+
+        // 保存登录状态
+        function saveLoginState(user, username) {
+            console.log('保存登录状态:', username);
+            
+            // 保存到sessionStorage（浏览器关闭后清除）
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            sessionStorage.setItem('username', username);
+            sessionStorage.setItem('loginTime', new Date().toLocaleString());
+            
+            // 如果选择了"记住我"，保存到localStorage
+            const rememberMe = document.querySelector('input[name="remember"]');
+            if (rememberMe && rememberMe.checked) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                localStorage.setItem('username', username);
+                console.log('已保存到本地存储（记住登录状态）');
+            }
+        }
+
+        // 登录后更新UI
+        function updateUIAfterLogin(user) {
+            // 更新用户问候语
+            const userGreeting = document.getElementById('userGreeting');
+            if (userGreeting) {
+                userGreeting.textContent = `欢迎，${user.name}`;
+            }
+            
+            // 更新模式横幅
+            const modeBanner = document.getElementById('modeBanner');
+            const bannerText = document.getElementById('bannerText');
+            if (modeBanner && bannerText) {
+                modeBanner.className = 'mode-banner member-mode';
+                bannerText.textContent = `欢迎回来，${user.name}！`;
+                modeBanner.style.display = 'block';
+            }
+        }
+
+        // 设置访客模式
+        function setGuestMode() {
+            console.log('设置访客模式');
+            
+            // 清除登录状态
+            sessionStorage.clear();
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('username');
+            
+            // 更新UI
+            const userGreeting = document.getElementById('userGreeting');
+            if (userGreeting) {
+                userGreeting.textContent = '欢迎访问';
+            }
+            
+            // 显示访客模式横幅
+            const modeBanner = document.getElementById('modeBanner');
+            const bannerText = document.getElementById('bannerText');
+            if (modeBanner && bannerText) {
+                modeBanner.className = 'mode-banner guest-mode';
+                bannerText.textContent = '您当前处于访客浏览模式';
+                modeBanner.style.display = 'block';
+            }
+            
+            alert('已切换到访客浏览模式');
+        }
+
+        // 检查是否已经登录
+        function checkExistingLogin() {
+            const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                console.log('检测到已登录用户:', user.name);
+                
+                // 更新页面显示
+                updateUIAfterLogin(user);
+                
+                // 如果是管理员，显示管理员入口
+                if (user.role === 'admin' || user.role === 'teacher') {
+                    showAdminAccess();
+                }
+            } else {
+                // 显示访客模式横幅
+                const modeBanner = document.getElementById('modeBanner');
+                if (modeBanner) {
+                    modeBanner.style.display = 'block';
+                }
+            }
+        }
+
+        // 显示管理员访问入口
+        function showAdminAccess() {
+            console.log('显示管理员访问入口');
+            
+            // 在导航栏添加管理员入口
+            const navMenu = document.querySelector('.nav-menu');
+            if (navMenu) {
+                // 检查是否已经存在管理员入口
+                const existingAdminLink = navMenu.querySelector('a[href="admin-panel.html"]');
+                if (!existingAdminLink) {
+                    const adminLink = document.createElement('li');
+                    adminLink.innerHTML = '<a href="admin-panel.html" style="color: #e74c3c; font-weight: bold;">⚙️ 管理后台</a>';
+                    navMenu.appendChild(adminLink);
+                }
+            }
+        }
+
+        // 退出登录函数（供其他页面使用）
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                // 清除登录状态
+                sessionStorage.clear();
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('username');
+                localStorage.removeItem('loginTime');
+                
+                console.log('已退出登录');
+                
+                // 跳转回首页
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
 </body>
 </html>
