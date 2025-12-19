@@ -1,5 +1,8 @@
 // 数据库操作工具
 const DatabaseService = {
+  url: 'https://wxbemuwgiiucdgmbhbvg.supabase.co', // 粘贴 Project URL
+  key: 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk' // 粘贴 anon public key
+};
   // 获取页面数据
   async getPageData(pageName) {
     try {
