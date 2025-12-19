@@ -4,133 +4,273 @@
   <title>用户管理系统</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    button { padding: 8px 12px; margin: 5px; cursor: pointer; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    input { padding: 8px; margin: 5px; width: 200px; }
-    .panel { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
-    .error { color: red; margin: 5px 0; }
+    body { font-family: Arial; padding: 20px; background-color: #f5f5f5; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .panel { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    h1 { color: #333; margin-bottom: 30px; }
+    h2 { color: #555; margin-top: 0; }
+    
+    input, select { 
+      padding: 10px; 
+      margin: 5px; 
+      border: 1px solid #ddd; 
+      border-radius: 4px; 
+      width: 200px; 
+    }
+    
+    button { 
+      padding: 10px 20px; 
+      margin: 5px; 
+      background: #007bff; 
+      color: white; 
+      border: none; 
+      border-radius: 4px; 
+      cursor: pointer; 
+    }
+    
+    button:hover { background: #0056b3; }
+    button.delete { background: #dc3545; }
+    button.delete:hover { background: #c82333; }
+    
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin-top: 20px; 
+    }
+    
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 12px; 
+      text-align: left; 
+    }
+    
+    th { 
+      background-color: #f8f9fa; 
+      font-weight: bold; 
+    }
+    
+    tr:hover { background-color: #f5f5f5; }
+    
+    .stats { 
+      display: flex; 
+      gap: 20px; 
+      margin-bottom: 20px; 
+    }
+    
+    .stat-card { 
+      background: white; 
+      padding: 20px; 
+      border-radius: 8px; 
+      flex: 1; 
+      text-align: center; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    }
+    
+    .stat-value { 
+      font-size: 24px; 
+      font-weight: bold; 
+      color: #007bff; 
+    }
+    
+    .error { 
+      color: #dc3545; 
+      margin: 10px 0; 
+      padding: 10px; 
+      background: #f8d7da; 
+      border-radius: 4px; 
+      display: none; 
+    }
+    
+    .success { 
+      color: #155724; 
+      margin: 10px 0; 
+      padding: 10px; 
+      background: #d4edda; 
+      border-radius: 4px; 
+      display: none; 
+    }
   </style>
 </head>
 <body>
-  <h1>用户管理系统</h1>
-  
-  <div class="panel">
-    <h2>添加用户</h2>
-    <input id="username" placeholder="用户名" required>
-    <input id="password" placeholder="密码" type="password" required>
-    <select id="role">
-      <option value="student">学生</option>
-      <option value="teacher">教师</option>
-      <option value="admin">管理员</option>
-    </select>
-    <button onclick="addUser()">添加用户</button>
-    <div id="addError" class="error"></div>
-  </div>
-
-  <div class="panel">
-    <h2>搜索用户</h2>
-    <input id="searchKeyword" placeholder="输入用户名或ID">
-    <button onclick="searchUser()">搜索</button>
-    <button onclick="loadUsers()">重置</button>
-    <div id="searchError" class="error"></div>
-  </div>
-
-  <div class="panel">
-    <h2>用户列表</h2>
-    <table id="userTable">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>用户名</th>
-          <th>角色</th>
-          <th>状态</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <div id="tableError" class="error"></div>
+  <div class="container">
+    <h1>用户管理系统</h1>
+    
+    <!-- 统计面板 -->
+    <div class="stats">
+      <div class="stat-card">
+        <div>总用户数</div>
+        <div class="stat-value" id="totalUsers">0</div>
+      </div>
+      <div class="stat-card">
+        <div>学生用户</div>
+        <div class="stat-value" id="studentUsers">0</div>
+      </div>
+      <div class="stat-card">
+        <div>教师用户</div>
+        <div class="stat-value" id="teacherUsers">0</div>
+      </div>
+      <div class="stat-card">
+        <div>活跃用户</div>
+        <div class="stat-value" id="activeUsers">0</div>
+      </div>
+    </div>
+    
+    <!-- 添加用户面板 -->
+    <div class="panel">
+      <h2>添加用户</h2>
+      <div id="addError" class="error"></div>
+      <div id="addSuccess" class="success"></div>
+      <input id="username" placeholder="用户名" required>
+      <input id="name" placeholder="姓名" required>
+      <input id="class" placeholder="班级/部门" required>
+      <input id="password" placeholder="密码" type="password">
+      <select id="role">
+        <option value="student">学生</option>
+        <option value="teacher">教师</option>
+        <option value="admin">管理员</option>
+      </select>
+      <button onclick="addUser()">添加用户</button>
+    </div>
+    
+    <!-- 批量导入面板 -->
+    <div class="panel">
+      <h2>批量导入用户</h2>
+      <textarea id="batchImport" placeholder="输入CSV格式：用户名,姓名,班级,密码(可选)" 
+                style="width: 100%; height: 100px; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+      <button onclick="batchImportUsers()">批量导入</button>
+    </div>
+    
+    <!-- 搜索面板 -->
+    <div class="panel">
+      <h2>搜索用户</h2>
+      <input id="searchKeyword" placeholder="输入用户名、姓名或ID" style="width: 300px;">
+      <button onclick="searchUsers()">搜索</button>
+      <button onclick="resetSearch()" style="background: #6c757d;">重置</button>
+    </div>
+    
+    <!-- 用户列表 -->
+    <div class="panel">
+      <h2>用户列表</h2>
+      <div id="tableError" class="error"></div>
+      <table id="userTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>姓名</th>
+            <th>班级/部门</th>
+            <th>角色</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 用户数据将通过JavaScript动态插入 -->
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script>
-    // 初始化Supabase客户端
+    // 修复问题1：确保supabase只声明一次
     const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
     const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-    // 页面加载时初始化
-    document.addEventListener('DOMContentLoaded', () => {
-      loadUsers();
+    
+    // 确保supabase只被声明一次
+    if (typeof supabase === 'undefined') {
+      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    }
+    
+    // 全局变量
+    let allUsers = [];
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('页面加载完成，初始化用户系统...');
+      loadAllUsers();
     });
-
-    // 加载用户列表
-    async function loadUsers() {
+    
+    // 加载所有用户
+    async function loadAllUsers() {
       try {
-        document.getElementById('tableError').textContent = '';
+        console.log('正在加载用户数据...');
         const { data, error } = await supabase
           .from('users')
           .select('*')
           .order('created_at', { ascending: false });
         
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
         
-        renderUserTable(data);
+        allUsers = data || [];
+        console.log(`加载了 ${allUsers.length} 个用户`);
+        renderUserTable(allUsers);
+        updateStats(allUsers);
       } catch (error) {
         console.error('加载用户失败:', error);
-        document.getElementById('tableError').textContent = '加载用户失败: ' + error.message;
+        showError('tableError', '加载用户失败: ' + error.message);
       }
     }
-
+    
     // 渲染用户表格
     function renderUserTable(users) {
       const tbody = document.querySelector('#userTable tbody');
       tbody.innerHTML = '';
       
       if (users.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5">没有找到用户</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">没有找到用户</td></tr>';
         return;
       }
       
       users.forEach(user => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${user.id}</td>
-          <td>${user.username}</td>
-          <td>${user.role}</td>
-          <td>${user.status ? '活跃' : '禁用'}</td>
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${user.id || '-'}</td>
+          <td>${user.username || '-'}</td>
+          <td>${user.name || '-'}</td>
+          <td>${user.class || '-'}</td>
+          <td>${getRoleName(user.role)}</td>
+          <td>${user.status ? '<span style="color: green;">活跃</span>' : '<span style="color: red;">禁用</span>'}</td>
+          <td>${formatDate(user.created_at)}</td>
           <td>
             <button onclick="editUser('${user.id}')">编辑</button>
-            <button onclick="toggleStatus('${user.id}', ${!user.status})">
+            <button onclick="toggleUserStatus('${user.id}', ${!user.status})">
               ${user.status ? '禁用' : '启用'}
             </button>
-            <button onclick="deleteUser('${user.id}')">删除</button>
+            <button onclick="resetPassword('${user.id}')">重置密码</button>
+            <button class="delete" onclick="deleteUser('${user.id}')">删除</button>
           </td>
         `;
-        tbody.appendChild(tr);
+        tbody.appendChild(row);
       });
     }
-
-    // 添加用户
+    
+    // 修复问题2：确保addUser函数已定义
     async function addUser() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const role = document.getElementById('role').value;
-      
-      if (!username || !password) {
-        document.getElementById('addError').textContent = '用户名和密码不能为空';
-        return;
-      }
-      
       try {
-        document.getElementById('addError').textContent = '';
+        const username = document.getElementById('username').value.trim();
+        const name = document.getElementById('name').value.trim();
+        const className = document.getElementById('class').value.trim();
+        const password = document.getElementById('password').value.trim() || '123456';
+        const role = document.getElementById('role').value;
+        
+        // 验证输入
+        if (!username || !name || !className) {
+          showError('addError', '用户名、姓名和班级不能为空');
+          return;
+        }
+        
+        console.log('正在添加用户:', { username, name, className, role });
+        
         const { error } = await supabase
           .from('users')
-          .insert([{ 
-            username, 
-            password, 
+          .insert([{
+            username,
+            name,
+            class: className,
+            password,
             role,
             status: true,
             created_at: new Date().toISOString()
@@ -138,104 +278,239 @@
         
         if (error) throw error;
         
-        alert('用户添加成功');
+        showSuccess('addSuccess', '用户添加成功');
+        
+        // 清空表单
         document.getElementById('username').value = '';
+        document.getElementById('name').value = '';
+        document.getElementById('class').value = '';
         document.getElementById('password').value = '';
-        loadUsers();
+        
+        // 重新加载数据
+        await loadAllUsers();
       } catch (error) {
         console.error('添加用户失败:', error);
-        document.getElementById('addError').textContent = '添加用户失败: ' + error.message;
+        showError('addError', '添加用户失败: ' + error.message);
       }
     }
-
-    // 搜索用户
-    async function searchUser() {
-      const keyword = document.getElementById('searchKeyword').value.trim();
+    
+    // 批量导入用户
+    async function batchImportUsers() {
+      const csvData = document.getElementById('batchImport').value.trim();
+      if (!csvData) {
+        showError('addError', '请输入CSV数据');
+        return;
+      }
       
-      try {
-        document.getElementById('searchError').textContent = '';
-        if (!keyword) {
-          loadUsers();
-          return;
+      const lines = csvData.split('\n');
+      const usersToImport = [];
+      let importedCount = 0;
+      
+      for (const line of lines) {
+        const [username, name, className, password] = line.split(',').map(item => item.trim());
+        if (username && name && className) {
+          usersToImport.push({
+            username,
+            name,
+            class: className,
+            password: password || '123456',
+            role: username.toLowerCase().includes('teacher') ? 'teacher' : 'student',
+            status: true,
+            created_at: new Date().toISOString()
+          });
         }
-        
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .or(`username.ilike.%${keyword}%,id.eq.${keyword}`)
-          .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        
-        renderUserTable(data);
-      } catch (error) {
-        console.error('搜索用户失败:', error);
-        document.getElementById('searchError').textContent = '搜索用户失败: ' + error.message;
       }
-    }
-
-    // 编辑用户
-    async function editUser(id) {
-      const newPassword = prompt('输入新密码（留空则不修改）');
-      if (newPassword === null) return;
+      
+      if (usersToImport.length === 0) {
+        showError('addError', '没有找到有效的用户数据');
+        return;
+      }
       
       try {
-        const updates = {};
-        if (newPassword) updates.password = newPassword;
-        
-        if (Object.keys(updates).length === 0) return;
-        
         const { error } = await supabase
           .from('users')
-          .update(updates)
-          .eq('id', id);
+          .insert(usersToImport);
         
         if (error) throw error;
         
-        alert('用户信息已更新');
-        loadUsers();
+        showSuccess('addSuccess', `成功导入 ${usersToImport.length} 个用户`);
+        document.getElementById('batchImport').value = '';
+        await loadAllUsers();
       } catch (error) {
-        console.error('更新用户失败:', error);
-        alert('更新用户失败: ' + error.message);
+        console.error('批量导入失败:', error);
+        showError('addError', '批量导入失败: ' + error.message);
       }
     }
-
+    
+    // 搜索用户
+    async function searchUsers() {
+      const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
+      
+      if (!keyword) {
+        showError('tableError', '请输入搜索关键词');
+        return;
+      }
+      
+      const filteredUsers = allUsers.filter(user => 
+        (user.username && user.username.toLowerCase().includes(keyword)) ||
+        (user.name && user.name.toLowerCase().includes(keyword)) ||
+        (user.class && user.class.toLowerCase().includes(keyword)) ||
+        (user.id && user.id.toString().includes(keyword))
+      );
+      
+      if (filteredUsers.length === 0) {
+        showError('tableError', '没有找到匹配的用户');
+      } else {
+        document.getElementById('tableError').style.display = 'none';
+      }
+      
+      renderUserTable(filteredUsers);
+    }
+    
+    // 重置搜索
+    function resetSearch() {
+      document.getElementById('searchKeyword').value = '';
+      document.getElementById('tableError').style.display = 'none';
+      renderUserTable(allUsers);
+    }
+    
+    // 编辑用户
+    async function editUser(userId) {
+      const user = allUsers.find(u => u.id === userId);
+      if (!user) return;
+      
+      const newName = prompt('请输入新的姓名', user.name || '');
+      if (newName === null) return;
+      
+      const newClass = prompt('请输入新的班级/部门', user.class || '');
+      if (newClass === null) return;
+      
+      const newRole = prompt('请输入新的角色 (student/teacher/admin)', user.role || 'student');
+      if (newRole === null) return;
+      
+      try {
+        const { error } = await supabase
+          .from('users')
+          .update({
+            name: newName,
+            class: newClass,
+            role: newRole
+          })
+          .eq('id', userId);
+        
+        if (error) throw error;
+        
+        showSuccess('addSuccess', '用户信息已更新');
+        await loadAllUsers();
+      } catch (error) {
+        console.error('更新用户失败:', error);
+        showError('addError', '更新用户失败: ' + error.message);
+      }
+    }
+    
     // 切换用户状态
-    async function toggleStatus(id, newStatus) {
+    async function toggleUserStatus(userId, newStatus) {
       try {
         const { error } = await supabase
           .from('users')
           .update({ status: newStatus })
-          .eq('id', id);
+          .eq('id', userId);
         
         if (error) throw error;
         
-        alert(`用户已${newStatus ? '启用' : '禁用'}`);
-        loadUsers();
+        showSuccess('addSuccess', `用户已${newStatus ? '启用' : '禁用'}`);
+        await loadAllUsers();
       } catch (error) {
         console.error('状态更新失败:', error);
-        alert('状态更新失败: ' + error.message);
+        showError('addError', '状态更新失败: ' + error.message);
       }
     }
-
+    
+    // 重置密码
+    async function resetPassword(userId) {
+      if (!confirm('确定要重置这个用户的密码吗？')) return;
+      
+      try {
+        const { error } = await supabase
+          .from('users')
+          .update({ password: '123456' })
+          .eq('id', userId);
+        
+        if (error) throw error;
+        
+        showSuccess('addSuccess', '密码已重置为 123456');
+        await loadAllUsers();
+      } catch (error) {
+        console.error('重置密码失败:', error);
+        showError('addError', '重置密码失败: ' + error.message);
+      }
+    }
+    
     // 删除用户
-    async function deleteUser(id) {
-      if (!confirm('确定删除这个用户吗？')) return;
+    async function deleteUser(userId) {
+      if (!confirm('确定要删除这个用户吗？此操作不可撤销。')) return;
       
       try {
         const { error } = await supabase
           .from('users')
           .delete()
-          .eq('id', id);
+          .eq('id', userId);
         
         if (error) throw error;
         
-        alert('用户已删除');
-        loadUsers();
+        showSuccess('addSuccess', '用户已删除');
+        await loadAllUsers();
       } catch (error) {
         console.error('删除用户失败:', error);
-        alert('删除用户失败: ' + error.message);
+        showError('addError', '删除用户失败: ' + error.message);
       }
+    }
+    
+    // 更新统计信息
+    function updateStats(users) {
+      const total = users.length;
+      const students = users.filter(u => u.role === 'student').length;
+      const teachers = users.filter(u => u.role === 'teacher').length;
+      const active = users.filter(u => u.status).length;
+      
+      document.getElementById('totalUsers').textContent = total;
+      document.getElementById('studentUsers').textContent = students;
+      document.getElementById('teacherUsers').textContent = teachers;
+      document.getElementById('activeUsers').textContent = active;
+    }
+    
+    // 辅助函数
+    function getRoleName(role) {
+      const roles = {
+        'student': '学生',
+        'teacher': '教师',
+        'admin': '管理员'
+      };
+      return roles[role] || role;
+    }
+    
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      const date = new Date(dateString);
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    }
+    
+    function showError(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.style.display = 'block';
+      setTimeout(() => {
+        element.style.display = 'none';
+      }, 5000);
+    }
+    
+    function showSuccess(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.style.display = 'block';
+      setTimeout(() => {
+        element.style.display = 'none';
+      }, 3000);
     }
   </script>
 </body>
