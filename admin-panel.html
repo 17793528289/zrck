@@ -1,784 +1,130 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理员面板 - 卓然创客社团</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-            background: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .admin-header {
-            background: #2c3e50;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .admin-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .logout-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .logout-btn:hover {
-            background: #c0392b;
-        }
-        
-        .admin-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .welcome-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: transform 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-2px);
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #3498db;
-            display: block;
-        }
-        
-        .admin-sections {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 2rem;
-        }
-        
-        .section-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .section-card h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #3498db;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        textarea {
-            width: 100%;
-            height: 150px;
-            padding: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: 'Microsoft YaHei', monospace;
-            font-size: 0.9rem;
-            resize: vertical;
-            margin-bottom: 1rem;
-        }
-        
-        .btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0.5rem 0.5rem 0.5rem 0;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-        
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .btn-success {
-            background: #27ae60;
-        }
-        
-        .btn-success:hover {
-            background: #219a52;
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-        }
-        
-        .btn-warning:hover {
-            background: #e67e22;
-        }
-        
-        .user-list {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-top: 1rem;
-            border: 1px solid #eee;
-            border-radius: 5px;
-        }
-        
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid #eee;
-            transition: background 0.3s;
-        }
-        
-        .user-item:hover {
-            background: #f8f9fa;
-        }
-        
-        .user-item:last-child {
-            border-bottom: none;
-        }
-        
-        .user-info {
-            flex: 1;
-        }
-        
-        .user-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .action-btn {
-            padding: 0.3rem 0.8rem;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s;
-        }
-        
-        .search-box {
-            margin-bottom: 1rem;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        .message {
-            padding: 0.75rem;
-            border-radius: 5px;
-            margin: 1rem 0;
-            display: none;
-        }
-        
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .message.warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        
-        .import-format {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 5px;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        .import-format code {
-            background: #e9ecef;
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            font-family: monospace;
-            display: inline-block;
-            margin: 0.2rem 0;
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-            font-weight: 500;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        .quick-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-        
-        .quick-btn {
-            background: #95a5a6;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        
-        .quick-btn:hover {
-            background: #7f8c8d;
-        }
-    </style>
+  <title>用户管理系统</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    button { padding: 8px 12px; margin: 5px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+  </style>
 </head>
 <body>
-    <!-- 管理员头部 -->
-    <header class="admin-header">
-        <h1>卓然创客社团 - 账号管理系统</h1>
-        <div class="admin-info">
-            <span id="adminWelcome">欢迎，管理员</span>
-            <button class="logout-btn" onclick="logout()">退出登录</button>
-        </div>
-    </header>
+  <h1>用户管理系统</h1>
+  
+  <div>
+    <h2>添加用户</h2>
+    <input id="username" placeholder="用户名">
+    <input id="password" placeholder="密码">
+    <button onclick="addUser()">添加</button>
+  </div>
 
-    <!-- 主要内容 -->
-    <div class="admin-container">
-        <!-- 欢迎横幅 -->
-        <div class="welcome-banner">
-            <h2 id="mainWelcome">管理员控制台</h2>
-            <p>管理系统账号和权限 | 登录时间: <span id="loginTime"></span></p>
-        </div>
-        
-        <!-- 统计信息 -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-number" id="totalUsers">0</span>
-                <span>总用户数</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number" id="studentUsers">0</span>
-                <span>学生用户</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number" id="teacherUsers">0</span>
-                <span>教师用户</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number" id="activeUsers">0</span>
-                <span>活跃用户</span>
-            </div>
-        </div>
-        
-        <!-- 功能区域 -->
-        <div class="admin-sections">
-            <!-- 批量导入区域 -->
-            <div class="section-card">
-                <h3>📥 批量导入账号</h3>
-                
-                <div class="import-format">
-                    <strong>导入格式说明：</strong><br>
-                    每行一个账号，格式：<code>学号,姓名,班级,初始密码(可选)</code><br>
-                    <strong>示例：</strong><br>
-                    <code>2023001,张三,高一(1)班,123456</code><br>
-                    <code>2023002,李四,高一(1)班</code> (默认密码：123456)<br>
-                    <code>teacher01,张老师,指导教师,teacher123</code>
-                </div>
-                
-                <textarea id="importData" placeholder="请按照上述格式输入账号信息..."></textarea>
-                
-                <div class="quick-actions">
-                    <button class="quick-btn" onclick="generateSampleData()">生成示例数据</button>
-                    <button class="quick-btn" onclick="clearImportData()">清空输入</button>
-                    <button class="quick-btn" onclick="showFormatHelp()">格式帮助</button>
-                </div>
-                
-                <div>
-                    <button class="btn btn-success" onclick="importAccounts()">✅ 导入账号</button>
-                    <button class="btn btn-warning" onclick="validateImportData()">🔍 验证数据</button>
-                </div>
-                
-                <div id="importMessage" class="message"></div>
-            </div>
-            
-            <!-- 用户管理区域 -->
-            <div class="section-card">
-                <h3>👥 用户账号管理</h3>
-                
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="搜索学号、姓名或班级..." onkeyup="searchUsers()">
-                </div>
-                
-                <div class="quick-actions">
-                    <button class="btn btn-success" onclick="exportUsersToCSV()">📊 导出CSV</button>
-                    <button class="btn" onclick="backupUsers()">💾 备份数据</button>
-                    <button class="btn btn-warning" onclick="resetAllPasswords()">🔄 重置所有密码</button>
-                    <button class="btn btn-danger" onclick="deleteAllUsers()">🗑️ 删除所有用户</button>
-                </div>
-                
-                <div class="user-list" id="userList">
-                    <!-- 用户列表将通过JavaScript动态生成 -->
-                </div>
-            </div>
-            
-            <!-- 单个账号操作区域 -->
-            <div class="section-card">
-                <h3>➕ 单个账号操作</h3>
-                
-                <div class="form-group">
-                    <label>学号/账号：</label>
-                    <input type="text" id="singleUsername" placeholder="请输入学号或账号">
-                </div>
-                
-                <div class="form-group">
-                    <label>姓名：</label>
-                    <input type="text" id="singleName" placeholder="请输入姓名">
-                </div>
-                
-                <div class="form-group">
-                    <label>班级/身份：</label>
-                    <input type="text" id="singleGrade" placeholder="例如：高一(1)班 或 指导教师">
-                </div>
-                
-                <div class="form-group">
-                    <label>密码：</label>
-                    <input type="text" id="singlePassword" placeholder="请输入密码（默认：123456）" value="123456">
-                </div>
-                
-                <div class="quick-actions">
-                    <button class="btn btn-success" onclick="addSingleUser()">✅ 添加用户</button>
-                    <button class="btn" onclick="findUser()">🔍 查找用户</button>
-                    <button class="btn btn-warning" onclick="updateUser()">✏️ 更新信息</button>
-                    <button class="btn btn-danger" onclick="deleteUser()">🗑️ 删除用户</button>
-                    <button class="btn" onclick="resetUserPassword()">🔄 重置密码</button>
-                </div>
-                
-                <div id="singleUserMessage" class="message"></div>
-            </div>
-        </div>
-    </div>
+  <div>
+    <h2>用户列表</h2>
+    <table id="userTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>用户名</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-    <script>
-        // 全局变量
-        let allUsers = {};
-        
-        // 页面加载时初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('管理员面板初始化...');
-            initializeAdminPanel();
-        });
-        
-        function initializeAdminPanel() {
-            // 显示管理员信息
-            displayAdminInfo();
-            
-            // 加载用户数据
-            loadUsers();
-            
-            // 更新统计信息
-            updateStats();
-            
-            // 显示登录时间
-            document.getElementById('loginTime').textContent = new Date().toLocaleString();
-            
-            console.log('管理员面板初始化完成');
-        }
-        
-        // 显示管理员信息
-        function displayAdminInfo() {
-            const adminUser = JSON.parse(sessionStorage.getItem('adminUser') || '{"name":"管理员"}');
-            document.getElementById('adminWelcome').textContent = `欢迎，${adminUser.name}`;
-            document.getElementById('mainWelcome').textContent = `${adminUser.name}的控制台`;
-        }
-        
-        // 加载用户数据
-        function loadUsers() {
-            console.log('加载用户数据...');
-            
-            // 从localStorage加载注册用户
-            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
-            
-            // 预设一些示例用户（如果还没有用户数据）
-            if (Object.keys(registeredUsers).length === 0) {
-                console.log('没有找到用户数据，创建示例数据...');
-                allUsers = createSampleUsers();
-                localStorage.setItem('registeredUsers', JSON.stringify(allUsers));
-            } else {
-                allUsers = registeredUsers;
-            }
-            
-            displayUserList();
-            console.log('用户数据加载完成，总数:', Object.keys(allUsers).length);
-        }
-        
-        // 创建示例用户数据
-        function createSampleUsers() {
-            return {
-                '2023001': { 
-                    password: '123456', 
-                    name: '张三', 
-                    grade: '高一(1)班',
-                    role: 'student',
-                    registerTime: new Date().toLocaleString()
-                },
-                '2023002': { 
-                    password: '123456', 
-                    name: '李四', 
-                    grade: '高一(1)班',
-                    role: 'student',
-                    registerTime: new Date().toLocaleString()
-                },
-                '2023003': { 
-                    password: '123456', 
-                    name: '王五', 
-                    grade: '高一(2)班',
-                    role: 'student',
-                    registerTime: new Date().toLocaleString()
-                },
-                'teacher01': { 
-                    password: 'teacher123', 
-                    name: '张老师', 
-                    grade: '指导教师',
-                    role: 'teacher',
-                    registerTime: new Date().toLocaleString()
-                }
-            };
-        }
-        
-        // 显示用户列表
-        function displayUserList(filteredUsers = null) {
-            const usersToShow = filteredUsers || allUsers;
-            const userList = document.getElementById('userList');
-            
-            if (Object.keys(usersToShow).length === 0) {
-                userList.innerHTML = '<div class="user-item" style="text-align: center; color: #999;">暂无用户数据</div>';
-                return;
-            }
-            
-            userList.innerHTML = Object.keys(usersToShow).map(username => {
-                const user = usersToShow[username];
-                return `
-                    <div class="user-item">
-                        <div class="user-info">
-                            <strong>${username}</strong> - ${user.name} (${user.grade})
-                            ${user.role === 'teacher' ? '<span style="color: #e74c3c; margin-left: 10px;">[教师]</span>' : ''}
-                            ${user.role === 'admin' ? '<span style="color: #3498db; margin-left: 10px;">[管理员]</span>' : ''}
-                            <br>
-                            <small style="color: #95a5a6;">注册时间: ${user.registerTime || '未知'}</small>
-                        </div>
-                        <div class="user-actions">
-                            <button class="action-btn" style="background: #3498db; color: white;" 
-                                    onclick="editUser('${username}')">编辑</button>
-                            <button class="action-btn" style="background: #e74c3c; color: white;" 
-                                    onclick="deleteSingleUser('${username}')">删除</button>
-                            <button class="action-btn" style="background: #f39c12; color: white;" 
-                                    onclick="resetSinglePassword('${username}')">重置密码</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        // 更新统计信息
-        function updateStats() {
-            const studentCount = Object.values(allUsers).filter(user => user.role === 'student').length;
-            const teacherCount = Object.values(allUsers).filter(user => user.role === 'teacher' || user.role === 'admin').length;
-            
-            document.getElementById('totalUsers').textContent = Object.keys(allUsers).length;
-            document.getElementById('studentUsers').textContent = studentCount;
-            document.getElementById('teacherUsers').textContent = teacherCount;
-            document.getElementById('activeUsers').textContent = Object.keys(allUsers).length; // 简化处理
-        }
-        
-        // 批量导入账号
-        function importAccounts() {
-            const importData = document.getElementById('importData').value.trim();
-            if (!importData) {
-                showMessage('请输入要导入的账号数据！', 'error', 'importMessage');
-                return;
-            }
-            
-            const lines = importData.split('\n').filter(line => line.trim());
-            let successCount = 0;
-            let errorCount = 0;
-            const errors = [];
-            
-            lines.forEach((line, index) => {
-                const parts = line.split(',').map(part => part.trim());
-                if (parts.length >= 3) {
-                    const [username, name, grade, password = '123456'] = parts;
-                    
-                    if (!allUsers[username]) {
-                        allUsers[username] = {
-                            password: password,
-                            name: name,
-                            grade: grade,
-                            role: grade.includes('教师') || grade.includes('老师') || grade.includes('指导') ? 'teacher' : 'student',
-                            registerTime: new Date().toLocaleString(),
-                            importTime: new Date().toLocaleString()
-                        };
-                        successCount++;
-                    } else {
-                        errorCount++;
-                        errors.push(`第${index + 1}行: 账号 ${username} 已存在`);
-                    }
-                } else {
-                    errorCount++;
-                    errors.push(`第${index + 1}行: 格式错误，需要至少3个字段（学号,姓名,班级）`);
-                }
-            });
-            
-            // 保存到localStorage
-            localStorage.setItem('registeredUsers', JSON.stringify(allUsers));
-            
-            let message = `导入完成！成功: ${successCount}个, 失败: ${errorCount}个`;
-            let messageType = 'success';
-            
-            if (errorCount > 0) {
-                messageType = 'warning';
-                message += '<br><br>错误详情:<br>' + errors.join('<br>');
-            }
-            
-            if (successCount > 0) {
-                message += '<br><br>✅ 数据已保存到系统';
-            }
-            
-            showMessage(message, messageType, 'importMessage');
-            
-            // 更新显示
-            displayUserList();
-            updateStats();
-        }
-        
-        // 搜索用户
-        function searchUsers() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            if (!searchTerm) {
-                displayUserList();
-                return;
-            }
-            
-            const filteredUsers = {};
-            Object.keys(allUsers).forEach(username => {
-                const user = allUsers[username];
-                if (username.toLowerCase().includes(searchTerm) ||
-                    user.name.toLowerCase().includes(searchTerm) ||
-                    user.grade.toLowerCase().includes(searchTerm)) {
-                    filteredUsers[username] = user;
-                }
-            });
-            
-            displayUserList(filteredUsers);
-        }
-        
-        // 生成示例数据
-        function generateSampleData() {
-            const sampleData = `2023001,张三,高一(1)班,123456
-2023002,李四,高一(1)班
-2023003,王五,高一(2)班
-2023004,赵六,高一(3)班
-teacher01,张老师,指导教师,teacher123
-teacher02,李老师,技术顾问,teacher123`;
-            
-            document.getElementById('importData').value = sampleData;
-            showMessage('示例数据已生成，请检查后点击"导入账号"', 'success', 'importMessage');
-        }
-        
-        // 清空输入
-        function clearImportData() {
-            document.getElementById('importData').value = '';
-            showMessage('输入框已清空', 'success', 'importMessage');
-        }
-        
-        // 显示格式帮助
-        function showFormatHelp() {
-            const helpText = `📋 格式帮助：
-• 每行一个账号，用逗号分隔
-• 必需字段：学号,姓名,班级
-• 可选字段：密码（不填则默认为123456）
-• 示例：2023001,张三,高一(1)班,123456
-• 教师账号会在班级中包含"教师"、"老师"、"指导"等字样时自动识别`;
-            
-            showMessage(helpText, 'success', 'importMessage');
-        }
-        
-        // 验证导入数据
-        function validateImportData() {
-            const importData = document.getElementById('importData').value.trim();
-            if (!importData) {
-                showMessage('请输入要验证的数据！', 'error', 'importMessage');
-                return;
-            }
-            
-            const lines = importData.split('\n').filter(line => line.trim());
-            let validCount = 0;
-            let invalidCount = 0;
-            const results = [];
-            
-            lines.forEach((line, index) => {
-                const parts = line.split(',').map(part => part.trim());
-                if (parts.length >= 3) {
-                    validCount++;
-                    results.push(`第${index + 1}行: ✅ 格式正确`);
-                } else {
-                    invalidCount++;
-                    results.push(`第${index + 1}行: ❌ 格式错误，需要至少3个字段`);
-                }
-            });
-            
-            const message = `验证结果：有效 ${validCount} 行，无效 ${invalidCount} 行<br><br>${results.join('<br>')}`;
-            showMessage(message, invalidCount === 0 ? 'success' : 'warning', 'importMessage');
-        }
-        
-        // 添加单个用户
-        function addSingleUser() {
-            const username = document.getElementById('singleUsername').value.trim();
-            const name = document.getElementById('singleName').value.trim();
-            const grade = document.getElementById('singleGrade').value.trim();
-            const password = document.getElementById('singlePassword').value.trim() || '123456';
-            
-            if (!username || !name || !grade) {
-                showMessage('请填写完整信息！', 'error', 'singleUserMessage');
-                return;
-            }
-            
-            if (allUsers[username]) {
-                showMessage('该账号已存在！', 'error', 'singleUserMessage');
-                return;
-            }
-            
-            allUsers[username] = {
-                password: password,
-                name: name,
-                grade: grade,
-                role: grade.includes('教师') || grade.includes('老师') || grade.includes('指导') ? 'teacher' : 'student',
-                registerTime: new Date().toLocaleString()
-            };
-            
-            localStorage.setItem('registeredUsers', JSON.stringify(allUsers));
-            showMessage(`用户 ${username} 添加成功！`, 'success', 'singleUserMessage');
-            clearSingleForm();
-            displayUserList();
-            updateStats();
-        }
-        
-        // 查找用户
-        function findUser() {
-            const username = document.getElementById('singleUsername').value.trim();
-            if (!username) {
-                showMessage('请输入要查找的账号！', 'error', 'singleUserMessage');
-                return;
-            }
-            
-            if (allUsers[username]) {
-                const user = allUsers[username];
-                document.getElementById('singleName').value = user.name;
-                document.getElementById('singleGrade').value = user.grade;
-                document.getElementById('singlePassword').value = '';
-                showMessage(`找到用户：${user.name} (${user.grade})`, 'success', 'singleUserMessage');
-            } else {
-                showMessage('用户不存在！', 'error', 'singleUserMessage');
-            }
-        }
-        
-        // 删除用户
-        function deleteUser() {
-            const username = document.getElementById('singleUsername').value.trim();
-            if (!username) {
-                showMessage('请输入要删除的账号！', 'error', 'singleUserMessage');
-                return;
-            }
-            
-            if (allUsers[username]) {
-                if (confirm(`确定要删除用户 ${username} - ${allUsers[username].name} 吗？`)) {
-                    delete allUsers[username];
-                    localStorage.setItem('registeredUsers', JSON.stringify(allUsers));
-                    showMessage('用户删除成功！', 'success', 'singleUserMessage');
-                    clearSingleForm();
-                    displayUserList();
-                    updateStats();
-                }
-            } else {
-                showMessage('用户不存在！', 'error', 'singleUserMessage');
-            }
-        }
-        
-        // 更新用户信息
-        function updateUser() {
-            const username = document.getElementById('singleUsername').value.trim();
-            const name = document.getElementById('singleName').value.trim();
-            const grade = document.getElementById('singleGrade').value.trim();
-            const password =
+  <script>
+    // 初始化Supabase
+    const supabaseUrl = 'YOUR_SUPABASE_URL';
+    const supabaseKey = 'YOUR_SUPABASE_KEY';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // 加载用户列表
+    async function loadUsers() {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*');
+      
+      if (error) {
+        console.error('加载用户失败:', error);
+        return;
+      }
+      
+      const tbody = document.querySelector('#userTable tbody');
+      tbody.innerHTML = '';
+      
+      data.forEach(user => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${user.id}</td>
+          <td>${user.username}</td>
+          <td>
+            <button onclick="updateUser('${user.id}')">更新</button>
+            <button onclick="deleteUser('${user.id}')">删除</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 添加用户
+    async function addUser() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      const { error } = await supabase
+        .from('users')
+        .insert([{ username, password }]);
+      
+      if (error) {
+        alert('添加失败: ' + error.message);
+        return;
+      }
+      
+      alert('用户添加成功');
+      loadUsers();
+    }
+
+    // 更新用户
+    async function updateUser(id) {
+      const newPassword = prompt('输入新密码');
+      if (!newPassword) return;
+      
+      const { error } = await supabase
+        .from('users')
+        .update({ password: newPassword })
+        .eq('id', id);
+      
+      if (error) {
+        alert('更新失败: ' + error.message);
+        return;
+      }
+      
+      alert('密码已更新');
+      loadUsers();
+    }
+
+    // 删除用户
+    async function deleteUser(id) {
+      if (!confirm('确定删除这个用户吗？')) return;
+      
+      const { error } = await supabase
+        .from('users')
+        .delete()
+        .eq('id', id);
+      
+      if (error) {
+        alert('删除失败: ' + error.message);
+        return;
+      }
+      
+      alert('用户已删除');
+      loadUsers();
+    }
+
+    // 页面加载时初始化
+    loadUsers();
+  </script>
+</body>
+</html>
