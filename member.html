@@ -6,6 +6,8 @@
     <title>会员中心 - 武威第十八中学卓然创客社团</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <!-- 引入Supabase客户端库 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .member-container {
             max-width: 1200px;
@@ -77,25 +79,37 @@
             background: #c0392b;
         }
         
-        /* 添加Supabase初始化状态提示 */
-        .init-status {
-            padding: 10px;
+        .status-message {
+            padding: 10px 15px;
             margin: 10px 0;
             border-radius: 5px;
+            font-size: 14px;
         }
-        .init-warning {
+        
+        .status-warning {
             background: #fff3cd;
-            border: 1px solid #ffeaa7;
+            border: 1px solid #ffc107;
             color: #856404;
         }
-        .init-success {
+        
+        .status-success {
             background: #d4edda;
-            border: 1px solid #c3e6cb;
+            border: 1px solid #28a745;
             color: #155724;
         }
+        
+        .status-error {
+            background: #f8d7da;
+            border: 1px solid #dc3545;
+            color: #721c24;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
     </style>
-    <!-- 引入Supabase客户端库 -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -132,9 +146,12 @@
             <p>专属资源 · 个性服务 · 成长记录</p>
         </div>
         
-        <!-- Supabase状态提示 -->
-        <div id="supabaseStatus" class="init-status" style="display: none;">
-            <p>数据库状态：<span id="statusText">检测中...</span></p>
+        <!-- 数据库状态 -->
+        <div id="dbStatus" class="status-message" style="display: none;"></div>
+        
+        <!-- 加载指示器 -->
+        <div id="loading" class="loading" style="display: none;">
+            <p>正在加载用户信息...</p>
         </div>
 
         <!-- 用户信息 -->
@@ -159,7 +176,7 @@
                 </div>
             </div>
             
-            <div id="adminAccess" style="margin-top: 20px;"></div>
+            <div id="adminAccess" style="margin-top: 20px; display: none;"></div>
         </div>
 
         <!-- 会员专属功能 -->
@@ -220,239 +237,303 @@
     </footer>
 
     <script>
-        // Supabase配置
-        const SUPABASE_CONFIG = {
-            url: 'https://wxbemuwgiiucdgmbhbvg.supabase.co',
-            key: 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk'
-        };
+        // ==================== 核心代码 - 修复重复声明问题 ====================
         
-        let supabase = null;
-        let currentUser = null;
-        
-        // 初始化Supabase
-        async function initSupabase() {
-            try {
-                if (!window.supabase || typeof window.supabase.createClient !== 'function') {
-                    throw new Error('Supabase SDK未加载');
-                }
-                
-                supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key);
-                console.log('✅ Supabase客户端初始化成功');
-                return true;
-            } catch (error) {
-                console.error('❌ Supabase初始化失败:', error);
-                return false;
-            }
-        }
-        
-        // 测试数据库连接
-        async function testDatabaseConnection() {
-            try {
-                if (!supabase) {
-                    await initSupabase();
-                }
-                
-                const { data, error } = await supabase
-                    .from('users')
-                    .select('count')
-                    .limit(1);
-                
-                if (error) {
-                    if (error.code === 'PGRST205' || error.message.includes('Could not find')) {
-                        return { success: false, message: 'users表不存在，请先在Supabase中创建' };
-                    }
-                    throw error;
-                }
-                
-                return { success: true, message: '数据库连接正常' };
-            } catch (error) {
-                console.error('数据库连接测试失败:', error);
-                return { 
-                    success: false, 
-                    message: '数据库连接失败: ' + error.message 
-                };
-            }
-        }
-        
-        // 更新状态显示
-        function updateStatus(message, isSuccess = false) {
-            const statusDiv = document.getElementById('supabaseStatus');
-            const statusText = document.getElementById('statusText');
+        // 使用立即执行函数避免变量冲突
+        (function() {
+            'use strict';
             
-            if (statusDiv && statusText) {
-                statusDiv.style.display = 'block';
-                statusDiv.className = isSuccess ? 'init-status init-success' : 'init-status init-warning';
-                statusText.textContent = message;
+            // Supabase配置
+            const SUPABASE_CONFIG = {
+                url: 'https://wxbemuwgiiucdgmbhbvg.supabase.co',
+                key: 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk'
+            };
+            
+            // 全局变量声明
+            let supabaseClient = null;  // 使用不同名称避免冲突
+            let currentUser = null;
+            
+            // DOM元素引用
+            let dbStatusEl, loadingEl, userNameEl, userGradeEl, userRoleEl, loginTimeEl, adminAccessEl;
+            
+            // 页面初始化
+            document.addEventListener('DOMContentLoaded', async function() {
+                console.log('会员中心页面初始化...');
                 
-                // 如果是警告，5秒后自动隐藏
-                if (!isSuccess) {
-                    setTimeout(() => {
-                        statusDiv.style.display = 'none';
-                    }, 5000);
-                }
-            }
-        }
-        
-        // 从数据库获取用户信息
-        async function fetchUserFromDatabase(username) {
-            try {
-                if (!supabase) {
-                    await initSupabase();
-                }
+                // 获取DOM元素
+                dbStatusEl = document.getElementById('dbStatus');
+                loadingEl = document.getElementById('loading');
+                userNameEl = document.getElementById('userName');
+                userGradeEl = document.getElementById('userGrade');
+                userRoleEl = document.getElementById('userRole');
+                loginTimeEl = document.getElementById('loginTime');
+                adminAccessEl = document.getElementById('adminAccess');
                 
-                const { data, error } = await supabase
-                    .from('users')
-                    .select('*')
-                    .eq('username', username)
-                    .single();
-                
-                if (error) {
-                    if (error.code === 'PGRST116') {
-                        console.log('用户不在数据库中，使用本地存储数据');
-                        return null;
-                    }
-                    throw error;
+                // 1. 检查登录状态
+                if (!checkLoginStatus()) {
+                    return;
                 }
                 
-                return data;
-            } catch (error) {
-                console.error('从数据库获取用户失败:', error);
-                return null;
-            }
-        }
-        
-        // 安全更新元素文本
-        function updateElementText(elementId, text) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.textContent = text;
-            }
-        }
-        
-        // 安全更新HTML
-        function updateElementHTML(elementId, html) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.innerHTML = html;
-            }
-        }
-        
-        // 主初始化函数
-        async function initializeMemberPage() {
-            console.log('会员中心页面初始化...');
+                // 2. 初始化Supabase
+                const initialized = await initSupabase();
+                if (!initialized) {
+                    // 使用本地数据
+                    displayUserFromLocalStorage();
+                    return;
+                }
+                
+                // 3. 从数据库获取用户信息
+                await fetchAndDisplayUser();
+                
+            });
             
-            // 1. 检查登录状态
-            const localUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
-            
-            if (!localUser) {
-                alert('请先登录！');
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            // 2. 初始化Supabase
-            const supabaseInitialized = await initSupabase();
-            if (!supabaseInitialized) {
-                updateStatus('数据库连接初始化失败，使用本地数据', false);
-            } else {
-                // 3. 测试数据库连接
-                const dbTest = await testDatabaseConnection();
-                updateStatus(dbTest.message, dbTest.success);
-            }
-            
-            try {
-                // 4. 解析本地用户数据
-                const user = JSON.parse(localUser);
+            // 检查登录状态
+            function checkLoginStatus() {
                 const username = sessionStorage.getItem('username') || localStorage.getItem('username');
-                const loginTime = sessionStorage.getItem('loginTime') || localStorage.getItem('loginTime') || '刚刚';
+                const userData = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
                 
-                // 5. 尝试从数据库获取最新信息
-                let userData = user;
-                if (supabase) {
-                    const dbUser = await fetchUserFromDatabase(username);
-                    if (dbUser) {
-                        userData = dbUser;
-                        console.log('使用数据库用户数据:', userData);
+                if (!username || !userData) {
+                    alert('请先登录！');
+                    window.location.href = 'index.html';
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // 初始化Supabase客户端
+            async function initSupabase() {
+                try {
+                    showLoading(true);
+                    showStatus('正在初始化数据库连接...', 'warning');
+                    
+                    // 检查Supabase SDK是否加载
+                    if (typeof window.supabase === 'undefined') {
+                        showStatus('Supabase SDK未加载，请检查网络连接', 'error');
+                        return false;
+                    }
+                    
+                    // 创建Supabase客户端实例
+                    supabaseClient = window.supabase.createClient(
+                        SUPABASE_CONFIG.url,
+                        SUPABASE_CONFIG.key
+                    );
+                    
+                    // 测试连接
+                    const { error } = await supabaseClient
+                        .from('users')
+                        .select('count')
+                        .limit(1);
+                    
+                    if (error) {
+                        if (error.code === 'PGRST205') {
+                            showStatus('数据库表未创建，使用本地数据模式', 'warning');
+                        } else {
+                            showStatus('数据库连接异常: ' + error.message, 'error');
+                        }
+                        return false;
+                    }
+                    
+                    showStatus('数据库连接成功', 'success');
+                    return true;
+                    
+                } catch (error) {
+                    console.error('初始化失败:', error);
+                    showStatus('初始化失败: ' + error.message, 'error');
+                    return false;
+                } finally {
+                    showLoading(false);
+                }
+            }
+            
+            // 从数据库获取并显示用户信息
+            async function fetchAndDisplayUser() {
+                try {
+                    showLoading(true);
+                    
+                    const username = sessionStorage.getItem('username') || localStorage.getItem('username');
+                    
+                    if (!supabaseClient) {
+                        throw new Error('数据库连接未就绪');
+                    }
+                    
+                    const { data, error } = await supabaseClient
+                        .from('users')
+                        .select('*')
+                        .eq('username', username)
+                        .single();
+                    
+                    if (error) {
+                        if (error.code === 'PGRST116') {
+                            // 用户不在数据库中
+                            console.log('用户不在数据库中，使用本地数据');
+                            displayUserFromLocalStorage();
+                            return;
+                        }
+                        throw error;
+                    }
+                    
+                    // 使用数据库中的用户数据
+                    displayUser(data, true);
+                    
+                } catch (error) {
+                    console.error('获取用户信息失败:', error);
+                    showStatus('获取用户信息失败: ' + error.message, 'error');
+                    displayUserFromLocalStorage();
+                } finally {
+                    showLoading(false);
+                }
+            }
+            
+            // 从本地存储显示用户信息
+            function displayUserFromLocalStorage() {
+                try {
+                    const userData = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+                    const username = sessionStorage.getItem('username') || localStorage.getItem('username');
+                    
+                    if (!userData) {
+                        throw new Error('本地用户数据不存在');
+                    }
+                    
+                    const user = JSON.parse(userData);
+                    displayUser(user, false);
+                    
+                } catch (error) {
+                    console.error('显示本地用户失败:', error);
+                    showStatus('加载用户信息失败', 'error');
+                    
+                    // 显示默认值
+                    userNameEl.textContent = '数据加载失败';
+                    userGradeEl.textContent = '请重新登录';
+                    userRoleEl.textContent = '未知';
+                    loginTimeEl.textContent = '--';
+                }
+            }
+            
+            // 显示用户信息
+            function displayUser(user, fromDatabase = false) {
+                try {
+                    // 更新欢迎信息
+                    const welcomeEl = document.getElementById('userWelcome');
+                    const mainWelcomeEl = document.getElementById('mainWelcome');
+                    
+                    if (welcomeEl) {
+                        welcomeEl.textContent = `欢迎，${user.name || user.username || '用户'}`;
+                    }
+                    if (mainWelcomeEl) {
+                        mainWelcomeEl.textContent = `欢迎回来，${user.name || user.username || '用户'}！`;
+                    }
+                    
+                    // 更新基本信息
+                    userNameEl.textContent = user.name || '未设置';
+                    userGradeEl.textContent = user.class || user.grade || '未设置';
+                    
+                    // 角色转换
+                    const roleMap = {
+                        'admin': '管理员',
+                        'teacher': '教师',
+                        'student': '学生'
+                    };
+                    userRoleEl.textContent = roleMap[user.role] || user.role || '学生';
+                    
+                    // 登录时间
+                    const loginTime = sessionStorage.getItem('loginTime') || localStorage.getItem('loginTime') || '刚刚';
+                    loginTimeEl.textContent = formatTime(loginTime);
+                    
+                    // 管理员/教师权限
+                    if (user.role === 'admin' || user.role === 'teacher') {
+                        adminAccessEl.style.display = 'block';
+                        adminAccessEl.innerHTML = '<a href="admin-panel.html" class="btn btn-warning" style="background: #ffc107; color: #212529; padding: 8px 16px; border-radius: 4px; text-decoration: none;">⚙️ 管理后台</a>';
+                    }
+                    
+                    // 保存到全局
+                    window.currentUser = user;
+                    
+                    if (fromDatabase) {
+                        showStatus('用户信息已从数据库加载', 'success');
                     } else {
-                        console.log('使用本地存储用户数据');
+                        showStatus('使用本地存储的用户信息', 'warning');
                     }
+                    
+                } catch (error) {
+                    console.error('显示用户信息失败:', error);
+                    showStatus('显示用户信息时出错', 'error');
+                }
+            }
+            
+            // 工具函数
+            function showStatus(message, type = 'info') {
+                if (!dbStatusEl) return;
+                
+                dbStatusEl.style.display = 'block';
+                dbStatusEl.textContent = message;
+                dbStatusEl.className = 'status-message';
+                
+                switch (type) {
+                    case 'success':
+                        dbStatusEl.classList.add('status-success');
+                        break;
+                    case 'warning':
+                        dbStatusEl.classList.add('status-warning');
+                        break;
+                    case 'error':
+                        dbStatusEl.classList.add('status-error');
+                        break;
                 }
                 
-                // 6. 更新页面显示
-                updateElementText('userWelcome', `欢迎，${userData.name || username}`);
-                updateElementText('mainWelcome', `欢迎回来，${userData.name || username}！`);
-                updateElementText('userName', userData.name || '未设置');
-                updateElementText('userGrade', userData.class || userData.grade || '未设置');
+                // 自动隐藏成功消息
+                if (type === 'success') {
+                    setTimeout(() => {
+                        dbStatusEl.style.display = 'none';
+                    }, 3000);
+                }
+            }
+            
+            function showLoading(show) {
+                if (!loadingEl) return;
+                loadingEl.style.display = show ? 'block' : 'none';
+            }
+            
+            function formatTime(timeString) {
+                if (!timeString || timeString === '刚刚') {
+                    return '刚刚';
+                }
                 
-                // 角色转换
-                const roleMap = {
-                    'admin': '管理员',
-                    'teacher': '教师',
-                    'student': '学生'
-                };
-                updateElementText('userRole', roleMap[userData.role] || userData.role || '学生');
-                
-                // 格式化时间
-                let displayTime = loginTime;
-                if (loginTime === '刚刚' || loginTime === '刚刚登录') {
-                    displayTime = '刚刚';
-                } else {
-                    try {
-                        const time = new Date(loginTime);
-                        displayTime = time.toLocaleString('zh-CN');
-                    } catch (e) {
-                        displayTime = loginTime;
+                try {
+                    const time = new Date(timeString);
+                    if (isNaN(time.getTime())) {
+                        return timeString;
                     }
+                    return time.toLocaleString('zh-CN');
+                } catch (e) {
+                    return timeString;
                 }
-                updateElementText('loginTime', displayTime);
-                
-                // 7. 如果是管理员/教师，显示管理入口
-                if (userData.role === 'admin' || userData.role === 'teacher') {
-                    updateElementHTML('adminAccess', 
-                        '<a href="admin-panel.html" class="btn btn-warning">⚙️ 管理后台</a>');
+            }
+            
+            // 暴露函数到全局作用域
+            window.logout = function() {
+                if (confirm('确定要退出登录吗？')) {
+                    sessionStorage.clear();
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('loginTime');
+                    window.location.href = 'index.html';
                 }
-                
-                // 保存当前用户对象到全局
-                window.currentUser = userData;
-                
-            } catch (error) {
-                console.error('处理用户数据时出错:', error);
-                updateStatus('用户数据加载异常: ' + error.message, false);
-                
-                // 显示基本错误信息
-                updateElementText('userName', '数据加载失败');
-                updateElementText('userGrade', '请刷新页面重试');
-                updateElementText('userRole', '未知');
-                updateElementText('loginTime', '未知');
-            }
-        }
-        
-        // 页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', initializeMemberPage);
-        
-        // 退出登录
-        function logout() {
-            if (confirm('确定要退出登录吗？')) {
-                sessionStorage.clear();
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('username');
-                localStorage.removeItem('loginTime');
-                window.location.href = 'index.html';
-            }
-        }
-        
-        // 会员功能函数
-        function accessResources() {
-            alert('资源库功能开发中...');
-        }
-        
-        function manageProjects() {
-            alert('项目管理功能开发中...');
-        }
-        
-        function viewProgress() {
-            alert('成长记录功能开发中...');
-        }
+            };
+            
+            window.accessResources = function() {
+                alert('资源库功能开发中...');
+            };
+            
+            window.manageProjects = function() {
+                alert('项目管理功能开发中...');
+            };
+            
+            window.viewProgress = function() {
+                alert('成长记录功能开发中...');
+            };
+            
+        })(); // 立即执行函数结束
     </script>
 </body>
 </html>
