@@ -5,28 +5,43 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body { font-family: Arial; padding: 20px; }
-    button { padding: 8px 12px; margin: 5px; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ddd; padding: 8px; }
+    button { padding: 8px 12px; margin: 5px; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    input { padding: 8px; margin: 5px; width: 200px; }
+    .panel { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
   </style>
 </head>
 <body>
   <h1>用户管理系统</h1>
   
-  <div>
+  <div class="panel">
     <h2>添加用户</h2>
-    <input id="username" placeholder="用户名">
-    <input id="password" placeholder="密码">
-    <button onclick="addUser()">添加</button>
+    <input id="username" placeholder="用户名" required>
+    <input id="password" placeholder="密码" type="password" required>
+    <select id="role">
+      <option value="student">学生</option>
+      <option value="teacher">教师</option>
+      <option value="admin">管理员</option>
+    </select>
+    <button onclick="addUser()">添加用户</button>
   </div>
 
-  <div>
+  <div class="panel">
+    <h2>搜索用户</h2>
+    <input id="searchKeyword" placeholder="输入用户名或ID">
+    <button onclick="searchUser()">搜索</button>
+  </div>
+
+  <div class="panel">
     <h2>用户列表</h2>
     <table id="userTable">
       <thead>
         <tr>
           <th>ID</th>
           <th>用户名</th>
+          <th>角色</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -35,32 +50,46 @@
   </div>
 
   <script>
-    // 正确初始化Supabase客户端
+    // 初始化Supabase客户端
     const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
     const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUsers();
+    });
+
     // 加载用户列表
     async function loadUsers() {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*');
-      
-      if (error) {
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        renderUserTable(data);
+      } catch (error) {
         console.error('加载用户失败:', error);
-        return;
+        alert('加载用户失败: ' + error.message);
       }
-      
+    }
+
+    // 渲染用户表格
+    function renderUserTable(users) {
       const tbody = document.querySelector('#userTable tbody');
       tbody.innerHTML = '';
       
-      data.forEach(user => {
+      users.forEach(user => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${user.id}</td>
           <td>${user.username}</td>
+          <td>${user.role}</td>
           <td>
-            <button onclick="updateUser('${user.id}')">更新</button>
+            <button onclick="editUser('${user.id}')">编辑</button>
             <button onclick="deleteUser('${user.id}')">删除</button>
           </td>
         `;
@@ -72,59 +101,94 @@
     async function addUser() {
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
       
-      const { error } = await supabase
-        .from('users')
-        .insert([{ username, password }]);
-      
-      if (error) {
-        alert('添加失败: ' + error.message);
+      if (!username || !password) {
+        alert('用户名和密码不能为空');
         return;
       }
       
-      alert('用户添加成功');
-      loadUsers();
+      try {
+        const { error } = await supabase
+          .from('users')
+          .insert([{ 
+            username, 
+            password, 
+            role,
+            created_at: new Date().toISOString()
+          }]);
+        
+        if (error) throw error;
+        
+        alert('用户添加成功');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        loadUsers();
+      } catch (error) {
+        console.error('添加用户失败:', error);
+        alert('添加用户失败: ' + error.message);
+      }
     }
 
-    // 更新用户
-    async function updateUser(id) {
+    // 搜索用户
+    async function searchUser() {
+      const keyword = document.getElementById('searchKeyword').value;
+      
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .or(`username.ilike.%${keyword}%,id.eq.${keyword}`);
+        
+        if (error) throw error;
+        
+        renderUserTable(data);
+      } catch (error) {
+        console.error('搜索用户失败:', error);
+        alert('搜索用户失败: ' + error.message);
+      }
+    }
+
+    // 编辑用户
+    async function editUser(id) {
       const newPassword = prompt('输入新密码');
       if (!newPassword) return;
       
-      const { error } = await supabase
-        .from('users')
-        .update({ password: newPassword })
-        .eq('id', id);
-      
-      if (error) {
-        alert('更新失败: ' + error.message);
-        return;
+      try {
+        const { error } = await supabase
+          .from('users')
+          .update({ password: newPassword })
+          .eq('id', id);
+        
+        if (error) throw error;
+        
+        alert('密码已更新');
+        loadUsers();
+      } catch (error) {
+        console.error('更新用户失败:', error);
+        alert('更新用户失败: ' + error.message);
       }
-      
-      alert('密码已更新');
-      loadUsers();
     }
 
     // 删除用户
     async function deleteUser(id) {
       if (!confirm('确定删除这个用户吗？')) return;
       
-      const { error } = await supabase
-        .from('users')
-        .delete()
-        .eq('id', id);
-      
-      if (error) {
-        alert('删除失败: ' + error.message);
-        return;
+      try {
+        const { error } = await supabase
+          .from('users')
+          .delete()
+          .eq('id', id);
+        
+        if (error) throw error;
+        
+        alert('用户已删除');
+        loadUsers();
+      } catch (error) {
+        console.error('删除用户失败:', error);
+        alert('删除用户失败: ' + error.message);
       }
-      
-      alert('用户已删除');
-      loadUsers();
     }
-
-    // 页面加载时初始化
-    loadUsers();
   </script>
 </body>
 </html>
