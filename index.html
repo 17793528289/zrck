@@ -185,7 +185,91 @@
     supabaseConfig.key
   );
 </script>
-<body>
+<!-- 在你的 index.html 的 </body> 标签前添加 -->
+
+<!-- 加载 Supabase SDK -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<!-- 你的数据库配置（先创建这个文件） -->
+<script src="supabase-config.js"></script>
+
+<!-- 数据库操作工具 -->
+<script src="database-tool.js"></script>
+
+<!-- 简单编辑器（可选） -->
+<script src="simple-editor.js"></script>
+
+<!-- 初始化代码 -->
+<script>
+// 页面加载完成后执行
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 网站启动完成');
+  
+  // 测试数据库连接
+  if (window.siteDB) {
+    window.siteDB.testConnection().then(result => {
+      console.log(result.message);
+      
+      // 自动加载页面数据
+      if (!window.location.search.includes('edit=true')) {
+        setTimeout(() => {
+          window.siteDB.setCurrentPage('home');
+          window.siteDB.getPageContents().then(contents => {
+            for (const [section, content] of Object.entries(contents)) {
+              const element = document.getElementById(section) || 
+                             document.querySelector(`[data-section="${section}"]`);
+              if (element && content) {
+                element.innerHTML = content;
+              }
+            }
+            console.log('✅ 页面数据自动加载完成');
+          });
+        }, 1000);
+      }
+    });
+  }
+  
+  // 创建管理入口（在页面右下角添加一个按钮）
+  const adminBtn = document.createElement('button');
+  adminBtn.innerHTML = '🔧';
+  adminBtn.title = '进入编辑模式';
+  adminBtn.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+  `;
+  adminBtn.onmouseenter = () => {
+    adminBtn.style.transform = 'scale(1.1)';
+    adminBtn.style.boxShadow = '0 6px 15px rgba(0,0,0,0.3)';
+  };
+  adminBtn.onmouseleave = () => {
+    adminBtn.style.transform = 'scale(1)';
+    adminBtn.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+  };
+  adminBtn.onclick = () => {
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('edit', 'true');
+    window.location.href = currentUrl.toString();
+  };
+  
+  // 只有不是编辑模式时才显示按钮
+  if (!window.location.search.includes('edit=true')) {
+    document.body.appendChild(adminBtn);
+  }
+});
+</script>
+    <body>
     <!-- 导航栏 -->
     <nav class="navbar">
         <div class="nav-container">
