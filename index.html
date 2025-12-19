@@ -170,6 +170,21 @@
         }
     </style>
 </head>
+    <!-- 在head标签的最后添加 -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+  // Supabase 配置（用你自己的密钥替换）
+  const supabaseConfig = {
+    url: 'https://wxbemuwgiiucdgmbhbvg.supabase.co',
+    key: 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk'
+  };
+  
+  // 创建客户端
+  const supabase = window.supabase.createClient(
+    supabaseConfig.url, 
+    supabaseConfig.key
+  );
+</script>
 <body>
     <!-- 导航栏 -->
     <nav class="navbar">
