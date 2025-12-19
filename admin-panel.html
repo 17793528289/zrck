@@ -11,6 +11,7 @@
     th { background-color: #f2f2f2; }
     input { padding: 8px; margin: 5px; width: 200px; }
     .panel { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
+    .error { color: red; margin: 5px 0; }
   </style>
 </head>
 <body>
@@ -26,12 +27,15 @@
       <option value="admin">管理员</option>
     </select>
     <button onclick="addUser()">添加用户</button>
+    <div id="addError" class="error"></div>
   </div>
 
   <div class="panel">
     <h2>搜索用户</h2>
     <input id="searchKeyword" placeholder="输入用户名或ID">
     <button onclick="searchUser()">搜索</button>
+    <button onclick="loadUsers()">重置</button>
+    <div id="searchError" class="error"></div>
   </div>
 
   <div class="panel">
@@ -42,11 +46,13 @@
           <th>ID</th>
           <th>用户名</th>
           <th>角色</th>
+          <th>状态</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
+    <div id="tableError" class="error"></div>
   </div>
 
   <script>
@@ -63,6 +69,7 @@
     // 加载用户列表
     async function loadUsers() {
       try {
+        document.getElementById('tableError').textContent = '';
         const { data, error } = await supabase
           .from('users')
           .select('*')
@@ -73,7 +80,7 @@
         renderUserTable(data);
       } catch (error) {
         console.error('加载用户失败:', error);
-        alert('加载用户失败: ' + error.message);
+        document.getElementById('tableError').textContent = '加载用户失败: ' + error.message;
       }
     }
 
@@ -82,14 +89,23 @@
       const tbody = document.querySelector('#userTable tbody');
       tbody.innerHTML = '';
       
+      if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5">没有找到用户</td></tr>';
+        return;
+      }
+      
       users.forEach(user => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${user.id}</td>
           <td>${user.username}</td>
           <td>${user.role}</td>
+          <td>${user.status ? '活跃' : '禁用'}</td>
           <td>
             <button onclick="editUser('${user.id}')">编辑</button>
+            <button onclick="toggleStatus('${user.id}', ${!user.status})">
+              ${user.status ? '禁用' : '启用'}
+            </button>
             <button onclick="deleteUser('${user.id}')">删除</button>
           </td>
         `;
@@ -99,22 +115,24 @@
 
     // 添加用户
     async function addUser() {
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
       const role = document.getElementById('role').value;
       
       if (!username || !password) {
-        alert('用户名和密码不能为空');
+        document.getElementById('addError').textContent = '用户名和密码不能为空';
         return;
       }
       
       try {
+        document.getElementById('addError').textContent = '';
         const { error } = await supabase
           .from('users')
           .insert([{ 
             username, 
             password, 
             role,
+            status: true,
             created_at: new Date().toISOString()
           }]);
         
@@ -126,47 +144,77 @@
         loadUsers();
       } catch (error) {
         console.error('添加用户失败:', error);
-        alert('添加用户失败: ' + error.message);
+        document.getElementById('addError').textContent = '添加用户失败: ' + error.message;
       }
     }
 
     // 搜索用户
     async function searchUser() {
-      const keyword = document.getElementById('searchKeyword').value;
+      const keyword = document.getElementById('searchKeyword').value.trim();
       
       try {
+        document.getElementById('searchError').textContent = '';
+        if (!keyword) {
+          loadUsers();
+          return;
+        }
+        
         const { data, error } = await supabase
           .from('users')
           .select('*')
-          .or(`username.ilike.%${keyword}%,id.eq.${keyword}`);
+          .or(`username.ilike.%${keyword}%,id.eq.${keyword}`)
+          .order('created_at', { ascending: false });
         
         if (error) throw error;
         
         renderUserTable(data);
       } catch (error) {
         console.error('搜索用户失败:', error);
-        alert('搜索用户失败: ' + error.message);
+        document.getElementById('searchError').textContent = '搜索用户失败: ' + error.message;
       }
     }
 
     // 编辑用户
     async function editUser(id) {
-      const newPassword = prompt('输入新密码');
-      if (!newPassword) return;
+      const newPassword = prompt('输入新密码（留空则不修改）');
+      if (newPassword === null) return;
       
       try {
+        const updates = {};
+        if (newPassword) updates.password = newPassword;
+        
+        if (Object.keys(updates).length === 0) return;
+        
         const { error } = await supabase
           .from('users')
-          .update({ password: newPassword })
+          .update(updates)
           .eq('id', id);
         
         if (error) throw error;
         
-        alert('密码已更新');
+        alert('用户信息已更新');
         loadUsers();
       } catch (error) {
         console.error('更新用户失败:', error);
         alert('更新用户失败: ' + error.message);
+      }
+    }
+
+    // 切换用户状态
+    async function toggleStatus(id, newStatus) {
+      try {
+        const { error } = await supabase
+          .from('users')
+          .update({ status: newStatus })
+          .eq('id', id);
+        
+        if (error) throw error;
+        
+        alert(`用户已${newStatus ? '启用' : '禁用'}`);
+        loadUsers();
+      } catch (error) {
+        console.error('状态更新失败:', error);
+        alert('状态更新失败: ' + error.message);
       }
     }
 
