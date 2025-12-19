@@ -35,9 +35,10 @@
   </div>
 
   <script>
-    // 初始化Supabase
+    // 正确初始化Supabase客户端
     const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
     const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     // 加载用户列表
     async function loadUsers() {
