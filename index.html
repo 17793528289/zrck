@@ -168,6 +168,11 @@
             font-size: 0.9rem;
             margin-left: 1rem;
         }
+        
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -376,7 +381,7 @@
                     </label>
                 </div>
                 
-                <button type="submit" class="btn btn-primary full-width">登录</button>
+                <button type="submit" class="btn btn-primary full-width" id="submitBtn">登录</button>
             </form>
 
             <div class="modal-footer">
@@ -420,10 +425,22 @@
         </div>
     </footer>
 
-    <!-- 修复后的JavaScript代码 -->
+    <!-- 引入Supabase客户端库 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- 集成Supabase的JavaScript代码 -->
     <script>
         // 启用严格模式
         "use strict";
+        
+        // Supabase配置 - 请替换为您的实际项目配置
+        const SUPABASE_CONFIG = {
+            url: 'https://wxbemuwgiiucdgmbhbvg.supabase.co', // 替换为您的Supabase项目URL
+            anonKey: 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk' // 替换为您的Supabase anon key
+        };
+        
+        // 初始化Supabase客户端
+        const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
         
         // 首页登录功能
         document.addEventListener('DOMContentLoaded', function() {
@@ -438,6 +455,7 @@
                 const modeBanner = document.getElementById('modeBanner');
                 const switchToLogin = document.getElementById('switchToLogin');
                 const viewModeBtn = document.getElementById('viewModeBtn');
+                const submitBtn = document.getElementById('submitBtn');
                 
                 // 确保模态框初始隐藏
                 if (loginModal instanceof HTMLElement) {
@@ -481,7 +499,7 @@
                 
                 // 登录表单提交
                 if (loginForm instanceof HTMLFormElement) {
-                    loginForm.addEventListener('submit', function(e) {
+                    loginForm.addEventListener('submit', async function(e) {
                         e.preventDefault();
                         console.log('登录表单提交');
                         
@@ -510,27 +528,37 @@
                         
                         console.log('用户名:', username, '密码:', password);
                         
-                        // 调用登录验证函数
-                        const loginResult = validateLogin(username, password);
+                        // 设置按钮加载状态
+                        setButtonLoading(true);
                         
-                        if (loginResult.success) {
-                            showLoginMessage('登录成功！正在跳转...', 'success');
-                            console.log('登录成功:', loginResult.user);
+                        try {
+                            // 调用Supabase登录验证函数
+                            const loginResult = await validateLoginWithSupabase(username, password);
                             
-                            // 保存登录状态
-                            saveLoginState(loginResult.user, username);
-                            
-                            // 更新UI
-                            updateUIAfterLogin(loginResult.user);
-                            
-                            // 2秒后跳转到会员页面
-                            setTimeout(() => {
-                                window.location.href = 'member.html';
-                            }, 3000);
-                            
-                        } else {
-                            showLoginMessage(loginResult.message, 'error');
-                            console.log('登录失败:', loginResult.message);
+                            if (loginResult.success) {
+                                showLoginMessage('登录成功！正在跳转...', 'success');
+                                console.log('登录成功:', loginResult.user);
+                                
+                                // 保存登录状态
+                                saveLoginState(loginResult.user, username);
+                                
+                                // 更新UI
+                                updateUIAfterLogin(loginResult.user);
+                                
+                                // 2秒后跳转到会员页面
+                                setTimeout(() => {
+                                    window.location.href = 'member.html';
+                                }, 2000);
+                                
+                            } else {
+                                showLoginMessage(loginResult.message, 'error');
+                                console.log('登录失败:', loginResult.message);
+                            }
+                        } catch (error) {
+                            console.error('登录过程异常:', error);
+                            showLoginMessage('登录过程出现异常，请重试', 'error');
+                        } finally {
+                            setButtonLoading(false);
                         }
                     });
                 }
@@ -564,55 +592,82 @@
             }
         });
 
-        // 验证管理员登录
-        function validateAdminLogin(username, password) {
-            const adminAccounts = {
-                'admin': { 
-                    password: 'admin123', 
-                    name: '系统管理员', 
-                    role: 'admin',
-                    grade: '系统管理'
-                },
-                'teacher': { 
-                    password: 'teacher123', 
-                    name: '教师', 
-                    role: 'teacher',
-                    grade: '指导教师'
-                }
-            };
+        // 使用Supabase验证登录
+        async function validateLoginWithSupabase(username, password) {
+            console.log('开始Supabase登录验证:', username);
             
-            if (adminAccounts[username]) {
-                console.log('检测到管理员账户:', username);
-                if (adminAccounts[username].password === password) {
-                    return adminAccounts[username];
-                }
-            }
-            return null;
-        }
-
-        // 验证注册用户登录
-        function validateRegisteredUser(username, password) {
-            let registeredUsers = {};
             try {
-                const storedUsers = localStorage.getItem('registeredUsers');
-                registeredUsers = storedUsers ? JSON.parse(storedUsers) : {};
-            } catch (error) {
-                console.error('解析本地用户数据失败:', error);
-                // 可以选择清空异常数据
-                localStorage.removeItem('registeredUsers');
-            }
-            
-            if (registeredUsers[username]) {
-                console.log('检测到注册用户:', username);
-                if (registeredUsers[username].password === password) {
-                    return registeredUsers[username];
+                // 查询Supabase数据库中的用户
+                const { data, error } = await supabase
+                    .from('members')
+                    .select('*')
+                    .eq('student_id', username)
+                    .eq('password', password)
+                    .single();
+                
+                if (error) {
+                    console.error('Supabase查询错误:', error);
+                    
+                    // 如果Supabase查询失败，回退到本地验证
+                    const localResult = validateLocalLogin(username, password);
+                    if (localResult.success) {
+                        return {
+                            success: true,
+                            user: localResult.user,
+                            message: '登录成功（本地模式）'
+                        };
+                    }
+                    
+                    return {
+                        success: false,
+                        message: '用户名或密码错误'
+                    };
                 }
+                
+                if (data) {
+                    console.log('Supabase登录成功:', data.name);
+                    return {
+                        success: true,
+                        user: {
+                            name: data.name,
+                            grade: data.grade || '未知班级',
+                            role: data.role || 'student',
+                            student_id: data.student_id
+                        },
+                        message: '登录成功'
+                    };
+                } else {
+                    console.log('Supabase未找到用户:', username);
+                    return {
+                        success: false,
+                        message: '用户名或密码错误'
+                    };
+                }
+            } catch (error) {
+                console.error('Supabase登录异常:', error);
+                
+                // 如果Supabase连接失败，回退到本地验证
+                const localResult = validateLocalLogin(username, password);
+                if (localResult.success) {
+                    return {
+                        success: true,
+                        user: localResult.user,
+                        message: '登录成功（本地模式）'
+                    };
+                }
+                
+                return {
+                    success: false,
+                    message: '系统错误，请稍后重试'
+                };
             }
-            return null;
         }
 
-        // 验证测试账户登录
-        function validateTestAccount(username, password) {
+        // 本地验证函数（作为备用方案）
+        function validateLocalLogin(username, password) {
+            console.log('使用本地验证:', username);
+            
+            // 测试账户
             const testAccounts = {
                 '2023001': { 
                     password: '123456', 
@@ -625,40 +680,41 @@
                     name: '李四', 
                     grade: '高一(3)班', 
                     role: 'student' 
+                },
+                'admin': { 
+                    password: 'admin123', 
+                    name: '系统管理员', 
+                    role: 'admin',
+                    grade: '系统管理'
                 }
             };
             
-            if (testAccounts[username]) {
-                console.log('检测到测试账户:', username);
-                if (testAccounts[username].password === password) {
-                    return testAccounts[username];
-                }
-            }
-            return null;
-        }
-
-        // 验证登录信息
-        function validateLogin(username, password) {
-            console.log('开始验证登录:', username);
-            
-            // 按优先级验证不同类型的账户
-            const user = validateAdminLogin(username, password) ||
-                       validateRegisteredUser(username, password) ||
-                       validateTestAccount(username, password);
-            
-            if (user) {
+            if (testAccounts[username] && testAccounts[username].password === password) {
                 return {
                     success: true,
-                    user: user,
-                    message: '登录成功'
+                    user: testAccounts[username]
                 };
             }
             
-            console.log('未找到用户或密码错误:', username);
             return {
-                success: false,
-                message: '用户名或密码错误'
+                success: false
             };
+        }
+
+        // 设置按钮加载状态
+        function setButtonLoading(isLoading) {
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                if (isLoading) {
+                    submitBtn.textContent = '登录中...';
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('loading');
+                } else {
+                    submitBtn.textContent = '登录';
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                }
+            }
         }
 
         // 显示登录消息
@@ -717,6 +773,21 @@
                 modeBanner.className = 'mode-banner member-mode';
                 bannerText.textContent = `欢迎回来，${user.name}！`;
                 modeBanner.style.display = 'block';
+                
+                // 更新横幅按钮
+                const switchToLogin = document.getElementById('switchToLogin');
+                if (switchToLogin) {
+                    switchToLogin.textContent = '进入会员中心';
+                    switchToLogin.onclick = function(e) {
+                        e.preventDefault();
+                        window.location.href = 'member.html';
+                    };
+                }
+            }
+            
+            // 如果是管理员，显示管理员入口
+            if (user.role === 'admin' || user.role === 'teacher') {
+                showAdminAccess();
             }
         }
 
@@ -742,6 +813,23 @@
                 modeBanner.className = 'mode-banner guest-mode';
                 bannerText.textContent = '您当前处于访客浏览模式';
                 modeBanner.style.display = 'block';
+                
+                // 重置横幅按钮
+                const switchToLogin = document.getElementById('switchToLogin');
+                if (switchToLogin) {
+                    switchToLogin.textContent = '登录解锁更多内容';
+                    switchToLogin.onclick = function(e) {
+                        e.preventDefault();
+                        const modal = document.getElementById('loginModal');
+                        if (modal) modal.style.display = 'block';
+                    };
+                }
+            }
+            
+            // 移除管理员入口
+            const existingAdminLink = document.querySelector('a[href="admin-panel.html"]');
+            if (existingAdminLink) {
+                existingAdminLink.parentElement.remove();
             }
             
             alert('已切换到访客浏览模式');
