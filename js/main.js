@@ -25,18 +25,6 @@ function getSupabase() {
     return window.supabaseClient;
 }
 
-// 导航系统初始化
-function initializeNavigation() {
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-        });
-    }
-}
-
 // 设置访客模式
 function setGuestMode() {
     // 清除登录状态
@@ -261,6 +249,18 @@ function checkExistingLogin() {
     }
 }
 
+// 导航系统初始化
+function initializeNavigation() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+        });
+    }
+}
+
 // 登录系统初始化
 function initializeLoginSystem(supabase) {
     const loginBtn = document.getElementById('loginBtn');
@@ -270,7 +270,6 @@ function initializeLoginSystem(supabase) {
     const viewModeBtn = document.getElementById('viewModeBtn');
     const switchToLogin = document.getElementById('switchToLogin');
 
-    // 登录按钮点击事件
     if (loginBtn) {
         loginBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -280,7 +279,6 @@ function initializeLoginSystem(supabase) {
         });
     }
 
-    // 关闭按钮
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
             if (loginModal) {
@@ -290,7 +288,6 @@ function initializeLoginSystem(supabase) {
         });
     }
 
-    // 点击模态框外部关闭
     if (loginModal) {
         loginModal.addEventListener('click', function(e) {
             if (e.target === loginModal) {
@@ -300,7 +297,6 @@ function initializeLoginSystem(supabase) {
         });
     }
 
-    // 登录表单提交
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -309,13 +305,11 @@ function initializeLoginSystem(supabase) {
             const password = document.getElementById('password').value;
             const submitBtn = document.getElementById('submitBtn');
             
-            // 输入验证
             if (!username || !password) {
                 showLoginMessage('请输入用户名和密码', 'error');
                 return;
             }
             
-            // 设置加载状态
             setButtonLoading(true, submitBtn);
             
             try {
@@ -341,12 +335,10 @@ function initializeLoginSystem(supabase) {
         });
     }
 
-    // 访客模式按钮
     if (viewModeBtn) {
         viewModeBtn.addEventListener('click', setGuestMode);
     }
 
-    // 横幅登录按钮
     if (switchToLogin) {
         switchToLogin.addEventListener('click', function(e) {
             e.preventDefault();
