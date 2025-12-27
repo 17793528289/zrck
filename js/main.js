@@ -1,10 +1,10 @@
 // 启用严格模式
 "use strict";
 
-// Supabase配置 - 请替换为您的实际项目配置
+// Supabase配置
 const SUPABASE_CONFIG = {
-    url: 'https://your-project-ref.supabase.co',
-    anonKey: 'your-anon-key'
+    url: 'https://wxbemuwgiiucdgmbhbvg.supabase.co',
+    anonKey: 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk'
 };
 
 // 初始化Supabase客户端
@@ -12,20 +12,9 @@ const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONF
 
 // 主初始化函数
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('网站初始化开始...');
-    
-    try {
-        initializeNavigation();
-        initializeLoginSystem();
-        initializeAnimations();
-        initializeMobileMenu();
-        checkExistingLogin();
-        
-        console.log('网站初始化完成');
-    } catch (error) {
-        console.error('初始化过程中发生错误:', error);
-        showNotification('页面初始化失败，请刷新页面重试', 'error');
-    }
+    initializeNavigation();
+    initializeLoginSystem();
+    checkExistingLogin();
 });
 
 // 导航系统初始化
@@ -36,27 +25,8 @@ function initializeNavigation() {
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', function() {
             navMenu.classList.toggle('active');
-            this.classList.toggle('active');
         });
     }
-    
-    // 平滑滚动
-    const navLinks = document.querySelectorAll('a[href^="#"]');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
 }
 
 // 登录系统初始化
@@ -65,168 +35,101 @@ function initializeLoginSystem() {
     const loginModal = document.getElementById('loginModal');
     const closeBtn = document.querySelector('.close');
     const loginForm = document.getElementById('loginForm');
-    const modeBanner = document.getElementById('modeBanner');
-    const switchToLogin = document.getElementById('switchToLogin');
     const viewModeBtn = document.getElementById('viewModeBtn');
-    
-    // 确保模态框初始隐藏
-    if (loginModal) {
-        loginModal.style.display = 'none';
-    }
-    
-    // 事件监听器绑定
-    bindEvent(loginBtn, 'click', showLoginModal);
-    bindEvent(closeBtn, 'click', hideLoginModal);
-    bindEvent(loginModal, 'click', handleModalClick);
-    bindEvent(loginForm, 'submit', handleLoginSubmit);
-    bindEvent(viewModeBtn, 'click', setGuestMode);
-    bindEvent(switchToLogin, 'click', showLoginModal);
-    
-    // 显示模式横幅
-    if (modeBanner) {
-        setTimeout(() => {
-            modeBanner.style.display = 'block';
-            setTimeout(() => modeBanner.classList.add('show'), 100);
-        }, 1000);
-    }
-}
+    const switchToLogin = document.getElementById('switchToLogin');
 
-// 动画系统初始化
-function initializeAnimations() {
-    // 滚动动画
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    // 观察所有需要动画的元素
-    const animatedElements = document.querySelectorAll('.feature-item, .resource-card, .activity-card');
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-}
-
-// 移动端菜单初始化
-function initializeMobileMenu() {
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (navToggle && navMenu) {
-        // 点击菜单外区域关闭菜单
-        document.addEventListener('click', function(e) {
-            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
-                navMenu.classList.remove('active');
-                navToggle.classList.remove('active');
+    // 登录按钮点击事件
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (loginModal) {
+                loginModal.style.display = 'block';
             }
         });
     }
-}
 
-// 通用事件绑定函数
-function bindEvent(element, event, handler) {
-    if (element) {
-        element.addEventListener(event, handler);
+    // 关闭按钮
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            if (loginModal) {
+                loginModal.style.display = 'none';
+                clearLoginMessage();
+            }
+        });
     }
-}
 
-// 显示登录模态框
-function showLoginModal(e) {
-    if (e) e.preventDefault();
-    
-    const loginModal = document.getElementById('loginModal');
+    // 点击模态框外部关闭
     if (loginModal) {
-        loginModal.style.display = 'block';
-        clearLoginMessage();
-        
-        // 添加显示动画
-        setTimeout(() => {
-            loginModal.style.opacity = '1';
-            loginModal.style.transform = 'scale(1)';
-        }, 10);
+        loginModal.addEventListener('click', function(e) {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+                clearLoginMessage();
+            }
+        });
+    }
+
+    // 登录表单提交
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // 输入验证
+            if (!username || !password) {
+                showLoginMessage('请输入用户名和密码', 'error');
+                return;
+            }
+            
+            // 设置加载状态
+            setButtonLoading(true, submitBtn);
+            
+            try {
+                const loginResult = await validateLogin(username, password);
+                
+                if (loginResult.success) {
+                    showLoginMessage('登录成功！', 'success');
+                    saveLoginState(loginResult.user, username);
+                    updateUIAfterLogin(loginResult.user);
+                    
+                    setTimeout(() => {
+                        if (loginModal) loginModal.style.display = 'none';
+                    }, 2000);
+                    
+                } else {
+                    showLoginMessage(loginResult.message, 'error');
+                }
+            } catch (error) {
+                console.error('登录过程异常:', error);
+                showLoginMessage('登录出现异常，请重试', 'error');
+            } finally {
+                setButtonLoading(false, submitBtn);
+            }
+        });
+    }
+
+    // 访客模式按钮
+    if (viewModeBtn) {
+        viewModeBtn.addEventListener('click', setGuestMode);
+    }
+
+    // 横幅登录按钮
+    if (switchToLogin) {
+        switchToLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (loginModal) {
+                loginModal.style.display = 'block';
+            }
+        });
     }
 }
 
-// 隐藏登录模态框
-function hideLoginModal() {
-    const loginModal = document.getElementById('loginModal');
-    if (loginModal) {
-        loginModal.style.opacity = '0';
-        loginModal.style.transform = 'scale(0.9)';
-        
-        setTimeout(() => {
-            loginModal.style.display = 'none';
-            clearLoginMessage();
-        }, 300);
-    }
-}
-
-// 处理模态框点击
-function handleModalClick(e) {
-    if (e.target === this) {
-        hideLoginModal();
-    }
-}
-
-// 处理登录提交
-async function handleLoginSubmit(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value;
-    const submitBtn = document.getElementById('submitBtn');
-    
-    // 输入验证
-    if (!validateLoginInput(username, password)) return;
-    
-    // 设置加载状态
-    setButtonLoading(true, submitBtn);
-    
+// 验证登录信息
+async function validateLogin(username, password) {
     try {
-        const loginResult = await validateLoginWithSupabase(username, password);
-        
-        if (loginResult.success) {
-            await handleLoginSuccess(loginResult.user, username);
-        } else {
-            showLoginMessage(loginResult.message, 'error');
-        }
-    } catch (error) {
-        console.error('登录过程异常:', error);
-        showLoginMessage('登录出现异常，请重试', 'error');
-    } finally {
-        setButtonLoading(false, submitBtn);
-    }
-}
-
-// 验证登录输入
-function validateLoginInput(username, password) {
-    if (!username || !password) {
-        showLoginMessage('请输入用户名和密码', 'error');
-        return false;
-    }
-    
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-        showLoginMessage('用户名包含非法字符', 'error');
-        return false;
-    }
-    
-    return true;
-}
-
-// 使用Supabase验证登录
-async function validateLoginWithSupabase(username, password) {
-    try {
+        // 首先尝试Supabase验证
         const { data, error } = await supabase
             .from('members')
             .select('*')
@@ -234,12 +137,7 @@ async function validateLoginWithSupabase(username, password) {
             .eq('password', password)
             .single();
         
-        if (error) {
-            console.error('Supabase查询错误:', error);
-            return validateLocalLogin(username, password);
-        }
-        
-        if (data) {
+        if (!error && data) {
             return {
                 success: true,
                 user: {
@@ -250,9 +148,11 @@ async function validateLoginWithSupabase(username, password) {
                 },
                 message: '登录成功'
             };
-        } else {
-            return validateLocalLogin(username, password);
         }
+        
+        // 如果Supabase验证失败，回退到本地验证
+        return validateLocalLogin(username, password);
+        
     } catch (error) {
         console.error('Supabase登录异常:', error);
         return validateLocalLogin(username, password);
@@ -294,19 +194,6 @@ function validateLocalLogin(username, password) {
         success: false,
         message: '用户名或密码错误'
     };
-}
-
-// 处理登录成功
-async function handleLoginSuccess(user, username) {
-    showLoginMessage('登录成功！正在跳转...', 'success');
-    
-    saveLoginState(user, username);
-    updateUIAfterLogin(user);
-    
-    // 延迟跳转以显示成功消息
-    setTimeout(() => {
-        window.location.href = 'member.html';
-    }, 2000);
 }
 
 // 设置按钮加载状态
@@ -365,7 +252,113 @@ function saveLoginState(user, username) {
 
 // 登录后更新UI
 function updateUIAfterLogin(user) {
-    updateUserGreeting(user);
-    updateModeBanner(user);
+    // 更新用户问候语
+    const userGreeting = document.getElementById('userGreeting');
+    if (userGreeting) {
+        userGreeting.textContent = `欢迎，${user.name}`;
+    }
     
-    if (user.role === 'admin' || user
+    // 更新模式横幅
+    const modeBanner = document.getElementById('modeBanner');
+    const bannerText = document.getElementById('bannerText');
+    if (modeBanner && bannerText) {
+        modeBanner.className = 'mode-banner member-mode';
+        bannerText.textContent = `欢迎回来，${user.name}！`;
+        
+        // 更新横幅按钮
+        const switchToLogin = document.getElementById('switchToLogin');
+        if (switchToLogin) {
+            switchToLogin.textContent = '进入会员中心';
+            switchToLogin.onclick = function(e) {
+                e.preventDefault();
+                window.location.href = 'member.html';
+            };
+        }
+    }
+    
+    // 如果是管理员，显示管理员入口
+    if (user.role === 'admin' || user.role === 'teacher') {
+        showAdminAccess();
+    }
+}
+
+// 设置访客模式
+function setGuestMode() {
+    // 清除登录状态
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('username');
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('username');
+    
+    // 更新UI
+    const userGreeting = document.getElementById('userGreeting');
+    if (userGreeting) {
+        userGreeting.textContent = '欢迎访问';
+    }
+    
+    // 更新模式横幅
+    const modeBanner = document.getElementById('modeBanner');
+    const bannerText = document.getElementById('bannerText');
+    if (modeBanner && bannerText) {
+        modeBanner.className = 'mode-banner guest-mode';
+        bannerText.textContent = '您当前处于访客浏览模式';
+        
+        // 重置横幅按钮
+        const switchToLogin = document.getElementById('switchToLogin');
+        if (switchToLogin) {
+            switchToLogin.textContent = '登录解锁更多内容';
+            switchToLogin.onclick = function(e) {
+                e.preventDefault();
+                const modal = document.getElementById('loginModal');
+                if (modal) modal.style.display = 'block';
+            };
+        }
+    }
+    
+    // 移除管理员入口
+    const existingAdminLink = document.querySelector('a[href="admin-panel.html"]');
+    if (existingAdminLink) {
+        existingAdminLink.parentElement.remove();
+    }
+    
+    alert('已切换到访客浏览模式');
+}
+
+// 检查是否已经登录
+function checkExistingLogin() {
+    let currentUser = null;
+    try {
+        currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+        if (currentUser) {
+            const user = JSON.parse(currentUser);
+            updateUIAfterLogin(user);
+        }
+    } catch (error) {
+        console.error('检查登录状态时出错:', error);
+        sessionStorage.removeItem('currentUser');
+        localStorage.removeItem('currentUser');
+    }
+}
+
+// 显示管理员访问入口
+function showAdminAccess() {
+    const navMenu = document.querySelector('.nav-menu');
+    if (navMenu) {
+        const existingAdminLink = navMenu.querySelector('a[href="admin-panel.html"]');
+        if (!existingAdminLink) {
+            const adminLink = document.createElement('li');
+            adminLink.innerHTML = '<a href="admin-panel.html" style="color: #e74c3c; font-weight: bold;">⚙️ 管理后台</a>';
+            navMenu.appendChild(adminLink);
+        }
+    }
+}
+
+// 退出登录函数（供其他页面使用）
+function logout() {
+    if (confirm('确定要退出登录吗？')) {
+        sessionStorage.clear();
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('username');
+        window.location.href = 'index.html';
+    }
+}
