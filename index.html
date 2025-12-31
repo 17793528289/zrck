@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>武威第十八中学卓然创客社团</title>
+    <title>用户登录 - 卓然创客社团</title>
     <style>
-        /* 基础样式 */
         * {
             margin: 0;
             padding: 0;
@@ -14,165 +13,37 @@
         
         body {
             font-family: 'Microsoft YaHei', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-        }
-        
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        /* 导航栏样式 */
-        .navbar {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .nav-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
         
-        .nav-logo h2 a {
-            color: white;
-            text-decoration: none;
-        }
-        
-        .nav-menu {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        
-        .nav-menu a {
-            color: white;
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            transition: background-color 0.3s;
-        }
-        
-        .nav-menu a:hover, .nav-menu a.active {
-            background-color: #3498db;
-        }
-        
-        .user-menu {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .login-btn, .guest-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            color: white;
-            font-size: 0.9em;
-            transition: all 0.3s;
-        }
-        
-        .login-btn {
-            background: #e74c3c;
-        }
-        
-        .login-btn:hover {
-            background: #c0392b;
-        }
-        
-        .guest-btn {
-            background: #95a5a6;
-        }
-        
-        .guest-btn:hover {
-            background: #7f8c8d;
-        }
-        
-        /* 状态横幅样式 */
-        .mode-banner {
-            padding: 10px 0;
-            color: white;
-            margin-top: 60px;
-            transition: all 0.3s;
-        }
-        
-        .guest-mode {
-            background: #34495e;
-        }
-        
-        .member-mode {
-            background: #27ae60;
-        }
-        
-        .banner-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .banner-action {
-            padding: 5px 15px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        
-        /* 模态框样式 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
+        .login-container {
+            background: white;
+            padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            position: relative;
-            animation: modalopen 0.4s;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
         }
         
-        @keyframes modalopen {
-            from { opacity: 0; transform: translateY(-60px); }
-            to { opacity: 1; transform: translateY(0); }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
         }
         
-        .close {
-            position: absolute;
-            right: 15px;
-            top: 10px;
+        .login-header h2 {
+            color: #333;
             font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #aaa;
+            margin-bottom: 10px;
         }
         
-        .close:hover {
-            color: #000;
+        .login-header p {
+            color: #666;
+            font-size: 14px;
         }
         
         .form-group {
@@ -182,453 +53,304 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
+            color: #333;
             font-weight: bold;
-            color: #2c3e50;
         }
         
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 12px;
+            border: 2px solid #ddd;
             border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1em;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
         
-        .form-options {
-            margin-bottom: 20px;
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
         }
         
         .remember-me {
             display: flex;
             align-items: center;
-            gap: 10px;
+            margin-bottom: 20px;
         }
         
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            margin: 10px;
-            border-radius: 25px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
+        .remember-me input {
+            margin-right: 10px;
         }
         
-        .btn-primary {
-            background-color: #e74c3c;
-        }
-        
-        .btn-primary:hover {
-            background-color: #c0392b;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .btn-secondary {
-            background-color: #2ecc71;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #27ae60;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .full-width {
+        .login-btn {
             width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
         
-        .message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 5px;
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 10px;
             display: none;
         }
         
-        .message.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+        .success-message {
+            color: #27ae60;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
         }
         
-        .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .test-accounts {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 14px;
         }
         
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .test-accounts h4 {
+            margin-bottom: 10px;
+            color: #333;
         }
         
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .nav-menu {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .user-menu {
-                margin-left: 0;
-                justify-content: center;
-            }
-            
-            .banner-content {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
+        .oauth-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .oauth-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <div class="nav-logo">
-                <h2><a href="index.html">卓然创客</a></h2>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="active">首页</a></li>
-                <li><a href="about.html">关于我们</a></li>
-                <li><a href="activities.html">活动展示</a></li>
-                <li><a href="projects.html">项目成果</a></li>
-                <li><a href="join.html">加入我们</a></li>
-                <li class="user-menu">
-                    <span id="userGreeting">欢迎访问</span>
-                    <button id="loginBtn" class="login-btn">会员登录</button>
-                    <button id="viewModeBtn" class="guest-btn" style="display: none;">访客浏览</button>
-                </li>
-            </ul>
+    <div class="login-container">
+        <div class="login-header">
+            <h2>欢迎回来</h2>
+            <p>登录您的卓然创客社团账户</p>
         </div>
-    </nav>
-
-    <!-- 模式状态提示 -->
-    <div id="modeBanner" class="mode-banner guest-mode">
-        <div class="container">
-            <div class="banner-content">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span class="banner-icon">👤</span>
-                    <span id="bannerText">您当前处于访客浏览模式</span>
-                </div>
-                <button id="switchToLogin" class="banner-action">登录解锁更多内容</button>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">邮箱地址</label>
+                <input type="email" id="email" name="email" placeholder="请输入邮箱地址" required>
             </div>
+            
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
+            </div>
+            
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">记住登录状态</label>
+            </div>
+            
+            <button type="submit" class="login-btn">登录</button>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>正在验证身份...</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+        </form>
+
+        <div class="oauth-buttons">
+            <button class="oauth-btn" onclick="signInWithOAuth('github')">使用 GitHub 登录</button>
+            <button class="oauth-btn" onclick="signInWithOAuth('google')">使用 Google 登录</button>
+        </div>
+        
+        <div class="test-accounts">
+            <h4>测试账户信息</h4>
+            <p><strong>提示：</strong>请使用在Supabase中注册的真实账户</p>
+            <p>首次使用需要先注册账户</p>
         </div>
     </div>
-
-    <!-- 主要内容区域 -->
-    <main style="margin-top: 120px; padding: 40px 0;">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 40px;">
-                <h1>武威第十八中学卓然创客社团</h1>
-                <p style="font-size: 1.2em; color: #666; margin-top: 10px;">创新 · 实践 · 分享 · 成长</p>
-            </div>
-            
-            <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                <h2>欢迎来到卓然创客社团</h2>
-                <p style="margin: 20px 0;">我们是一个充满活力的学生科技社团，致力于培养学生的创新思维、实践能力和团队协作精神。在这里，创意与科技相遇，梦想与现实接轨。</p>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px;">
-                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-                        <h3>50+ 活跃成员</h3>
-                        <p>来自各年级的创客爱好者</p>
-                    </div>
-                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-                        <h3>20+ 成功项目</h3>
-                        <p>涵盖多个技术领域</p>
-                    </div>
-                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-                        <h3>5 专业导师</h3>
-                        <p>提供专业指导支持</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- 登录模态框 -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-header">
-                <h2 style="color: #2c3e50; margin-bottom: 10px;">社团成员登录</h2>
-                <p style="color: #7f8c8d;">请输入您的账号信息访问会员资源</p>
-            </div>
-            
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="username">学号/用户名:</label>
-                    <input type="text" id="username" name="username" placeholder="请输入学号或用户名" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">密码:</label>
-                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
-                </div>
-                
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" name="remember"> 记住登录状态
-                    </label>
-                </div>
-                
-                <button type="submit" class="btn btn-primary full-width">登录</button>
-            </form>
-
-            <div class="modal-footer" style="margin-top: 20px; text-align: center;">
-                <p>还没有账号？ <a href="join.html" style="color: #3498db;">立即申请加入社团</a></p>
-                <div class="test-accounts" style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 15px;">
-                    <p style="margin: 0;"><strong>测试账户：</strong> 2023001 / 123456</p>
-                </div>
-            </div>
-            
-            <div id="loginMessage" class="message"></div>
-        </div>
-    </div>
-
-    <!-- 页脚 -->
-    <footer style="background: #2c3e50; color: white; padding: 40px 0; margin-top: 60px;">
-        <div class="container">
-            <div style="text-align: center;">
-                <p>&copy; 2025 武威第十八中学卓然创客社团. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <!-- 引入Supabase客户端库 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Supabase登录逻辑 -->
     <script>
-        // 修复：使用单例模式避免重复声明
-        function initializeSupabase() {
-            if (!window.supabaseClient) {
-                const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
-                const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
-                window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-                console.log('Supabase客户端初始化成功');
-            }
-            return window.supabaseClient;
+        // 初始化Supabase客户端[1,6](@ref)
+        const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
+        const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
+        
+        // 使用单例模式避免重复声明
+        if (!window.supabaseClient) {
+            window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
         }
-
-        // 显示消息提示
-        function showMessage(message, type = 'info') {
-            const messageEl = document.getElementById('loginMessage');
-            messageEl.textContent = message;
-            messageEl.className = `message ${type}`;
-            messageEl.style.display = 'block';
-
-            setTimeout(() => {
-                messageEl.style.display = 'none';
-            }, 3000);
-        }
-
-        // 更新登录状态
-        function updateLoginState(isLoggedIn, userData = null) {
-            const greetingEl = document.getElementById('userGreeting');
-            const bannerEl = document.getElementById('modeBanner');
-            const bannerTextEl = document.getElementById('bannerText');
-            const switchBtn = document.getElementById('switchToLogin');
-            const loginBtn = document.getElementById('loginBtn');
-            const viewModeBtn = document.getElementById('viewModeBtn');
-
-            if (isLoggedIn && userData) {
-                // 登录状态
-                const displayName = userData.name || userData.student_id || '成员';
-                greetingEl.textContent = `欢迎，${displayName}`;
-                bannerEl.className = 'mode-banner member-mode';
-                bannerTextEl.textContent = `您已登录会员账户（${displayName}）`;
-                switchBtn.textContent = '退出登录';
-                loginBtn.style.display = 'none';
-                viewModeBtn.style.display = 'inline-block';
-
-                // 更新退出登录功能
-                switchBtn.onclick = () => {
-                    localStorage.removeItem('makerClubUser');
-                    updateLoginState(false);
-                    showMessage('您已安全退出登录。', 'success');
-                };
-            } else {
-                // 访客状态
-                greetingEl.textContent = '欢迎访问';
-                bannerEl.className = 'mode-banner guest-mode';
-                bannerTextEl.textContent = '您当前处于访客浏览模式';
-                switchBtn.textContent = '登录解锁更多内容';
-                loginBtn.style.display = 'inline-block';
-                viewModeBtn.style.display = 'none';
-
-                // 恢复登录功能
-                switchBtn.onclick = () => {
-                    document.getElementById('loginModal').style.display = 'block';
-                };
-            }
-        }
-
-        // 登录函数 - 使用Supabase查询
-        async function handleLogin(studentId, password) {
-            try {
-                showMessage('正在验证身份...', 'info');
-                
-                // 初始化Supabase客户端
-                const supabase = initializeSupabase();
-                
-                // 使用Supabase查询会员数据
-                const { data: user, error: queryError } = await supabase
-                    .from('members')
-                    .select('*')
-                    .eq('student_id', studentId)
-                    .single();
-
-                if (queryError) {
-                    console.error('查询错误:', queryError);
-                    throw new Error('查询用户信息时出错，请稍后重试。');
-                }
-
-                if (!user) {
-                    throw new Error('学号不存在，请检查您的输入。');
-                }
-
-                // 验证密码（实际应用中密码应该加密存储和验证）
-                if (user.password !== password) {
-                    throw new Error('密码错误，请重新输入。');
-                }
-
-                return { success: true, user: user };
-
-            } catch (error) {
-                console.error('登录过程出错:', error);
-                throw error;
-            }
-        }
+        const supabase = window.supabaseClient;
 
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('页面初始化开始...');
-            
-            // 检查本地存储中是否有登录状态
-            const savedUser = localStorage.getItem('makerClubUser');
-            if (savedUser) {
-                try {
-                    const userData = JSON.parse(savedUser);
-                    updateLoginState(true, userData);
-                    console.log('检测到已登录用户:', userData.name);
-                } catch (error) {
-                    console.error('解析保存的用户数据失败:', error);
-                    localStorage.removeItem('makerClubUser');
-                }
-            }
-
-            // 获取DOM元素
-            const loginBtn = document.getElementById('loginBtn');
-            const closeBtn = document.querySelector('.close');
-            const modal = document.getElementById('loginModal');
             const loginForm = document.getElementById('loginForm');
-            const switchBtn = document.getElementById('switchToLogin');
-
-            // 登录按钮点击事件
-            loginBtn.addEventListener('click', () => {
-                modal.style.display = 'block';
-                loginForm.reset();
-                document.getElementById('loginMessage').style.display = 'none';
-            });
-
-            // 切换登录按钮点击事件
-            switchBtn.addEventListener('click', () => {
-                const savedUser = localStorage.getItem('makerClubUser');
-                if (savedUser) {
-                    localStorage.removeItem('makerClubUser');
-                    updateLoginState(false);
-                    showMessage('您已安全退出登录。', 'success');
-                } else {
-                    modal.style.display = 'block';
-                    loginForm.reset();
-                    document.getElementById('loginMessage').style.display = 'none';
-                }
-            });
-
-            // 关闭模态框
-            closeBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
-
-            // 点击模态框外部关闭
-            window.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-
-            // 登录表单提交事件
-            loginForm.addEventListener('submit', async (event) => {
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // 检查是否有保存的登录信息
+            checkCurrentSession();
+            
+            // 表单提交事件 - 使用Supabase进行真实登录[3,6](@ref)
+            loginForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
-
-                const studentId = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value;
-                const rememberMe = document.querySelector('input[name="remember"]').checked;
-
-                // 前端验证
-                if (!studentId) {
-                    showMessage('请输入学号或用户名。', 'error');
-                    return;
-                }
                 
-                if (!password) {
-                    showMessage('请输入密码。', 'error');
-                    return;
-                }
-
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('remember').checked;
+                
+                // 显示加载动画
+                loading.style.display = 'block';
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                
                 try {
-                    const result = await handleLogin(studentId, password);
+                    // 使用Supabase进行邮箱密码登录[3](@ref)
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
                     
-                    if (result.success) {
-                        showMessage(`登录成功！欢迎回来，${result.user.name}。`, 'success');
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    if (data.user) {
+                        // 登录成功
+                        showSuccess('登录成功！正在跳转到会员中心...');
                         
-                        // 更新页面状态
-                        updateLoginState(true, result.user);
-                        
-                        // 如果选择了"记住登录状态"，则保存到本地存储
+                        // 保存登录状态
                         if (rememberMe) {
-                            localStorage.setItem('makerClubUser', JSON.stringify(result.user));
+                            localStorage.setItem('supabaseSession', JSON.stringify(data.session));
                         }
                         
-      
-                        // 添加以下跳转代码 =======================
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+                        
+                        // 2秒后跳转到会员中心页面[6](@ref)
                         setTimeout(() => {
-                            modal.style.display = 'none';
-                            loginForm.reset();
-                            // 跳转到会员中心页面，例如 member.html 或 member-center.html
-                            window.location.href = 'member-center.html'; 
-                         }, 2000); // 保持2秒延迟，让用户看到成功消息
-                        // ========================================
-                         }                        
-                        // 3秒后关闭模态框
-                        setTimeout(() => {
-                            modal.style.display = 'none';
-                            loginForm.reset();
+                            window.location.href = 'member.html';
                         }, 2000);
                     }
+                    
                 } catch (error) {
-                    showMessage(error.message, 'error');
+                    // 登录失败
+                    showError('登录失败：' + error.message);
+                } finally {
+                    loading.style.display = 'none';
                 }
             });
-
-            // 添加回车键登录支持
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' && modal.style.display === 'block') {
-                    const submitBtn = loginForm.querySelector('button[type="submit"]');
-                    if (submitBtn) {
-                        submitBtn.click();
-                    }
-                }
+            
+            // 实时验证输入
+            document.getElementById('email').addEventListener('input', function() {
+                errorMessage.style.display = 'none';
             });
-
-            console.log('页面初始化完成');
+            
+            document.getElementById('password').addEventListener('input', function() {
+                errorMessage.style.display = 'none';
+            });
         });
+
+        // 检查当前会话状态[1](@ref)
+        async function checkCurrentSession() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (session?.user) {
+                    // 如果已有有效会话，直接跳转
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('currentUser', JSON.stringify(session.user));
+                    window.location.href = 'member.html';
+                }
+            } catch (error) {
+                console.log('无有效会话，需要登录');
+            }
+        }
+
+        // OAuth登录函数[4,5](@ref)
+        async function signInWithOAuth(provider) {
+            try {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: provider,
+                    options: {
+                        redirectTo: window.location.origin + '/member.html'
+                    }
+                });
+                
+                if (error) throw error;
+            } catch (error) {
+                showError('OAuth登录失败：' + error.message);
+            }
+        }
+
+        // 显示错误消息
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // 显示成功消息
+        function showSuccess(message) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+        }
+
+        // 检查登录状态函数
+        function checkLoginStatus() {
+            return sessionStorage.getItem('isLoggedIn') === 'true';
+        }
+
+        // 获取当前用户信息
+        function getCurrentUser() {
+            const userData = sessionStorage.getItem('currentUser');
+            return userData ? JSON.parse(userData) : null;
+        }
     </script>
 </body>
 </html>
