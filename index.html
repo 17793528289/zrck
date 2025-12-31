@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <style>
-        /* 基础样式 - 确保在没有外部CSS时也能正常显示 */
+        /* 基础样式 */
         body {
             font-family: 'Microsoft YaHei', sans-serif;
             margin: 0;
@@ -21,18 +21,48 @@
             margin: 0 auto;
             padding: 0 15px;
         }
-        /* 临时导航栏样式 */
         .navbar {
             background-color: #2c3e50;
             color: white;
             padding: 15px 0;
         }
-        /* 临时横幅样式 */
         .banner {
             background-color: #3498db;
             color: white;
             padding: 60px 0;
             text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #e74c3c;
+        }
+        .btn-secondary {
+            background-color: #2ecc71;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -205,28 +235,11 @@
 
     <!-- 引入Supabase客户端库 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- 基础JavaScript功能 -->
     <script>
-        // 确保在没有main.js时基础功能可用
-        document.addEventListener('DOMContentLoaded', function() {
-            // 登录按钮点击事件
-            document.getElementById('loginBtn')?.addEventListener('click', function() {
-                document.getElementById('loginModal').style.display = 'block';
-            });
-            
-            // 关闭模态框
-            document.querySelector('.close')?.addEventListener('click', function() {
-                document.getElementById('loginModal').style.display = 'none';
-            });
-            
-            // 点击模态框外部关闭
-            window.addEventListener('click', function(event) {
-                if (event.target === document.getElementById('loginModal')) {
-                    document.getElementById('loginModal').style.display = 'none';
-                }
-            });
-        });
+        // 初始化Supabase客户端
+        const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
+        const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
     </script>
     
     <!-- 引入自定义JavaScript -->
