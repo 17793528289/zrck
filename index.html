@@ -596,6 +596,16 @@
                             localStorage.setItem('makerClubUser', JSON.stringify(result.user));
                         }
                         
+      
+                        // 添加以下跳转代码 =======================
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            loginForm.reset();
+                            // 跳转到会员中心页面，例如 member.html 或 member-center.html
+                            window.location.href = 'member-center.html'; 
+                         }, 2000); // 保持2秒延迟，让用户看到成功消息
+                        // ========================================
+                         }                        
                         // 3秒后关闭模态框
                         setTimeout(() => {
                             modal.style.display = 'none';
