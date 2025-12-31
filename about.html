@@ -3,80 +3,395 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>关于我们 - 卓然创客社团</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <title>关于我们 - 武威第十八中学卓然创客社团</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        /* 关于页面专用样式 */
+        .page-header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 120px 0 60px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .breadcrumb {
+            background: #f8f9fa;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .breadcrumb a {
+            color: #6c757d;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: #007bff;
+        }
+        
+        .breadcrumb span {
+            margin: 0 10px;
+            color: #6c757d;
+        }
+        
+        .about-content {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #e74c3c;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        .about-story {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+        
+        .story-text h3 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        
+        .story-text p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .story-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .mission-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+        
+        .mission-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .mission-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .mission-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        
+        .mission-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .team-section {
+            background: #f8f9fa;
+            padding: 80px 0;
+            margin: 80px 0;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .team-member {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .member-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #3498db;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5em;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .info-icon {
+            font-size: 2.5em;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .about-story {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .page-header {
+                padding: 100px 0 40px;
+            }
+            
+            .section-title h2 {
+                font-size: 2em;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- 导航栏 -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2>卓然创客</h2>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="about.html" class="active">关于我们</a></li>
-                <li><a href="activities.html">活动展示</a></li>
-                <li><a href="projects.html">项目成果</a></li>
-                <li><a href="join.html">加入我们</a></li>
-            </ul>
-            <div class="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="nav-logo">
+                    <h2><a href="index.html">卓然创客</a></h2>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="about.html" class="active">关于我们</a></li>
+                    <li><a href="activities.html">活动展示</a></li>
+                    <li><a href="projects.html">项目成果</a></li>
+                    <li><a href="join.html">加入我们</a></li>
+                    <li class="user-menu">
+                        <span id="userGreeting">欢迎访问</span>
+                        <button id="loginBtn" class="login-btn">会员登录</button>
+                        <button id="viewModeBtn" class="guest-btn">访客浏览</button>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
+    <!-- 页面标题区 -->
     <section class="page-header">
         <div class="container">
-            <h1>关于我们</h1>
-            <p>了解卓然创客社团的使命和愿景</p>
+            <h1>关于卓然创客社团</h1>
+            <p>创新 · 实践 · 分享 · 成长 - 探索科技世界的无限可能</p>
         </div>
     </section>
 
-    <section class="about-content">
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
         <div class="container">
-            <div class="about-section">
-                <h2>社团简介</h2>
-                <p>武威第十八中学卓然创客社团成立于2020年，是一个致力于培养学生创新思维和实践能力的科技社团。我们秉承"创新、实践、分享、成长"的理念，为对科技感兴趣的同学提供学习和交流的平台。</p>
-            </div>
+            <a href="index.html">首页</a>
+            <span>/</span>
+            <a href="about.html">关于我们</a>
+        </div>
+    </div>
 
-            <div class="about-section">
-                <h2>指导老师</h2>
-                <div class="teachers-grid">
-                    <div class="teacher-card">
-                        <div class="teacher-avatar">张老师</div>
+    <!-- 主要内容区 -->
+    <div class="container">
+        <!-- 社团故事 -->
+        <section class="about-content">
+            <div class="section-title">
+                <h2>我们的故事</h2>
+                <p>从创意到现实的探索之旅</p>
+            </div>
+            
+            <div class="about-story">
+                <div class="story-text">
+                    <h3>武威第十八中学卓然创客社团</h3>
+                    <p>成立于2018年，我们是一个充满活力的学生科技社团，致力于培养学生的创新思维、实践能力和团队协作精神。社团名称"卓然"寓意着追求卓越、卓尔不群的精神品质。</p>
+                    <p>在过去的几年中，我们见证了无数创意想法的诞生与实现。从简单的电子制作到复杂的机器人编程，从3D打印设计到物联网应用，我们的成员在探索中成长，在实践中突破。</p>
+                    <p>社团拥有专业的创客空间，配备先进的设备器材，为成员提供完善的创作环境。我们相信，每个学生都有无限的创造潜力，只需要一个合适的平台和机会。</p>
+                </div>
+                <div class="story-image">
+                    <img src="./images/about-story.jpg" alt="创客社团活动照片" onerror="this.style.display='none'">
+                </div>
+            </div>
+        </section>
+
+        <!-- 使命愿景 -->
+        <section>
+            <div class="section-title">
+                <h2>我们的使命</h2>
+                <p>培养未来创新人才的摇篮</p>
+            </div>
+            
+            <div class="mission-cards">
+                <div class="mission-card">
+                    <div class="mission-icon">🚀</div>
+                    <h3>创新实践</h3>
+                    <p>通过项目式学习，让学生将理论知识转化为实际应用，培养解决实际问题的能力。</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">👥</div>
+                    <h3>团队协作</h3>
+                    <p>在合作项目中学习沟通技巧，培养领导能力和团队合作精神。</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">💡</div>
+                    <h3>创意孵化</h3>
+                    <p>为学生的创意想法提供技术支持和完善的孵化环境，让创意变为现实。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 团队介绍 -->
+        <section class="team-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>指导老师团队</h2>
+                    <p>专业敬业的指导教师队伍</p>
+                </div>
+                
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">张</div>
                         <h3>张老师</h3>
-                        <p>信息技术教师，擅长编程和机器人技术</p>
+                        <p>信息技术教师</p>
+                        <p>主要负责编程指导和项目架构设计，拥有10年教学经验。</p>
                     </div>
-                    <div class="teacher-card">
-                        <div class="teacher-avatar">李老师</div>
+                    <div class="team-member">
+                        <div class="member-avatar">李</div>
                         <h3>李老师</h3>
-                        <p>物理教师，专注电子制作和机械设计</p>
+                        <p>物理教师</p>
+                        <p>擅长电子技术和机械设计指导，多次带队获奖。</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">王</div>
+                        <h3>王老师</h3>
+                        <p>美术教师</p>
+                        <p>负责3D建模和产品外观设计指导，注重美学与功能的结合。</p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="about-section">
-                <h2>社团章程</h2>
-                <div class="charter">
-                    <h3>第一章 总则</h3>
-                    <p>第一条 本社团定名为"武威第十八中学卓然创客社团"</p>
-                    <p>第二条 本社团宗旨：培养创新精神，提高实践能力</p>
-                    
-                    <h3>第二章 会员权利与义务</h3>
-                    <p>第三条 会员享有参加社团活动的权利</p>
-                    <p>第四条 会员有遵守社团章程的义务</p>
+        <!-- 联系方式 -->
+        <section>
+            <div class="section-title">
+                <h2>联系我们</h2>
+                <p>欢迎加入我们的创客大家庭</p>
+            </div>
+            
+            <div class="contact-info">
+                <div class="info-card">
+                    <div class="info-icon">📍</div>
+                    <h3>地址</h3>
+                    <p>甘肃省武威市凉州区凤凰路163号<br>武威第十八中学科技楼3楼创客空间</p>
                 </div>
+                <div class="info-card">
+                    <div class="info-icon">📞</div>
+                    <h3>电话</h3>
+                    <p>17793528289<br>0935-6182000</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">📧</div>
+                    <h3>邮箱</h3>
+                    <p>2959665467@qq.com<br>zhuorangchuangke@163.com</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">⏰</div>
+                    <h3>活动时间</h3>
+                    <p>每周三下午 4:00-6:00<br>周六上午 9:00-11:30</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>卓然创客社团</h3>
+                    <p>武威第十八中学</p>
+                    <p>地址：甘肃省武威市凉州区凤凰路163号</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="index.html">首页</a></li>
+                        <li><a href="about.html">关于我们</a></li>
+                        <li><a href="activities.html">活动展示</a></li>
+                        <li><a href="projects.html">项目成果</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p>邮箱：2959665467@qq.com</p>
+                    <p>电话：17793528289</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 武威第十八中学卓然创客社团. All rights reserved.</p>
             </div>
         </div>
-    </section>
-
-    <footer class="footer">
-        <!-- 同index.html的页脚 -->
     </footer>
 
-    <script src="js/main.js"></script>
+    <script>
+        // 基础交互功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置当前页面导航激活状态
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // 登录功能
+            document.getElementById('loginBtn')?.addEventListener('click', function() {
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
 </body>
 </html>
