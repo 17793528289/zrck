@@ -1,9 +1,4 @@
-// 初始化Supabase客户端
-const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
-const supabaseKey = '你的Supabase匿名公共密钥';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-// 登录函数 - 修改为更安全的查询方式
+// 登录函数
 async function login(studentId, password) {
     try {
         // 先查询学号是否存在
@@ -17,8 +12,7 @@ async function login(studentId, password) {
             throw new Error('用户不存在或学号错误');
         }
 
-        // 验证密码 - 这里假设密码在数据库中是加密存储的
-        // 实际应用中应该使用Supabase Auth或加密比较
+        // 验证密码
         if (user.password !== password) {
             throw new Error('密码错误');
         }
@@ -33,7 +27,28 @@ async function login(studentId, password) {
 // 初始化登录系统
 function initLoginSystem() {
     const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const closeBtn = document.querySelector('.close');
+    const modal = document.getElementById('loginModal');
     
+    // 登录按钮点击事件
+    loginBtn.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+    
+    // 关闭按钮点击事件
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    
+    // 点击模态框外部关闭
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    
+    // 表单提交事件
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -51,6 +66,11 @@ function initLoginSystem() {
             
             // 更新UI显示登录状态
             updateLoginState(true, user);
+            
+            // 3秒后关闭模态框
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 3000);
         } catch (error) {
             messageEl.textContent = error.message;
             messageEl.className = 'message error';
@@ -62,26 +82,40 @@ function initLoginSystem() {
 function updateLoginState(isLoggedIn, user = null) {
     const greetingEl = document.getElementById('userGreeting');
     const bannerEl = document.getElementById('modeBanner');
+    const switchBtn = document.getElementById('switchToLogin');
     
     if (isLoggedIn && user) {
         greetingEl.textContent = `欢迎，${user.name || user.student_id}`;
         bannerEl.className = 'mode-banner member-mode';
         document.getElementById('bannerText').textContent = '您已登录会员账户';
+        switchBtn.textContent = '退出登录';
+        
+        // 更新退出登录功能
+        switchBtn.onclick = () => {
+            updateLoginState(false);
+        };
     } else {
         greetingEl.textContent = '欢迎访问';
         bannerEl.className = 'mode-banner guest-mode';
         document.getElementById('bannerText').textContent = '您当前处于访客浏览模式';
+        switchBtn.textContent = '登录解锁更多内容';
+        
+        // 恢复登录功能
+        switchBtn.onclick = () => {
+            document.getElementById('loginModal').style.display = 'block';
+        };
     }
 }
 
 // 应用程序初始化
 function initApp() {
-    console.log('Supabase客户端初始化成功');
+    console.log('应用程序初始化开始');
+    
+    // 初始化登录系统
     initLoginSystem();
-    console.log('登录系统初始化完成');
     
     // 其他初始化代码...
-    console.log('应用程序启动完成');
+    console.log('应用程序初始化完成');
 }
 
 // 启动应用
