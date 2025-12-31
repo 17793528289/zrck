@@ -1,4 +1,4 @@
-// 登录函数
+// 登录函数 - 直接使用全局已初始化的supabase对象
 async function login(studentId, password) {
     try {
         // 先查询学号是否存在
