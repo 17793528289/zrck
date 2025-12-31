@@ -405,15 +405,16 @@
     
     <!-- Supabase登录逻辑 -->
     <script>
-        // 初始化Supabase客户端[3,5](@ref)
-        const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
-        const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
-        
-        // 使用单例模式避免重复声明[1](@ref)
-        if (!window.supabase) {
-            window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // 修复：使用单例模式避免重复声明
+        function initializeSupabase() {
+            if (!window.supabaseClient) {
+                const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
+                const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
+                window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+                console.log('Supabase客户端初始化成功');
+            }
+            return window.supabaseClient;
         }
-        const supabase = window.supabase;
 
         // 显示消息提示
         function showMessage(message, type = 'info') {
@@ -427,7 +428,7 @@
             }, 3000);
         }
 
-        // 更新登录状态[3](@ref)
+        // 更新登录状态
         function updateLoginState(isLoggedIn, userData = null) {
             const greetingEl = document.getElementById('userGreeting');
             const bannerEl = document.getElementById('modeBanner');
@@ -437,7 +438,7 @@
             const viewModeBtn = document.getElementById('viewModeBtn');
 
             if (isLoggedIn && userData) {
-                // 登录状态[5](@ref)
+                // 登录状态
                 const displayName = userData.name || userData.student_id || '成员';
                 greetingEl.textContent = `欢迎，${displayName}`;
                 bannerEl.className = 'mode-banner member-mode';
@@ -446,7 +447,7 @@
                 loginBtn.style.display = 'none';
                 viewModeBtn.style.display = 'inline-block';
 
-                // 更新退出登录功能[3](@ref)
+                // 更新退出登录功能
                 switchBtn.onclick = () => {
                     localStorage.removeItem('makerClubUser');
                     updateLoginState(false);
@@ -468,12 +469,15 @@
             }
         }
 
-        // 登录函数 - 使用Supabase查询[2](@ref)
+        // 登录函数 - 使用Supabase查询
         async function handleLogin(studentId, password) {
             try {
                 showMessage('正在验证身份...', 'info');
                 
-                // 使用Supabase查询会员数据[2](@ref)
+                // 初始化Supabase客户端
+                const supabase = initializeSupabase();
+                
+                // 使用Supabase查询会员数据
                 const { data: user, error: queryError } = await supabase
                     .from('members')
                     .select('*')
@@ -502,7 +506,7 @@
             }
         }
 
-        // 页面加载完成后初始化[3](@ref)
+        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('页面初始化开始...');
             
