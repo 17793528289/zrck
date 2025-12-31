@@ -89,7 +89,7 @@
       <h2>➕ 添加用户</h2>
       <div id="addAlert" class="alert"></div>
       <div class="form-group">
-        <input id="username" placeholder="用户名" required>
+        <input id="student_id" placeholder="学号/工号" required>
         <input id="name" placeholder="姓名" required>
         <input id="class" placeholder="班级/部门" required>
         <input id="password" placeholder="密码（默认123456）" type="password">
@@ -105,7 +105,7 @@
     <!-- 批量导入 -->
     <div class="panel">
       <h2>📤 批量导入</h2>
-      <textarea id="batchData" placeholder="请输入CSV格式数据（用户名,姓名,班级,密码(可选)）" rows="4"></textarea>
+      <textarea id="batchData" placeholder="请输入CSV格式数据（学号/工号,姓名,班级,密码(可选)）" rows="4"></textarea>
       <div class="form-group">
         <button class="btn-secondary" onclick="batchImport()">批量导入</button>
         <button class="btn-success" onclick="exportUsers()">导出CSV</button>
@@ -116,7 +116,7 @@
     <div class="panel">
       <h2>🔍 搜索用户</h2>
       <div class="form-group">
-        <input id="searchInput" placeholder="搜索用户名、姓名、班级..." style="flex: 2;">
+        <input id="searchInput" placeholder="搜索学号/工号、姓名、班级..." style="flex: 2;">
         <button class="btn-secondary" onclick="searchUsers()">搜索</button>
         <button onclick="resetSearch()">重置</button>
       </div>
@@ -130,7 +130,7 @@
       <table id="userTable">
         <thead>
           <tr>
-            <th>用户名</th>
+            <th>学号/工号</th>
             <th>姓名</th>
             <th>班级/部门</th>
             <th>角色</th>
@@ -248,7 +248,7 @@
       users.forEach(user => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${escapeHtml(user.username || '-')}</td>
+          <td>${escapeHtml(user.student_id || '-')}</td>
           <td>${escapeHtml(user.name || '-')}</td>
           <td>${escapeHtml(user.class || '-')}</td>
           <td><span class="role-badge">${getRoleLabel(user.role)}</span></td>
@@ -269,20 +269,20 @@
     // 添加用户
     async function addUser() {
       try {
-        const username = document.getElementById('username').value.trim();
+        const studentId = document.getElementById('student_id').value.trim();
         const name = document.getElementById('name').value.trim();
         const className = document.getElementById('class').value.trim();
         const password = document.getElementById('password').value.trim() || '123456';
         const role = document.getElementById('role').value;
         
-        if (!username || !name || !className) {
+        if (!studentId || !name || !className) {
           throw new Error('请填写完整信息');
         }
         
         const { error } = await window.supabase
           .from('members')
           .insert([{
-            username,
+            student_id: studentId,
             name,
             class: className,
             password,
@@ -315,14 +315,14 @@
       let successCount = 0;
       
       for (const line of lines) {
-        const [username, name, className, password] = line.split(',').map(item => item?.trim());
-        if (username && name && className) {
+        const [studentId, name, className, password] = line.split(',').map(item => item?.trim());
+        if (studentId && name && className) {
           usersToAdd.push({
-            username,
+            student_id: studentId,
             name,
             class: className,
             password: password || '123456',
-            role: username.toLowerCase().includes('teacher') ? 'teacher' : 'student',
+            role: studentId.toLowerCase().includes('teacher') ? 'teacher' : 'student',
             status: true,
             created_at: new Date().toISOString()
           });
@@ -361,7 +361,7 @@
       }
       
       const filtered = usersCache.filter(user =>
-        (user.username && user.username.toLowerCase().includes(keyword)) ||
+        (user.student_id && user.student_id.toLowerCase().includes(keyword)) ||
         (user.name && user.name.toLowerCase().includes(keyword)) ||
         (user.class && user.class.toLowerCase().includes(keyword))
       );
@@ -375,6 +375,9 @@
       const user = usersCache.find(u => u.id === id);
       if (!user) return;
       
+      const newStudentId = prompt('请输入新学号/工号:', user.student_id);
+      if (newStudentId === null) return;
+      
       const newName = prompt('请输入新姓名:', user.name);
       if (newName === null) return;
       
@@ -384,7 +387,11 @@
       try {
         const { error } = await window.supabase
           .from('members')
-          .update({ name: newName, class: newClass })
+          .update({ 
+            student_id: newStudentId, 
+            name: newName, 
+            class: newClass 
+          })
           .eq('id', id);
         
         if (error) throw error;
@@ -439,9 +446,9 @@
         return;
       }
       
-      let csv = '用户名,姓名,班级,角色,状态\n';
+      let csv = '学号/工号,姓名,班级,角色,状态\n';
       usersCache.forEach(user => {
-        csv += `${user.username},${user.name},${user.class},${getRoleLabel(user.role)},${user.status ? '活跃' : '禁用'}\n`;
+        csv += `${user.student_id},${user.name},${user.class},${getRoleLabel(user.role)},${user.status ? '活跃' : '禁用'}\n`;
       });
       
       const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -497,7 +504,7 @@
     }
     
     function clearAddForm() {
-      document.getElementById('username').value = '';
+      document.getElementById('student_id').value = '';
       document.getElementById('name').value = '';
       document.getElementById('class').value = '';
       document.getElementById('password').value = '';
