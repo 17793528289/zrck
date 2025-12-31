@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户登录 - 卓然创客社团</title>
     <style>
+        /* (您的原有CSS样式保持不变) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             font-family: 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +20,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
         .login-container {
             background: white;
             padding: 40px;
@@ -29,34 +28,28 @@
             width: 100%;
             max-width: 400px;
         }
-        
         .login-header {
             text-align: center;
             margin-bottom: 30px;
         }
-        
         .login-header h2 {
             color: #333;
             font-size: 28px;
             margin-bottom: 10px;
         }
-        
         .login-header p {
             color: #666;
             font-size: 14px;
         }
-        
         .form-group {
             margin-bottom: 20px;
         }
-        
         .form-group label {
             display: block;
             margin-bottom: 5px;
             color: #333;
             font-weight: bold;
         }
-        
         .form-group input {
             width: 100%;
             padding: 12px;
@@ -65,22 +58,18 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
         .form-group input:focus {
             outline: none;
             border-color: #667eea;
         }
-        
         .remember-me {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
         }
-        
         .remember-me input {
             margin-right: 10px;
         }
-        
         .login-btn {
             width: 100%;
             padding: 12px;
@@ -92,21 +81,17 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-        
         .login-btn:hover {
             transform: translateY(-2px);
         }
-        
         .login-btn:active {
             transform: translateY(0);
         }
-        
         .loading {
             display: none;
             text-align: center;
             margin-top: 10px;
         }
-        
         .spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #667eea;
@@ -116,26 +101,16 @@
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
         .error-message {
             color: #e74c3c;
             text-align: center;
             margin-top: 10px;
             display: none;
         }
-        
-        .success-message {
-            color: #27ae60;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
-        }
-        
         .test-accounts {
             background: #f8f9fa;
             padding: 15px;
@@ -143,26 +118,9 @@
             margin-top: 20px;
             font-size: 14px;
         }
-        
         .test-accounts h4 {
             margin-bottom: 10px;
             color: #333;
-        }
-        
-        .oauth-buttons {
-            margin-top: 20px;
-            text-align: center;
-        }
-        
-        .oauth-btn {
-            display: inline-block;
-            padding: 10px 15px;
-            margin: 5px;
-            background: #f1f1f1;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
         }
     </style>
 </head>
@@ -175,8 +133,8 @@
         
         <form id="loginForm">
             <div class="form-group">
-                <label for="email">邮箱地址</label>
-                <input type="email" id="email" name="email" placeholder="请输入邮箱地址" required>
+                <label for="username">邮箱</label>
+                <input type="email" id="username" name="username" placeholder="请输入注册邮箱" required>
             </div>
             
             <div class="form-group">
@@ -197,97 +155,106 @@
             </div>
             
             <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
         </form>
-
-        <div class="oauth-buttons">
-            <button class="oauth-btn" onclick="signInWithOAuth('github')">使用 GitHub 登录</button>
-            <button class="oauth-btn" onclick="signInWithOAuth('google')">使用 Google 登录</button>
-        </div>
         
         <div class="test-accounts">
-            <h4>测试账户信息</h4>
-            <p><strong>提示：</strong>请使用在Supabase中注册的真实账户</p>
-            <p>首次使用需要先注册账户</p>
+            <h4>测试说明</h4>
+            <p>请使用您在 Supabase 中已注册的邮箱和密码登录。</p>
         </div>
     </div>
 
-    <!-- 引入Supabase客户端库 -->
+    <!-- 引入 Supabase 客户端库 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // 初始化Supabase客户端[1,6](@ref)
-        const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
-        const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
-        
-        // 使用单例模式避免重复声明
-        if (!window.supabaseClient) {
-            window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-        }
-        const supabase = window.supabaseClient;
+        // 初始化 Supabase 客户端
+        // 请将以下配置替换为您自己的 Supabase 项目信息
+        const supabaseUrl = 'https://your-project-ref.supabase.co'; // 替换为您的 Supabase URL
+        const supabaseKey = 'your-anon-key'; // 替换为您的 Supabase Anon Key
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('loginForm');
             const loading = document.getElementById('loading');
             const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
             
-            // 检查是否有保存的登录信息
-            checkCurrentSession();
+            // 检查本地存储中是否有保存的登录信息
+            const savedUser = localStorage.getItem('savedUser');
+            if (savedUser) {
+                const userData = JSON.parse(savedUser);
+                document.getElementById('username').value = userData.email || '';
+                document.getElementById('remember').checked = true;
+            }
             
-            // 表单提交事件 - 使用Supabase进行真实登录[3,6](@ref)
+            // 表单提交事件 - 使用 Supabase 进行认证
             loginForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
                 
-                const email = document.getElementById('email').value.trim();
+                const email = document.getElementById('username').value.trim();
                 const password = document.getElementById('password').value;
                 const rememberMe = document.getElementById('remember').checked;
                 
                 // 显示加载动画
                 loading.style.display = 'block';
                 errorMessage.style.display = 'none';
-                successMessage.style.display = 'none';
                 
                 try {
-                    // 使用Supabase进行邮箱密码登录[3](@ref)
+                    // 使用 Supabase 进行邮箱密码登录
                     const { data, error } = await supabase.auth.signInWithPassword({
                         email: email,
                         password: password
-                    });
-                    
+                    })[3,4](@ref);
+
                     if (error) {
                         throw error;
                     }
                     
                     if (data.user) {
                         // 登录成功
-                        showSuccess('登录成功！正在跳转到会员中心...');
-                        
-                        // 保存登录状态
                         if (rememberMe) {
-                            localStorage.setItem('supabaseSession', JSON.stringify(data.session));
+                            // 保存用户邮箱到本地存储（不保存密码）
+                            localStorage.setItem('savedUser', JSON.stringify({
+                                email: data.user.email
+                            }));
+                        } else {
+                            // 清除保存的信息
+                            localStorage.removeItem('savedUser');
                         }
                         
+                        // 保存完整的用户信息和会话到 sessionStorage
                         sessionStorage.setItem('isLoggedIn', 'true');
                         sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+                        sessionStorage.setItem('supabaseSession', JSON.stringify(data.session));
                         
-                        // 2秒后跳转到会员中心页面[6](@ref)
+                        // 显示成功消息
+                        loading.innerHTML = '<p style="color: #27ae60;">登录成功！正在跳转...</p>';
+                        
+                        // 跳转到会员中心页面
                         setTimeout(() => {
                             window.location.href = 'member.html';
-                        }, 2000);
+                        }, 1000);
+                        
                     }
-                    
                 } catch (error) {
                     // 登录失败
-                    showError('登录失败：' + error.message);
-                } finally {
                     loading.style.display = 'none';
+                    console.error('Login error:', error);
+                    
+                    // 根据错误类型显示相应的提示信息
+                    if (error.message.includes('Invalid login credentials')) {
+                        errorMessage.textContent = '邮箱或密码错误，请重试！';
+                    } else if (error.message.includes('Email not confirmed')) {
+                        errorMessage.textContent = '请先验证您的邮箱地址！';
+                    } else {
+                        errorMessage.textContent = `登录失败：${error.message}`;
+                    }
+                    errorMessage.style.display = 'block';
                 }
             });
             
             // 实时验证输入
-            document.getElementById('email').addEventListener('input', function() {
+            document.getElementById('username').addEventListener('input', function() {
                 errorMessage.style.display = 'none';
             });
             
@@ -295,61 +262,26 @@
                 errorMessage.style.display = 'none';
             });
         });
-
-        // 检查当前会话状态[1](@ref)
-        async function checkCurrentSession() {
-            try {
-                const { data: { session }, error } = await supabase.auth.getSession();
-                if (session?.user) {
-                    // 如果已有有效会话，直接跳转
-                    sessionStorage.setItem('isLoggedIn', 'true');
-                    sessionStorage.setItem('currentUser', JSON.stringify(session.user));
-                    window.location.href = 'member.html';
-                }
-            } catch (error) {
-                console.log('无有效会话，需要登录');
-            }
-        }
-
-        // OAuth登录函数[4,5](@ref)
-        async function signInWithOAuth(provider) {
-            try {
-                const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: provider,
-                    options: {
-                        redirectTo: window.location.origin + '/member.html'
-                    }
-                });
-                
-                if (error) throw error;
-            } catch (error) {
-                showError('OAuth登录失败：' + error.message);
-            }
-        }
-
-        // 显示错误消息
-        function showError(message) {
-            const errorMessage = document.getElementById('errorMessage');
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-
-        // 显示成功消息
-        function showSuccess(message) {
-            const successMessage = document.getElementById('successMessage');
-            successMessage.textContent = message;
-            successMessage.style.display = 'block';
-        }
-
+        
         // 检查登录状态函数
         function checkLoginStatus() {
             return sessionStorage.getItem('isLoggedIn') === 'true';
         }
-
+        
         // 获取当前用户信息
         function getCurrentUser() {
             const userData = sessionStorage.getItem('currentUser');
             return userData ? JSON.parse(userData) : null;
+        }
+        
+        // 退出登录函数
+        function logout() {
+            // 调用 Supabase 退出登录
+            supabase.auth.signOut()[3](@ref);
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('currentUser');
+            sessionStorage.removeItem('supabaseSession');
+            window.location.href = 'index.html';
         }
     </script>
 </body>
