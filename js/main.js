@@ -1,4 +1,9 @@
-// 登录函数 - 直接使用全局已初始化的supabase对象
+// 初始化Supabase客户端 - 只在main.js中初始化一次
+const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
+const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+// 登录函数
 async function login(studentId, password) {
     try {
         // 先查询学号是否存在
