@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>武威第十八中学卓然创客社团</title>
     <style>
-        /* 保留您原有的所有样式 */
+        /* 基础样式 */
         * {
             margin: 0;
             padding: 0;
@@ -405,7 +405,7 @@
     
     <!-- Supabase登录逻辑 -->
     <script>
-        // 初始化Supabase客户端[1,2](@ref)
+        // 初始化Supabase客户端
         function initializeSupabase() {
             if (!window.supabaseClient) {
                 const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
@@ -452,6 +452,7 @@
                     localStorage.removeItem('makerClubUser');
                     sessionStorage.removeItem('isLoggedIn');
                     sessionStorage.removeItem('currentUser');
+                    sessionStorage.removeItem('userRole');
                     updateLoginState(false);
                     showMessage('您已安全退出登录。', 'success');
                 };
@@ -471,7 +472,7 @@
             }
         }
 
-        // 登录函数 - 使用Supabase查询[2,4](@ref)
+        // 登录函数 - 使用Supabase查询
         async function handleLogin(studentId, password) {
             try {
                 showMessage('正在验证身份...', 'info');
@@ -479,7 +480,7 @@
                 // 初始化Supabase客户端
                 const supabase = initializeSupabase();
                 
-                // 使用Supabase查询会员数据[1,4](@ref)
+                // 使用Supabase查询会员数据（包含role字段）
                 const { data: user, error: queryError } = await supabase
                     .from('members')
                     .select('*')
@@ -525,6 +526,7 @@
                     console.error('解析保存的用户数据失败:', error);
                     localStorage.removeItem('makerClubUser');
                     sessionStorage.removeItem('isLoggedIn');
+                    sessionStorage.removeItem('userRole');
                 }
             }
 
@@ -549,6 +551,7 @@
                     localStorage.removeItem('makerClubUser');
                     sessionStorage.removeItem('isLoggedIn');
                     sessionStorage.removeItem('currentUser');
+                    sessionStorage.removeItem('userRole');
                     updateLoginState(false);
                     showMessage('您已安全退出登录。', 'success');
                 } else {
@@ -570,7 +573,7 @@
                 }
             });
 
-            // 登录表单提交事件[6,7](@ref)
+            // 登录表单提交事件
             loginForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
@@ -593,25 +596,31 @@
                     const result = await handleLogin(studentId, password);
                     
                     if (result.success) {
-                        showMessage(`登录成功！欢迎回来，${result.user.name}。`, 'success');
+                        // 根据用户角色决定跳转路径
+                        const userRole = result.user.role || 'user'; // 默认为普通用户
+                        const redirectUrl = userRole === 'admin' ? 'admin-dashboard.html' : 'member.html';
+                        const roleName = userRole === 'admin' ? '管理员后台' : '会员中心';
+                        
+                        showMessage(`登录成功！欢迎回来，${result.user.name}。正在跳转至${roleName}...`, 'success');
                         
                         // 更新页面状态
                         updateLoginState(true, result.user);
                         
-                        // 保存登录状态
+                        // 保存登录状态和角色信息
                         sessionStorage.setItem('isLoggedIn', 'true');
                         sessionStorage.setItem('currentUser', JSON.stringify(result.user));
+                        sessionStorage.setItem('userRole', userRole);
                         
                         // 如果选择了"记住登录状态"，则保存到本地存储
                         if (rememberMe) {
                             localStorage.setItem('makerClubUser', JSON.stringify(result.user));
                         }
                         
-                        // 2秒后跳转到会员中心[6,7](@ref)
+                        // 2秒后根据角色跳转
                         setTimeout(() => {
                             modal.style.display = 'none';
                             loginForm.reset();
-                            window.location.href = 'member.html';
+                            window.location.href = redirectUrl;
                         }, 2000);
                     }
                 } catch (error) {
