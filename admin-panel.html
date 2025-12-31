@@ -38,6 +38,26 @@
     .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     
     .loading { text-align: center; padding: 20px; color: #6c757d; }
+    
+    .role-badge { 
+      background: #e9ecef; 
+      padding: 2px 8px; 
+      border-radius: 12px; 
+      font-size: 12px; 
+    }
+    .status-badge { 
+      padding: 2px 8px; 
+      border-radius: 12px; 
+      font-size: 12px; 
+    }
+    .status-badge.active { 
+      background: #d4edda; 
+      color: #155724; 
+    }
+    .status-badge.inactive { 
+      background: #f8d7da; 
+      color: #721c24; 
+    }
   </style>
 </head>
 <body>
@@ -126,60 +146,65 @@
 
   <script>
     // ================== 初始化阶段 ==================
-    let supabase;
+    // 使用单例模式管理Supabase客户端，避免重复声明问题
+    const SupabaseManager = {
+      instance: null,
+      
+      getInstance: function() {
+        if (!this.instance) {
+          const SUPABASE_CONFIG = {
+            url: 'https://wxbemuwgiiucdgmbhbvg.supabase.co',
+            key: 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk'
+          };
+          
+          if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+            throw new Error('Supabase SDK未加载，请检查网络连接');
+          }
+          
+          this.instance = window.supabase.createClient(
+            SUPABASE_CONFIG.url, 
+            SUPABASE_CONFIG.key
+          );
+          console.log('✅ Supabase客户端初始化成功');
+        }
+        return this.instance;
+      }
+    };
+
     let usersCache = [];
     
-    // 1. Supabase配置
-    const SUPABASE_CONFIG = {
-      url: 'https://wxbemuwgiiucdgmbhbvg.supabase.co',
-      key: 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk'
-    };
-    
-    // 2. 初始化函数
-    async function initSupabase() {
-      try {
-        if (!window.supabase || typeof window.supabase.createClient !== 'function') {
-          throw new Error('Supabase SDK未加载，请检查网络连接');
-        }
-        
-        supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key);
-        console.log('✅ Supabase客户端初始化成功');
-        return true;
-      } catch (error) {
-        console.error('❌ Supabase初始化失败:', error);
-        showAlert('tableAlert', '数据库连接失败: ' + error.message, 'error');
-        return false;
-      }
-    }
-    
-    // 3. 页面加载完成后初始化
+    // 页面加载完成后初始化
     document.addEventListener('DOMContentLoaded', async function() {
       console.log('📄 页面加载完成，开始初始化...');
       
-      // 初始化Supabase
-      const initialized = await initSupabase();
-      if (!initialized) return;
-      
-      // 加载用户数据
-      await loadUsers();
-      
-      // 绑定事件
-      setupEventListeners();
+      try {
+        // 初始化Supabase
+        window.supabase = SupabaseManager.getInstance();
+        
+        // 加载用户数据
+        await loadUsers();
+        
+        // 绑定事件
+        setupEventListeners();
+      } catch (error) {
+        console.error('❌ 初始化失败:', error);
+        showAlert('tableAlert', '系统初始化失败: ' + error.message, 'error');
+      }
     });
     
     // ================== 核心功能函数 ==================
     
-    // 加载用户数据 - 表名已改为members
+    // 加载用户数据
     async function loadUsers() {
       try {
         showLoading(true);
         
-        if (!supabase || typeof supabase.from !== 'function') {
+        if (!window.supabase || typeof window.supabase.from !== 'function') {
           throw new Error('数据库连接未就绪');
         }
         
-        const { data, error } = await supabase
-          .from('members')  // 表名从users改为members
+        const { data, error } = await window.supabase
+          .from('members')
           .select('*')
           .order('created_at', { ascending: false });
         
@@ -223,9 +248,9 @@
       users.forEach(user => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${user.username || '-'}</td>
-          <td>${user.name || '-'}</td>
-          <td>${user.class || '-'}</td>
+          <td>${escapeHtml(user.username || '-')}</td>
+          <td>${escapeHtml(user.name || '-')}</td>
+          <td>${escapeHtml(user.class || '-')}</td>
           <td><span class="role-badge">${getRoleLabel(user.role)}</span></td>
           <td><span class="status-badge ${user.status ? 'active' : 'inactive'}">${user.status ? '活跃' : '禁用'}</span></td>
           <td>${formatDate(user.created_at)}</td>
@@ -239,12 +264,9 @@
         `;
         tbody.appendChild(tr);
       });
-      
-      // 添加样式
-      addTableStyles();
     }
     
-    // 添加用户 - 表名已改为members
+    // 添加用户
     async function addUser() {
       try {
         const username = document.getElementById('username').value.trim();
@@ -257,12 +279,8 @@
           throw new Error('请填写完整信息');
         }
         
-        if (!supabase) {
-          throw new Error('数据库连接异常');
-        }
-        
-        const { error } = await supabase
-          .from('members')  // 表名从users改为members
+        const { error } = await window.supabase
+          .from('members')
           .insert([{
             username,
             name,
@@ -284,7 +302,7 @@
       }
     }
     
-    // 批量导入 - 表名已改为members
+    // 批量导入
     async function batchImport() {
       const csvData = document.getElementById('batchData').value.trim();
       if (!csvData) {
@@ -318,8 +336,8 @@
       
       try {
         for (const user of usersToAdd) {
-          const { error } = await supabase
-            .from('members')  // 表名从users改为members
+          const { error } = await window.supabase
+            .from('members')
             .insert([user]);
           
           if (!error) successCount++;
@@ -352,7 +370,7 @@
       showAlert('tableAlert', `找到 ${filtered.length} 个匹配结果`, 'success');
     }
     
-    // 编辑用户 - 表名已改为members
+    // 编辑用户
     async function editUser(id) {
       const user = usersCache.find(u => u.id === id);
       if (!user) return;
@@ -364,8 +382,8 @@
       if (newClass === null) return;
       
       try {
-        const { error } = await supabase
-          .from('members')  // 表名从users改为members
+        const { error } = await window.supabase
+          .from('members')
           .update({ name: newName, class: newClass })
           .eq('id', id);
         
@@ -378,11 +396,11 @@
       }
     }
     
-    // 切换用户状态 - 表名已改为members
+    // 切换用户状态
     async function toggleUserStatus(id, newStatus) {
       try {
-        const { error } = await supabase
-          .from('members')  // 表名从users改为members
+        const { error } = await window.supabase
+          .from('members')
           .update({ status: newStatus })
           .eq('id', id);
         
@@ -395,13 +413,13 @@
       }
     }
     
-    // 删除用户 - 表名已改为members
+    // 删除用户
     async function deleteUser(id) {
       if (!confirm('确定要删除这个用户吗？此操作不可撤销。')) return;
       
       try {
-        const { error } = await supabase
-          .from('members')  // 表名从users改为members
+        const { error } = await window.supabase
+          .from('members')
           .delete()
           .eq('id', id);
         
@@ -490,36 +508,10 @@
       renderUserTable(usersCache);
     }
     
-    function addTableStyles() {
-      const style = document.createElement('style');
-      style.textContent = `
-        .role-badge { 
-          background: #e9ecef; 
-          padding: 2px 8px; 
-          border-radius: 12px; 
-          font-size: 12px; 
-        }
-        .status-badge { 
-          padding: 2px 8px; 
-          border-radius: 12px; 
-          font-size: 12px; 
-        }
-        .status-badge.active { 
-          background: #d4edda; 
-          color: #155724; 
-        }
-        .status-badge.inactive { 
-          background: #f8d7da; 
-          color: #721c24; 
-        }
-        .action-btn { 
-          padding: 4px 8px; 
-          font-size: 12px; 
-          border-radius: 3px; 
-          cursor: pointer; 
-        }
-      `;
-      document.head.appendChild(style);
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
     
   </script>
