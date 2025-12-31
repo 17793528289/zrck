@@ -204,49 +204,6 @@
         </div>
     </div>
 
-    <!-- 签到功能卡片 -->
-<div class="feature-card">
-    <div class="feature-icon">📅</div>
-    <h3>每日签到</h3>
-    <div id="signinStatus">
-        <p>连续签到: <span id="continuousDays">0</span> 天</p>
-        <p>今日积分: <span id="todayPoints">0</span> 分</p>
-    </div>
-    <button id="signinBtn" class="btn btn-primary" onclick="handleSignIn()">点击签到</button>
-    <div id="signinCalendar" style="margin-top: 15px;">
-        <h4>本月签到日历</h4>
-        <div id="calendarContainer" class="calendar-grid"></div>
-    </div>
-</div>
-
-<style>
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    margin-top: 10px;
-}
-.calendar-day {
-    padding: 8px;
-    text-align: center;
-    border-radius: 50%;
-    background: #f0f0f0;
-}
-.calendar-day.signed {
-    background: #4CAF50;
-    color: white;
-}
-.calendar-day.today {
-    border: 2px solid #2196F3;
-}
-.signin-animation {
-    animation: bounce 0.6s;
-}
-@keyframes bounce {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-</style>
     <!-- 页脚 -->
     <footer class="footer">
         <div class="container">
@@ -280,7 +237,7 @@
     </footer>
 
     <script>
-        // ==================== 核心代码 - 修复重复声明问题 ====================
+        // ==================== 核心代码 ====================
         
         // 使用立即执行函数避免变量冲突
         (function() {
@@ -293,7 +250,7 @@
             };
             
             // 全局变量声明
-            let supabaseClient = null;  // 使用不同名称避免冲突
+            let supabaseClient = null;
             let currentUser = null;
             
             // DOM元素引用
@@ -327,7 +284,6 @@
                 
                 // 3. 从数据库获取用户信息
                 await fetchAndDisplayUser();
-                
             });
             
             // 检查登录状态
