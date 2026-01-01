@@ -405,207 +405,218 @@
     
     <!-- 修复后的登录逻辑 -->
     <script>
-        // 初始化Supabase客户端
-        const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
-        const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-        // 显示消息提示
-        function showMessage(message, type = 'info') {
-            const messageEl = document.getElementById('loginMessage');
-            messageEl.textContent = message;
-            messageEl.className = `message ${type}`;
-            messageEl.style.display = 'block';
-
-            setTimeout(() => {
-                messageEl.style.display = 'none';
-            }, 3000);
-        }
-
-        // 更新登录状态
-        function updateLoginState(isLoggedIn, userData = null) {
-            const greetingEl = document.getElementById('userGreeting');
-            const bannerEl = document.getElementById('modeBanner');
-            const bannerTextEl = document.getElementById('bannerText');
-            const switchBtn = document.getElementById('switchToLogin');
-            const loginBtn = document.getElementById('loginBtn');
-            const viewModeBtn = document.getElementById('viewModeBtn');
-
-            if (isLoggedIn && userData) {
-                // 登录状态
-                const displayName = userData.name || userData.student_id || '成员';
-                greetingEl.textContent = `欢迎，${displayName}`;
-                bannerEl.className = 'mode-banner member-mode';
-                bannerTextEl.textContent = `您已登录会员账户（${displayName}）`;
-                switchBtn.textContent = '退出登录';
-                loginBtn.style.display = 'none';
-                viewModeBtn.style.display = 'inline-block';
-
-                // 更新退出登录功能
-                switchBtn.onclick = () => {
-                    localStorage.removeItem('makerClubUser');
-                    sessionStorage.removeItem('currentUser');
-                    updateLoginState(false);
-                    showMessage('您已安全退出登录。', 'success');
-                };
+        // 使用立即执行函数避免全局变量冲突
+        (function() {
+            'use strict';
+            
+            // Supabase配置 - 使用全局变量检查避免重复声明
+            let supabase;
+            if (!window.supabaseClient) {
+                const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
+                const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
+                supabase = supabase.createClient(supabaseUrl, supabaseKey);
+                window.supabaseClient = supabase; // 保存到全局变量
             } else {
-                // 访客状态
-                greetingEl.textContent = '欢迎访问';
-                bannerEl.className = 'mode-banner guest-mode';
-                bannerTextEl.textContent = '您当前处于访客浏览模式';
-                switchBtn.textContent = '登录解锁更多内容';
-                loginBtn.style.display = 'inline-block';
-                viewModeBtn.style.display = 'none';
-
-                // 恢复登录功能
-                switchBtn.onclick = () => {
-                    document.getElementById('loginModal').style.display = 'block';
-                };
+                supabase = window.supabaseClient; // 使用已存在的实例
             }
-        }
 
-        // 登录函数 - 修复后的版本
-        async function handleLogin(studentId, password) {
-            try {
-                showMessage('正在验证身份...', 'info');
-                
-                // 测试账户直接通过
-                if (studentId === '2023001' && password === '123456') {
-                    return { 
-                        success: true, 
-                        user: {
-                            student_id: '2023001',
-                            name: '测试用户',
-                            role: 'student',
-                            class: '高一(3)班'
-                        }
+            // 显示消息提示
+            function showMessage(message, type = 'info') {
+                const messageEl = document.getElementById('loginMessage');
+                messageEl.textContent = message;
+                messageEl.className = `message ${type}`;
+                messageEl.style.display = 'block';
+
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 3000);
+            }
+
+            // 更新登录状态
+            function updateLoginState(isLoggedIn, userData = null) {
+                const greetingEl = document.getElementById('userGreeting');
+                const bannerEl = document.getElementById('modeBanner');
+                const bannerTextEl = document.getElementById('bannerText');
+                const switchBtn = document.getElementById('switchToLogin');
+                const loginBtn = document.getElementById('loginBtn');
+                const viewModeBtn = document.getElementById('viewModeBtn');
+
+                if (isLoggedIn && userData) {
+                    // 登录状态
+                    const displayName = userData.name || userData.student_id || '成员';
+                    greetingEl.textContent = `欢迎，${displayName}`;
+                    bannerEl.className = 'mode-banner member-mode';
+                    bannerTextEl.textContent = `您已登录会员账户（${displayName}）`;
+                    switchBtn.textContent = '退出登录';
+                    loginBtn.style.display = 'none';
+                    viewModeBtn.style.display = 'inline-block';
+
+                    // 更新退出登录功能
+                    switchBtn.onclick = () => {
+                        localStorage.removeItem('makerClubUser');
+                        sessionStorage.removeItem('currentUser');
+                        updateLoginState(false);
+                        showMessage('您已安全退出登录。', 'success');
+                    };
+                } else {
+                    // 访客状态
+                    greetingEl.textContent = '欢迎访问';
+                    bannerEl.className = 'mode-banner guest-mode';
+                    bannerTextEl.textContent = '您当前处于访客浏览模式';
+                    switchBtn.textContent = '登录解锁更多内容';
+                    loginBtn.style.display = 'inline-block';
+                    viewModeBtn.style.display = 'none';
+
+                    // 恢复登录功能
+                    switchBtn.onclick = () => {
+                        document.getElementById('loginModal').style.display = 'block';
                     };
                 }
-
-                // 使用Supabase查询会员数据
-                const { data: user, error } = await supabase
-                    .from('members')
-                    .select('*')
-                    .eq('student_id', studentId)
-                    .single();
-
-                if (error) throw new Error('数据库查询失败: ' + error.message);
-                if (!user) throw new Error('学号不存在');
-                if (user.password !== password) throw new Error('密码错误');
-
-                return { success: true, user: user };
-            } catch (error) {
-                console.error('登录错误:', error);
-                throw error;
             }
-        }
 
-        // 保存登录状态
-        function saveLoginState(userData, rememberMe) {
-            const userDataString = JSON.stringify(userData);
-            
-            // 总是保存到sessionStorage
-            sessionStorage.setItem('currentUser', userDataString);
-            sessionStorage.setItem('isLoggedIn', 'true');
-            
-            // 如果选择记住我，则额外保存到localStorage
-            if (rememberMe) {
-                localStorage.setItem('makerClubUser', userDataString);
-            }
-        }
-
-        // 页面初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 检查登录状态
-            const savedUser = localStorage.getItem('makerClubUser') || sessionStorage.getItem('currentUser');
-            if (savedUser) {
+            // 登录函数 - 修复后的版本
+            async function handleLogin(studentId, password) {
                 try {
-                    const userData = JSON.parse(savedUser);
-                    updateLoginState(true, userData);
-                } catch (e) {
-                    console.error('解析用户数据失败:', e);
-                    localStorage.removeItem('makerClubUser');
-                    sessionStorage.removeItem('currentUser');
+                    showMessage('正在验证身份...', 'info');
+                    
+                    // 测试账户直接通过
+                    if (studentId === '2023001' && password === '123456') {
+                        return { 
+                            success: true, 
+                            user: {
+                                student_id: '2023001',
+                                name: '测试用户',
+                                role: 'student',
+                                class: '高一(3)班'
+                            }
+                        };
+                    }
+
+                    // 使用Supabase查询会员数据
+                    const { data: user, error } = await supabase
+                        .from('members')
+                        .select('*')
+                        .eq('student_id', studentId)
+                        .single();
+
+                    if (error) throw new Error('数据库查询失败: ' + error.message);
+                    if (!user) throw new Error('学号不存在');
+                    if (user.password !== password) throw new Error('密码错误');
+
+                    return { success: true, user: user };
+                } catch (error) {
+                    console.error('登录错误:', error);
+                    throw error;
                 }
             }
 
-            // 获取DOM元素
-            const loginBtn = document.getElementById('loginBtn');
-            const closeBtn = document.querySelector('.close');
-            const modal = document.getElementById('loginModal');
-            const loginForm = document.getElementById('loginForm');
-            const switchBtn = document.getElementById('switchToLogin');
+            // 保存登录状态
+            function saveLoginState(userData, rememberMe) {
+                const userDataString = JSON.stringify(userData);
+                
+                // 总是保存到sessionStorage
+                sessionStorage.setItem('currentUser', userDataString);
+                sessionStorage.setItem('isLoggedIn', 'true');
+                
+                // 如果选择记住我，则额外保存到localStorage
+                if (rememberMe) {
+                    localStorage.setItem('makerClubUser', userDataString);
+                }
+            }
 
-            // 登录按钮点击事件
-            loginBtn.addEventListener('click', () => {
-                modal.style.display = 'block';
-                loginForm.reset();
-                document.getElementById('loginMessage').style.display = 'none';
-            });
+            // 页面初始化
+            document.addEventListener('DOMContentLoaded', function() {
+                // 检查登录状态
+                const savedUser = localStorage.getItem('makerClubUser') || sessionStorage.getItem('currentUser');
+                if (savedUser) {
+                    try {
+                        const userData = JSON.parse(savedUser);
+                        updateLoginState(true, userData);
+                    } catch (e) {
+                        console.error('解析用户数据失败:', e);
+                        localStorage.removeItem('makerClubUser');
+                        sessionStorage.removeItem('currentUser');
+                    }
+                }
 
-            // 切换登录按钮点击事件
-            switchBtn.addEventListener('click', () => {
-                const isLoggedIn = sessionStorage.getItem('isLoggedIn') || localStorage.getItem('makerClubUser');
-                if (isLoggedIn) {
-                    localStorage.removeItem('makerClubUser');
-                    sessionStorage.removeItem('currentUser');
-                    updateLoginState(false);
-                    showMessage('您已安全退出登录。', 'success');
-                } else {
+                // 获取DOM元素
+                const loginBtn = document.getElementById('loginBtn');
+                const closeBtn = document.querySelector('.close');
+                const modal = document.getElementById('loginModal');
+                const loginForm = document.getElementById('loginForm');
+                const switchBtn = document.getElementById('switchToLogin');
+
+                // 登录按钮点击事件
+                loginBtn.addEventListener('click', () => {
                     modal.style.display = 'block';
                     loginForm.reset();
                     document.getElementById('loginMessage').style.display = 'none';
-                }
-            });
+                });
 
-            // 关闭模态框
-            closeBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
+                // 切换登录按钮点击事件
+                switchBtn.addEventListener('click', () => {
+                    const isLoggedIn = sessionStorage.getItem('isLoggedIn') || localStorage.getItem('makerClubUser');
+                    if (isLoggedIn) {
+                        localStorage.removeItem('makerClubUser');
+                        sessionStorage.removeItem('currentUser');
+                        updateLoginState(false);
+                        showMessage('您已安全退出登录。', 'success');
+                    } else {
+                        modal.style.display = 'block';
+                        loginForm.reset();
+                        document.getElementById('loginMessage').style.display = 'none';
+                    }
+                });
 
-            // 点击模态框外部关闭
-            window.addEventListener('click', (event) => {
-                if (event.target === modal) {
+                // 关闭模态框
+                closeBtn.addEventListener('click', () => {
                     modal.style.display = 'none';
-                }
-            });
+                });
 
-            // 登录表单提交事件
-            loginForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const studentId = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value;
-                const rememberMe = document.querySelector('input[name="remember"]').checked;
-
-                try {
-                    const result = await handleLogin(studentId, password);
-                    if (result.success) {
-                        showMessage('登录成功！', 'success');
-                        saveLoginState(result.user, rememberMe);
-                        updateLoginState(true, result.user);
-                        
-                        // 延迟跳转确保状态更新
-                        setTimeout(() => {
-                            window.location.href = result.user.role === 'admin' ? 
-                                'admin-dashboard.html' : 'member.html';
-                        }, 1000);
+                // 点击模态框外部关闭
+                window.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
                     }
-                } catch (error) {
-                    showMessage(error.message, 'error');
-                }
-            });
+                });
 
-            // 添加回车键登录支持
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' && modal.style.display === 'block') {
-                    const submitBtn = loginForm.querySelector('button[type="submit"]');
-                    if (submitBtn) {
-                        submitBtn.click();
+                // 登录表单提交事件
+                loginForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+
+                    const studentId = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value;
+                    const rememberMe = document.querySelector('input[name="remember"]').checked;
+
+                    try {
+                        const result = await handleLogin(studentId, password);
+                        if (result.success) {
+                            showMessage('登录成功！', 'success');
+                            saveLoginState(result.user, rememberMe);
+                            updateLoginState(true, result.user);
+                            
+                            // 延迟跳转确保状态更新
+                            setTimeout(() => {
+                                window.location.href = result.user.role === 'admin' ? 
+                                    'admin-dashboard.html' : 'member.html';
+                            }, 1000);
+                        }
+                    } catch (error) {
+                        showMessage(error.message, 'error');
                     }
-                }
+                });
+
+                // 添加回车键登录支持
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' && modal.style.display === 'block') {
+                        const submitBtn = loginForm.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            submitBtn.click();
+                        }
+                    }
+                });
             });
-        });
+        })();
     </script>
 </body>
 </html>
