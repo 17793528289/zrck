@@ -4,135 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>武威第十八中学卓然创客社团</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - 中文字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <script>
-        // 检测用户系统偏好
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#03fc90',
+                        secondary: '#fc03f8',
+                        dark: '#0f172a',
+                        light: '#f8fafc',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans SC', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
-        
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            transition: background-color 0.3s ease;
-        }
-        
+        /* 自定义样式 */
         .gradient-text {
-            background-clip: text;
+            background: linear-gradient(90deg, #03fc90, #fc03f8);
             -webkit-background-clip: text;
+            background-clip: text;
             color: transparent;
         }
-        
-        .btn-hover {
-            transition: all 0.3s ease;
-        }
-        
-        .btn-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
         .card-hover {
             transition: all 0.3s ease;
         }
-        
         .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+        .btn-hover {
+            transition: all 0.3s ease;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .btn-hover:hover {
+            transform: scale(1.05);
         }
-        
-        .slide-up {
-            animation: slideUp 0.5s ease-out;
+        .nav-link {
+            position: relative;
         }
-        
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #03fc90, #fc03f8);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .active::after {
+            width: 100%;
         }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body class="bg-light dark:bg-dark font-sans antialiased">
     <!-- 导航栏 -->
-    <nav class="fixed w-full z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-md">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="index.html" class="text-2xl font-bold">
-                        <span class="gradient-text bg-gradient-to-r from-green-400 to-purple-500">卓然创客</span>
-                    </a>
-                </div>
-                
-                <!-- 导航菜单 -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="font-bold text-green-500 dark:text-green-400">首页</a>
-                    <a href="about.html" class="hover:text-green-500 dark:hover:text-green-400 transition">关于我们</a>
-                    <a href="activities.html" class="hover:text-green-500 dark:hover:text-green-400 transition">活动展示</a>
-                    <a href="projects.html" class="hover:text-green-500 dark:hover:text-green-400 transition">项目成果</a>
-                    <a href="join.html" class="hover:text-green-500 dark:hover:text-green-400 transition">加入我们</a>
-                    
-                    <!-- 用户区域 -->
-                    <div class="flex items-center space-x-4">
-                        <span id="userGreeting" class="text-sm">欢迎访问</span>
-                        <button id="loginBtn" class="px-4 py-2 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-full text-sm font-medium btn-hover">
-                            会员登录
-                        </button>
-                        <button id="viewModeBtn" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium btn-hover hidden">
-                            访客浏览
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- 移动菜单按钮 -->
-                <button id="mobileMenuBtn" class="md:hidden text-gray-600 dark:text-gray-300">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
+    <nav class="fixed w-full bg-dark text-white z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-robot text-primary text-2xl"></i>
+                <a href="index.html" class="text-2xl font-bold gradient-text">卓然创客</a>
             </div>
             
-            <!-- 移动菜单 -->
-            <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 space-y-4">
-                <a href="index.html" class="block font-bold text-green-500 dark:text-green-400">首页</a>
-                <a href="about.html" class="block hover:text-green-500 dark:hover:text-green-400 transition">关于我们</a>
-                <a href="activities.html" class="block hover:text-green-500 dark:hover:text-green-400 transition">活动展示</a>
-                <a href="projects.html" class="block hover:text-green-500 dark:hover:text-green-400 transition">项目成果</a>
-                <a href="join.html" class="block hover:text-green-500 dark:hover:text-green-400 transition">加入我们</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="nav-link active text-white font-medium">首页</a>
+                <a href="about.html" class="nav-link text-gray-300 hover:text-white font-medium">关于我们</a>
+                <a href="activities.html" class="nav-link text-gray-300 hover:text-white font-medium">活动展示</a>
+                <a href="projects.html" class="nav-link text-gray-300 hover:text-white font-medium">项目成果</a>
+                <a href="join.html" class="nav-link text-gray-300 hover:text-white font-medium">加入我们</a>
                 
-                <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <span id="mobileUserGreeting" class="text-sm block mb-2">欢迎访问</span>
-                    <button id="mobileLoginBtn" class="w-full px-4 py-2 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-full text-sm font-medium btn-hover mb-2">
+                <div class="flex items-center space-x-4 ml-8">
+                    <span id="userGreeting" class="text-gray-300">欢迎访问</span>
+                    <button id="loginBtn" class="bg-primary hover:bg-opacity-80 text-dark font-bold px-4 py-2 rounded-full btn-hover transition-all">
                         会员登录
                     </button>
-                    <button id="mobileViewModeBtn" class="w-full px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium btn-hover hidden">
+                    <button id="viewModeBtn" class="bg-secondary hover:bg-opacity-80 text-white font-bold px-4 py-2 rounded-full btn-hover transition-all hidden">
                         访客浏览
                     </button>
                 </div>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="mobileMenuBtn" class="md:hidden text-white focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobileMenu" class="md:hidden hidden bg-dark pb-4 px-4">
+            <a href="index.html" class="block py-2 text-white font-medium">首页</a>
+            <a href="about.html" class="block py-2 text-gray-300 hover:text-white font-medium">关于我们</a>
+            <a href="activities.html" class="block py-2 text-gray-300 hover:text-white font-medium">活动展示</a>
+            <a href="projects.html" class="block py-2 text-gray-300 hover:text-white font-medium">项目成果</a>
+            <a href="join.html" class="block py-2 text-gray-300 hover:text-white font-medium">加入我们</a>
+            
+            <div class="mt-4 pt-4 border-t border-gray-700">
+                <span id="mobileUserGreeting" class="block text-gray-300 mb-2">欢迎访问</span>
+                <button id="mobileLoginBtn" class="w-full bg-primary text-dark font-bold px-4 py-2 rounded-full mb-2 btn-hover">
+                    会员登录
+                </button>
+                <button id="mobileViewModeBtn" class="w-full bg-secondary text-white font-bold px-4 py-2 rounded-full btn-hover hidden">
+                    访客浏览
+                </button>
             </div>
         </div>
     </nav>
 
     <!-- 模式状态提示 -->
-    <div id="modeBanner" class="pt-16 bg-gray-800 dark:bg-gray-700 text-white">
+    <div id="modeBanner" class="pt-16 bg-gradient-to-r from-gray-800 to-gray-900 text-white">
         <div class="container mx-auto px-4 py-3">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center mb-2 md:mb-0">
-                    <span class="mr-3 text-xl">👤</span>
+                <div class="flex items-center space-x-3 mb-2 md:mb-0">
+                    <i class="fas fa-user-circle text-xl"></i>
                     <span id="bannerText" class="font-medium">您当前处于访客浏览模式</span>
                 </div>
-                <button id="switchToLogin" class="px-4 py-2 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-full text-sm font-medium btn-hover">
+                <button id="switchToLogin" class="bg-primary hover:bg-opacity-80 text-dark font-bold px-4 py-2 rounded-full btn-hover transition-all">
                     登录解锁更多内容
                 </button>
             </div>
@@ -141,262 +151,366 @@
 
     <!-- 主要内容区域 -->
     <main class="pt-32 pb-20">
-        <div class="container mx-auto px-4">
-            <!-- 英雄区域 -->
-            <section class="text-center mb-20 slide-up">
-                <h1 class="text-5xl md:text-6xl font-black mb-6">
-                    <span class="gradient-text bg-gradient-to-r from-green-400 to-purple-500">卓然创客</span>
-                    <span class="block text-2xl md:text-3xl font-medium mt-4 text-gray-600 dark:text-gray-400">创新 · 实践 · 分享 · 成长</span>
+        <!-- 英雄区域 -->
+        <section class="container mx-auto px-4 mb-20">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 dark:text-white">
+                    <span class="gradient-text">武威第十八中学</span><br>
+                    <span class="dark:text-white">卓然创客社团</span>
                 </h1>
-                <p class="text-xl max-w-3xl mx-auto text-gray-600 dark:text-gray-300 leading-relaxed">
-                    我们是一个充满活力的学生创客社团，致力于培养学生的创新思维、实践能力和团队协作精神。在这里，创意与科技相遇，梦想与现实接轨。
-                </p>
-            </section>
+                <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">创新 · 实践 · 分享 · 成长</p>
+                
+                <div class="flex justify-center space-x-4">
+                    <a href="#about" class="bg-primary hover:bg-opacity-80 text-dark font-bold px-6 py-3 rounded-full btn-hover transition-all">
+                        了解更多
+                    </a>
+                    <a href="join.html" class="border-2 border-primary text-primary hover:bg-primary hover:text-dark font-bold px-6 py-3 rounded-full btn-hover transition-all">
+                        加入我们
+                    </a>
+                </div>
+            </div>
             
-            <!-- 数据卡片 -->
-            <section class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg card-hover fade-in">
-                    <div class="text-5xl font-bold text-green-500 mb-4">50+</div>
-                    <h3 class="text-xl font-bold mb-2">活跃成员</h3>
+            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-5xl text-primary mb-4 animate-float">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold dark:text-white mb-2">50+ 活跃成员</h3>
                     <p class="text-gray-600 dark:text-gray-300">来自各年级的创客爱好者</p>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg card-hover fade-in" style="animation-delay: 0.2s;">
-                    <div class="text-5xl font-bold text-purple-500 mb-4">10+</div>
-                    <h3 class="text-xl font-bold mb-2">成功项目</h3>
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-5xl text-secondary mb-4 animate-float" style="animation-delay: 0.2s">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold dark:text-white mb-2">10+ 成功项目</h3>
                     <p class="text-gray-600 dark:text-gray-300">涵盖多个技术领域</p>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg card-hover fade-in" style="animation-delay: 0.4s;">
-                    <div class="text-5xl font-bold text-blue-500 mb-4">5</div>
-                    <h3 class="text-xl font-bold mb-2">专业导师</h3>
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-5xl text-primary mb-4 animate-float" style="animation-delay: 0.4s">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold dark:text-white mb-2">5 专业导师</h3>
                     <p class="text-gray-600 dark:text-gray-300">提供专业指导支持</p>
                 </div>
-            </section>
-            
-            <!-- 特色区域 -->
-            <section class="mb-20">
-                <div class="bg-gradient-to-r from-green-400 to-blue-500 rounded-3xl p-8 md:p-12 text-white">
-                    <div class="flex flex-col md:flex-row items-center">
-                        <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
-                            <h2 class="text-3xl md:text-4xl font-bold mb-6">探索无限可能</h2>
-                            <p class="text-lg mb-6 opacity-90">
-                                在卓然创客社团，我们提供最前沿的技术设备和资源支持，让每一位成员都能将创意变为现实。
-                            </p>
-                            <button class="px-6 py-3 bg-white text-gray-900 rounded-full font-bold btn-hover">
-                                了解更多 <i class="fas fa-arrow-right ml-2"></i>
-                            </button>
-                        </div>
-                        <div class="md:w-1/2">
-                            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6">
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="bg-white/10 p-4 rounded-lg">
-                                        <i class="fas fa-microchip text-2xl mb-3"></i>
-                                        <h3 class="font-bold mb-1">硬件开发</h3>
-                                        <p class="text-sm opacity-80">Arduino/Raspberry Pi</p>
-                                    </div>
-                                    <div class="bg-white/10 p-4 rounded-lg">
-                                        <i class="fas fa-code text-2xl mb-3"></i>
-                                        <h3 class="font-bold mb-1">软件开发</h3>
-                                        <p class="text-sm opacity-80">Python/JavaScript</p>
-                                    </div>
-                                    <div class="bg-white/10 p-4 rounded-lg">
-                                        <i class="fas fa-robot text-2xl mb-3"></i>
-                                        <h3 class="font-bold mb-1">人工智能</h3>
-                                        <p class="text-sm opacity-80">机器学习/深度学习</p>
-                                    </div>
-                                    <div class="bg-white/10 p-4 rounded-lg">
-                                        <i class="fas fa-vr-cardboard text-2xl mb-3"></i>
-                                        <h3 class="font-bold mb-1">虚拟现实</h3>
-                                        <p class="text-sm opacity-80">VR/AR开发</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+        </section>
+
+        <!-- 关于我们 -->
+        <section id="about" class="py-16 bg-gray-100 dark:bg-gray-900">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold dark:text-white mb-4">欢迎来到卓然创客社团</h2>
+                    <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
                 </div>
-            </section>
-            
-            <!-- 活动展示 -->
-            <section class="mb-20">
-                <h2 class="text-3xl font-bold mb-8 text-center">近期活动</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg card-hover">
-                        <div class="h-48 bg-gradient-to-r from-purple-400 to-pink-500 flex items-center justify-center">
-                            <i class="fas fa-robot text-6xl text-white opacity-80"></i>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold mb-2">机器人编程大赛</h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">社团成员在省级机器人编程比赛中获得一等奖</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-500">2023.11.15</span>
-                                <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400 font-medium">
-                                    查看详情 <i class="fas fa-arrow-right ml-1"></i>
-                                </button>
-                            </div>
+                
+                <div class="flex flex-col lg:flex-row items-center">
+                    <div class="lg:w-1/2 mb-8 lg:mb-0 lg:pr-8">
+                        <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+                            我们是一个充满活力的学生创客社团，致力于培养学生的创新思维、实践能力和团队协作精神。在这里，创意与科技相遇，梦想与现实接轨。
+                        </p>
+                        <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+                            通过项目制学习，我们鼓励学生将想法变为现实，从概念设计到原型制作，从编程开发到产品展示，全方位提升学生的综合素质。
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="activities.html" class="bg-primary hover:bg-opacity-80 text-dark font-bold px-6 py-3 rounded-full btn-hover transition-all">
+                                查看活动
+                            </a>
+                            <a href="projects.html" class="border-2 border-primary text-primary hover:bg-primary hover:text-dark font-bold px-6 py-3 rounded-full btn-hover transition-all">
+                                项目展示
+                            </a>
                         </div>
                     </div>
                     
-                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg card-hover">
-                        <div class="h-48 bg-gradient-to-r from-blue-400 to-teal-500 flex items-center justify-center">
-                            <i class="fas fa-laptop-code text-6xl text-white opacity-80"></i>
+                    <div class="lg:w-1/2 relative">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                            <img src="https://images.unsplash.com/photo-1551033406-611cf9a28f67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                                 alt="创客活动" 
+                                 class="rounded-lg w-full h-auto">
                         </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold mb-2">创客工作坊</h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">每周五下午的创客技能培训活动</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-500">每周五</span>
-                                <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400 font-medium">
-                                    查看详情 <i class="fas fa-arrow-right ml-1"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg card-hover">
-                        <div class="h-48 bg-gradient-to-r from-yellow-400 to-red-500 flex items-center justify-center">
-                            <i class="fas fa-lightbulb text-6xl text-white opacity-80"></i>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold mb-2">创新项目展示</h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">学期末的创新项目成果展示会</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-500">2023.12.20</span>
-                                <button class="text-green-500 hover:text-green-600 dark:hover:text-green-400 font-medium">
-                                    查看详情 <i class="fas fa-arrow-right ml-1"></i>
-                                </button>
-                            </div>
+                        <div class="absolute -bottom-6 -right-6 bg-secondary text-white p-4 rounded-lg shadow-lg hidden md:block">
+                            <i class="fas fa-lightbulb text-3xl"></i>
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+
+        <!-- 特色活动 -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold dark:text-white mb-4">我们的特色活动</h2>
+                    <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg card-hover">
+                        <div class="text-primary text-4xl mb-4">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h3 class="text-xl font-bold dark:text-white mb-3">硬件开发工作坊</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            学习Arduino、树莓派等开发板的使用，制作智能硬件项目，从基础电路到物联网应用。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg card-hover">
+                        <div class="text-secondary text-4xl mb-4">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3 class="text-xl font-bold dark:text-white mb-3">编程马拉松</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            24小时编程挑战，团队协作完成一个完整的软件项目，锻炼编程能力和团队合作精神。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg card-hover">
+                        <div class="text-primary text-4xl mb-4">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3 class="text-xl font-bold dark:text-white mb-3">机器人竞赛</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            设计并制作机器人参加各类竞赛，学习机械设计、自动控制和人工智能算法。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg card-hover">
+                        <div class="text-secondary text-4xl mb-4">
+                            <i class="fas fa-vr-cardboard"></i>
+                        </div>
+                        <h3 class="text-xl font-bold dark:text-white mb-3">VR/AR体验</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            探索虚拟现实和增强现实技术，开发沉浸式教育应用和互动游戏。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg card-hover">
+                        <div class="text-primary text-4xl mb-4">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-xl font-bold dark:text-white mb-3">数据分析挑战</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            使用Python进行数据分析和可视化，解决实际问题，培养数据思维。
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg card-hover">
+                        <div class="text-secondary text-4xl mb-4">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="text-xl font-bold dark:text-white mb-3">创客分享会</h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            定期邀请行业专家和优秀学长分享经验，拓宽视野，激发创新灵感。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 加入我们 -->
+        <section class="py-16 bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">加入卓然创客社团</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                        无论你是编程新手还是技术达人，这里都有适合你的位置。让我们一起创造未来！
+                    </p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-6">
+                    <div class="bg-white dark:bg-gray-800 bg-opacity-10 p-8 rounded-xl backdrop-blur-sm max-w-md">
+                        <h3 class="text-2xl font-bold mb-4">会员权益</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-1 mr-2"></i>
+                                <span>参与所有社团活动和项目</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-1 mr-2"></i>
+                                <span>使用社团设备和资源</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-1 mr-2"></i>
+                                <span>获得导师一对一指导</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-primary mt-1 mr-2"></i>
+                                <span>优先参加竞赛和展览</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 bg-opacity-10 p-8 rounded-xl backdrop-blur-sm max-w-md">
+                        <h3 class="text-2xl font-bold mb-4">申请流程</h3>
+                        <ol class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="bg-primary text-dark rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">1</span>
+                                <span>填写在线申请表</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-primary text-dark rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">2</span>
+                                <span>参加面试或技能测试</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-primary text-dark rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">3</span>
+                                <span>收到录取通知</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-primary text-dark rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">4</span>
+                                <span>参加新会员培训</span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="join.html" class="inline-block bg-primary hover:bg-opacity-80 text-dark font-bold px-8 py-4 rounded-full btn-hover transition-all text-lg">
+                        立即申请加入
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
 
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold gradient-text mb-4">卓然创客</h3>
+                    <p class="text-gray-400">
+                        武威第十八中学学生创客社团，培养未来创新人才。
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-primary transition-colors">首页</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-primary transition-colors">关于我们</a></li>
+                        <li><a href="activities.html" class="text-gray-400 hover:text-primary transition-colors">活动展示</a></li>
+                        <li><a href="projects.html" class="text-gray-400 hover:text-primary transition-colors">项目成果</a></li>
+                        <li><a href="join.html" class="text-gray-400 hover:text-primary transition-colors">加入我们</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">联系我们</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-primary"></i>
+                            <span>甘肃省武威市凉州区某路18号</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-primary"></i>
+                            <span>maker@wwei18.edu.cn</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-primary"></i>
+                            <span>(0935) 123-4567</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">关注我们</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary text-2xl transition-colors">
+                            <i class="fab fa-weixin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary text-2xl transition-colors">
+                            <i class="fab fa-qq"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary text-2xl transition-colors">
+                            <i class="fab fa-weibo"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary text-2xl transition-colors">
+                            <i class="fab fa-bilibili"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <button id="themeToggle" class="flex items-center space-x-2 text-gray-400 hover:text-primary transition-colors">
+                            <i class="fas fa-moon"></i>
+                            <span>暗黑模式</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 武威第十八中学卓然创客社团. 保留所有权利.</p>
+                <p class="mt-2">网站设计: <span class="text-primary">卓然创客技术团队</span></p>
+            </div>
+        </div>
+    </footer>
+
     <!-- 登录模态框 -->
-    <div id="loginModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-        <div class="relative max-w-md mx-auto my-12 bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-xl">
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md relative overflow-hidden">
             <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                 <i class="fas fa-times text-2xl"></i>
             </button>
             
             <div class="p-8">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold mb-2">社团成员登录</h2>
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold dark:text-white mb-2">社团成员登录</h2>
                     <p class="text-gray-600 dark:text-gray-300">请输入您的学号和密码访问会员资源</p>
                 </div>
                 
                 <form id="loginForm" class="space-y-6">
                     <div>
                         <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">学号</label>
-                        <input type="text" id="username" name="username" placeholder="请输入学号" 
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                        <input type="text" id="username" name="username" 
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="请输入学号" required>
                     </div>
                     
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">密码</label>
-                        <input type="password" id="password" name="password" placeholder="请输入密码" 
-                            class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                        <input type="password" id="password" name="password" 
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="请输入密码" required>
                     </div>
                     
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <input id="remember" name="remember" type="checkbox" 
-                                class="h-4 w-4 text-green-500 focus:ring-green-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
-                            <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">记住登录状态</label>
+                                   class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600 rounded">
+                            <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                记住登录状态
+                            </label>
                         </div>
                     </div>
                     
-                    <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-lg btn-hover">
+                    <button type="submit" class="w-full bg-primary hover:bg-opacity-80 text-dark font-bold py-3 px-4 rounded-lg btn-hover transition-all">
                         登录
                     </button>
-                    
-                    <div id="loginMessage" class="hidden px-4 py-3 rounded-lg text-sm"></div>
                 </form>
                 
-                <div class="mt-6 text-center text-sm">
-                    <p class="text-gray-600 dark:text-gray-400">还没有账号？ <a href="join.html" class="text-green-500 font-medium hover:text-green-600 dark:hover:text-green-400">立即申请加入社团</a></p>
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        还没有账号？ <a href="join.html" class="text-primary hover:underline">立即申请加入社团</a>
+                    </p>
                 </div>
                 
                 <div class="mt-6 bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-                    <p class="text-sm text-center text-gray-600 dark:text-gray-300"><strong>测试账号：</strong> 学号: 2023001 / 密码: 123456</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 text-center">
+                        <strong>测试账号：</strong> 学号: 2023001 / 密码: 123456
+                    </p>
                 </div>
+                
+                <div id="loginMessage" class="mt-4 hidden p-3 rounded-lg text-sm"></div>
             </div>
         </div>
-    </div>
-
-    <!-- 页脚 -->
-    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">卓然创客</h3>
-                    <p class="text-gray-400">创新 · 实践 · 分享 · 成长</p>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
-                    <ul class="space-y-2">
-                        <li><a href="index.html" class="text-gray-400 hover:text-green-400 transition">首页</a></li>
-                        <li><a href="about.html" class="text-gray-400 hover:text-green-400 transition">关于我们</a></li>
-                        <li><a href="activities.html" class="text-gray-400 hover:text-green-400 transition">活动展示</a></li>
-                        <li><a href="projects.html" class="text-gray-400 hover:text-green-400 transition">项目成果</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-bold mb-4">联系我们</h3>
-                    <ul class="space-y-2">
-                        <li class="flex items-center text-gray-400">
-                            <i class="fas fa-map-marker-alt mr-2"></i> 甘肃省武威市第十八中学
-                        </li>
-                        <li class="flex items-center text-gray-400">
-                            <i class="fas fa-envelope mr-2"></i> maker@wuwei18.edu.cn
-                        </li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-lg font-bold mb-4">关注我们</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 dark:bg-gray-600 flex items-center justify-center hover:bg-green-500 transition">
-                            <i class="fab fa-weixin"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 dark:bg-gray-600 flex items-center justify-center hover:bg-blue-500 transition">
-                            <i class="fab fa-weibo"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 dark:bg-gray-600 flex items-center justify-center hover:bg-red-500 transition">
-                            <i class="fab fa-bilibili"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-700 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 武威第十八中学卓然创客社团. 保留所有权利.</p>
-                    
-                    <div class="flex items-center space-x-4">
-                        <button id="themeToggle" class="w-10 h-10 rounded-full bg-gray-700 dark:bg-gray-600 flex items-center justify-center hover:bg-gray-600 dark:hover:bg-gray-500 transition">
-                            <i class="fas fa-moon dark:hidden"></i>
-                            <i class="fas fa-sun hidden dark:block"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- 作者信息 -->
-    <div class="bg-gray-900 text-gray-500 text-xs py-2 text-center">
-        网页设计: 武威第十八中学信息技术组 | 技术支持: 卓然创客社团
     </div>
 
     <!-- 引入Supabase客户端库 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- 登录逻辑 -->
+    <!-- 主脚本 -->
     <script>
         // 使用立即执行函数避免全局变量冲突
         (function() {
@@ -435,10 +549,14 @@
                 const messageEl = document.getElementById('loginMessage');
                 if (messageEl) {
                     messageEl.textContent = message;
-                    messageEl.className = `px-4 py-3 rounded-lg text-sm ${type === 'error' ? 'bg-red-100 text-red-700' : type === 'success' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`;
+                    messageEl.className = `p-3 rounded-lg text-sm ${type === 'error' ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100' : 
+                                          type === 'success' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-100' : 
+                                          'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-100'}`;
                     messageEl.classList.remove('hidden');
-                    
+                    messageEl.classList.add('block');
+
                     setTimeout(() => {
+                        messageEl.classList.remove('block');
                         messageEl.classList.add('hidden');
                     }, 3000);
                 }
@@ -461,13 +579,13 @@
                     const displayName = userData.name || userData.student_id || '成员';
                     if (greetingEl) greetingEl.textContent = `欢迎，${displayName}`;
                     if (mobileGreetingEl) mobileGreetingEl.textContent = `欢迎，${displayName}`;
-                    if (bannerEl) bannerEl.className = 'pt-16 bg-green-600 dark:bg-green-700 text-white';
+                    if (bannerEl) bannerEl.className = 'pt-16 bg-gradient-to-r from-primary to-secondary text-white';
                     if (bannerTextEl) bannerTextEl.textContent = `您已登录会员账户（${displayName}）`;
                     if (switchBtn) switchBtn.textContent = '退出登录';
-                    if (loginBtn) loginBtn.classList.add('hidden');
-                    if (mobileLoginBtn) mobileLoginBtn.classList.add('hidden');
-                    if (viewModeBtn) viewModeBtn.classList.remove('hidden');
-                    if (mobileViewModeBtn) mobileViewModeBtn.classList.remove('hidden');
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (mobileLoginBtn) mobileLoginBtn.style.display = 'none';
+                    if (viewModeBtn) viewModeBtn.style.display = 'inline-block';
+                    if (mobileViewModeBtn) mobileViewModeBtn.style.display = 'block';
 
                     // 更新退出登录功能
                     if (switchBtn) {
@@ -478,21 +596,39 @@
                             showMessage('您已安全退出登录。', 'success');
                         };
                     }
+                    
+                    // 移动端退出登录
+                    if (mobileViewModeBtn) {
+                        mobileViewModeBtn.onclick = () => {
+                            localStorage.removeItem('makerClubUser');
+                            sessionStorage.removeItem('currentUser');
+                            updateLoginState(false);
+                            showMessage('您已安全退出登录。', 'success');
+                        };
+                    }
                 } else {
                     // 访客状态
                     if (greetingEl) greetingEl.textContent = '欢迎访问';
                     if (mobileGreetingEl) mobileGreetingEl.textContent = '欢迎访问';
-                    if (bannerEl) bannerEl.className = 'pt-16 bg-gray-800 dark:bg-gray-700 text-white';
+                    if (bannerEl) bannerEl.className = 'pt-16 bg-gradient-to-r from-gray-800 to-gray-900 text-white';
                     if (bannerTextEl) bannerTextEl.textContent = '您当前处于访客浏览模式';
                     if (switchBtn) switchBtn.textContent = '登录解锁更多内容';
-                    if (loginBtn) loginBtn.classList.remove('hidden');
-                    if (mobileLoginBtn) mobileLoginBtn.classList.remove('hidden');
-                    if (viewModeBtn) viewModeBtn.classList.add('hidden');
-                    if (mobileViewModeBtn) mobileViewModeBtn.classList.add('hidden');
+                    if (loginBtn) loginBtn.style.display = 'inline-block';
+                    if (mobileLoginBtn) mobileLoginBtn.style.display = 'block';
+                    if (viewModeBtn) viewModeBtn.style.display = 'none';
+                    if (mobileViewModeBtn) mobileViewModeBtn.style.display = 'none';
 
                     // 恢复登录功能
                     if (switchBtn) {
                         switchBtn.onclick = () => {
+                            const modal = document.getElementById('loginModal');
+                            if (modal) modal.classList.remove('hidden');
+                        };
+                    }
+                    
+                    // 移动端登录
+                    if (mobileLoginBtn) {
+                        mobileLoginBtn.onclick = () => {
                             const modal = document.getElementById('loginModal');
                             if (modal) modal.classList.remove('hidden');
                         };
@@ -606,6 +742,45 @@
                 const mobileMenu = document.getElementById('mobileMenu');
                 const themeToggle = document.getElementById('themeToggle');
 
+                // 移动端菜单切换
+                if (mobileMenuBtn && mobileMenu) {
+                    mobileMenuBtn.addEventListener('click', () => {
+                        const isOpen = mobileMenu.classList.contains('hidden');
+                        if (isOpen) {
+                            mobileMenu.classList.remove('hidden');
+                            mobileMenuBtn.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+                        } else {
+                            mobileMenu.classList.add('hidden');
+                            mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                        }
+                    });
+                }
+
+                // 主题切换
+                if (themeToggle) {
+                    themeToggle.addEventListener('click', () => {
+                        const html = document.documentElement;
+                        if (html.classList.contains('dark')) {
+                            html.classList.remove('dark');
+                            localStorage.setItem('theme', 'light');
+                            themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>暗黑模式</span>';
+                        } else {
+                            html.classList.add('dark');
+                            localStorage.setItem('theme', 'dark');
+                            themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>明亮模式</span>';
+                        }
+                    });
+
+                    // 检查存储的主题偏好
+                    if (localStorage.getItem('theme') === 'dark' || 
+                        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        document.documentElement.classList.add('dark');
+                        themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>明亮模式</span>';
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                }
+
                 // 登录按钮点击事件
                 if (loginBtn) {
                     loginBtn.addEventListener('click', () => {
@@ -616,14 +791,16 @@
                     });
                 }
 
-                // 移动登录按钮点击事件
+                // 移动端登录按钮
                 if (mobileLoginBtn) {
                     mobileLoginBtn.addEventListener('click', () => {
                         if (modal) modal.classList.remove('hidden');
                         if (loginForm) loginForm.reset();
                         const messageEl = document.getElementById('loginMessage');
                         if (messageEl) messageEl.classList.add('hidden');
-                        mobileMenu.classList.add('hidden');
+                        // 关闭移动菜单
+                        if (mobileMenu) mobileMenu.classList.add('hidden');
+                        if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
                     });
                 }
 
@@ -645,13 +822,6 @@
                     });
                 }
 
-                // 移动菜单按钮点击事件
-                if (mobileMenuBtn) {
-                    mobileMenuBtn.addEventListener('click', () => {
-                        mobileMenu.classList.toggle('hidden');
-                    });
-                }
-
                 // 关闭模态框
                 if (closeBtn) {
                     closeBtn.addEventListener('click', () => {
@@ -666,19 +836,6 @@
                     }
                 });
 
-                // 主题切换
-                if (themeToggle) {
-                    themeToggle.addEventListener('click', () => {
-                        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                            document.documentElement.classList.remove('dark');
-                            localStorage.setItem('color-theme', 'light');
-                        } else {
-                            document.documentElement.classList.add('dark');
-                            localStorage.setItem('color-theme', 'dark');
-                        }
-                    });
-                }
-
                 // 登录表单提交事件
                 if (loginForm) {
                     loginForm.addEventListener('submit', async (event) => {
@@ -686,7 +843,7 @@
 
                         const studentId = document.getElementById('username').value.trim();
                         const password = document.getElementById('password').value;
-                        const rememberMe = document.querySelector('input[name="remember"]').checked;
+                        const rememberMe = document.getElementById('remember').checked;
 
                         // 基本验证
                         if (!studentId) {
