@@ -269,8 +269,13 @@
                 loginTimeEl = document.getElementById('loginTime');
                 adminAccessEl = document.getElementById('adminAccess');
                 
-                // 1. 检查登录状态
-                if (!checkLoginStatus()) {
+                // 1. 检查登录状态 - 修改为异步检查
+                const isLoggedIn = await checkLoginStatus();
+                if (!isLoggedIn) {
+                    showStatus('请先登录系统', 'warning');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
                     return;
                 }
                 
@@ -286,18 +291,52 @@
                 await fetchAndDisplayUser();
             });
             
-            // 检查登录状态
-            function checkLoginStatus() {
-                const username = sessionStorage.getItem('username') || localStorage.getItem('username');
-                const userData = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
-                
-                if (!username || !userData) {
-                    alert('请先登录！');
-                    window.location.href = 'index.html';
+            // 检查登录状态 - 修改后的函数
+            async function checkLoginStatus() {
+                try {
+                    // 优先检查sessionStorage，其次localStorage
+                    let username = sessionStorage.getItem('username');
+                    let userData = sessionStorage.getItem('currentUser');
+                    
+                    if (!username || !userData) {
+                        username = localStorage.getItem('username');
+                        userData = localStorage.getItem('currentUser');
+                        
+                        if (!username || !userData) {
+                            // 如果都没有，检查Supabase会话
+                            const session = await getSupabaseSession();
+                            if (!session) {
+                                return false;
+                            }
+                            // 如果有Supabase会话，可以继续
+                            return true;
+                        }
+                    }
+                    
+                    return true;
+                    
+                } catch (error) {
+                    console.error('检查登录状态失败:', error);
+                    showStatus('登录状态检查失败: ' + error.message, 'error');
                     return false;
                 }
-                
-                return true;
+            }
+            
+            // 新增函数：获取Supabase会话
+            async function getSupabaseSession() {
+                try {
+                    if (!supabaseClient) {
+                        await initSupabase();
+                    }
+                    if (supabaseClient) {
+                        const { data: { session } } = await supabaseClient.auth.getSession();
+                        return session;
+                    }
+                    return null;
+                } catch (error) {
+                    console.error('获取Supabase会话失败:', error);
+                    return null;
+                }
             }
             
             // 初始化Supabase客户端
