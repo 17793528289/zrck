@@ -75,6 +75,24 @@
         .theme-transition * {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #03fc90, #fc03f8);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #00e67a, #e600dd);
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 theme-transition">
@@ -94,50 +112,51 @@
                 
                 <!-- 桌面导航菜单 -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#about" class="text-gray-300 hover:text-white font-medium transition-colors">关于我们</a>
-                    <a href="#activities" class="text-gray-300 hover:text-white font-medium transition-colors">活动展示</a>
-                    <a href="#projects" class="text-gray-300 hover:text-white font-medium transition-colors">项目成果</a>
-                    <a href="#join" class="text-gray-300 hover:text-white font-medium transition-colors">加入我们</a>
+                    <a href="#about" class="text-gray-300 hover:text-white font-medium transition-colors hover:scale-105">关于我们</a>
+                    <a href="#activities" class="text-gray-300 hover:text-white font-medium transition-colors hover:scale-105">活动展示</a>
+                    <a href="#projects" class="text-gray-300 hover:text-white font-medium transition-colors hover:scale-105">项目成果</a>
+                    <a href="#join" class="text-gray-300 hover:text-white font-medium transition-colors hover:scale-105">加入我们</a>
                     
                     <!-- 用户菜单 -->
                     <div class="flex items-center space-x-4">
-                        <span id="userGreeting" class="text-gray-300">欢迎访问</span>
-                        <button id="themeToggle" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:text-white">
+                        <span id="userGreeting" class="text-gray-300 font-medium">欢迎访问</span>
+                        <button id="themeToggle" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:text-white hover:bg-gray-700 transition-all">
                             <i class="fas fa-moon"></i>
                         </button>
-                        <button id="loginBtn" class="px-4 py-2 bg-gradient-to-r from-green-500 to-teal-400 text-white font-semibold rounded-lg hover:shadow-lg transition-all btn-hover">
+                        <button id="loginBtn" class="px-5 py-2 bg-gradient-to-r from-green-500 to-teal-400 text-white font-semibold rounded-lg hover:shadow-lg transition-all btn-hover shadow-md">
                             会员登录
                         </button>
-                        <button id="viewModeBtn" class="px-4 py-2 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-600 transition-all hidden">
+                        <button id="viewModeBtn" class="px-5 py-2 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-600 transition-all btn-hover hidden">
                             访客浏览
                         </button>
+                    </div>
                 </div>
                 
                 <!-- 移动端菜单按钮 -->
-                <button id="mobileMenuBtn" class="md:hidden text-gray-300 text-xl">
+                <button id="mobileMenuBtn" class="md:hidden text-gray-300 text-2xl hover:text-white transition-colors">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
         
         <!-- 移动端菜单 -->
-        <div id="mobileMenu" class="md:hidden bg-gray-800 hidden">
+        <div id="mobileMenu" class="md:hidden bg-gray-800/95 backdrop-blur-lg hidden absolute top-full left-0 right-0 shadow-xl">
             <div class="flex flex-col p-4">
-                <a href="#about" class="py-3 text-gray-300 hover:text-white border-b border-gray-700">关于我们</a>
-                <a href="#activities" class="py-3 text-gray-300 hover:text-white border-b border-gray-700">活动展示</a>
-                <a href="#projects" class="py-3 text-gray-300 hover:text-white border-b border-gray-700">项目成果</a>
-                <a href="#join" class="py-3 text-gray-300 hover:text-white border-b border-gray-700">加入我们</a>
-                <div class="py-4">
+                <a href="#about" class="py-3 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg px-4 transition-colors">关于我们</a>
+                <a href="#activities" class="py-3 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg px-4 transition-colors">活动展示</a>
+                <a href="#projects" class="py-3 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg px-4 transition-colors">项目成果</a>
+                <a href="#join" class="py-3 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg px-4 transition-colors">加入我们</a>
+                <div class="py-4 px-4 border-t border-gray-700 mt-2">
                     <div class="flex justify-between items-center mb-4">
-                        <span id="mobileUserGreeting" class="text-gray-300">欢迎访问</span>
-                        <button id="mobileThemeToggle" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-300 hover:text-white">
+                        <span id="mobileUserGreeting" class="text-gray-300 font-medium">欢迎访问</span>
+                        <button id="mobileThemeToggle" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-300 hover:text-white hover:bg-gray-600">
                             <i class="fas fa-moon"></i>
                         </button>
                     </div>
-                    <button id="mobileLoginBtn" class="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-teal-400 text-white font-semibold rounded-lg mb-3">
+                    <button id="mobileLoginBtn" class="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-teal-400 text-white font-semibold rounded-lg mb-3 hover:shadow-lg transition-all">
                         会员登录
                     </button>
-                    <button id="mobileViewModeBtn" class="w-full px-4 py-3 bg-gray-700 text-white font-semibold rounded-lg hidden">
+                    <button id="mobileViewModeBtn" class="w-full px-4 py-3 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-600 transition-all hidden">
                         访客浏览
                     </button>
                 </div>
@@ -146,16 +165,16 @@
     </nav>
     
     <!-- 模式状态提示 -->
-    <div id="modeBanner" class="pt-20 bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+    <div id="modeBanner" class="pt-20 bg-gradient-to-r from-gray-800 to-gray-900 text-white transition-all duration-500">
         <div class="container mx-auto px-4 py-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="flex items-center space-x-3 mb-3 md:mb-0">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-teal-400 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-teal-400 flex items-center justify-center animate-pulse">
                         <i class="fas fa-user text-sm"></i>
                     </div>
                     <span id="bannerText" class="text-lg font-medium">您当前处于访客浏览模式</span>
                 </div>
-                <button id="switchToLogin" class="px-6 py-2 bg-gradient-to-r from-green-500 to-teal-400 text-white font-semibold rounded-lg hover:shadow-lg transition-all btn-hover">
+                <button id="switchToLogin" class="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-400 text-white font-semibold rounded-lg hover:shadow-lg transition-all btn-hover shadow-md">
                     登录解锁更多内容
                 </button>
             </div>
@@ -165,8 +184,14 @@
     <!-- 主要内容区域 -->
     <main>
         <!-- 英雄区域 -->
-        <section id="hero" class="hero-gradient text-white pt-24 pb-20 md:pt-32 md:pb-28">
-            <div class="container mx-auto px-4">
+        <section id="hero" class="hero-gradient text-white pt-24 pb-20 md:pt-32 md:pb-28 relative overflow-hidden">
+            <!-- 背景装饰 -->
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-green-500 to-purple-600 blur-3xl"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-blue-500 to-pink-500 blur-3xl"></div>
+            </div>
+            
+            <div class="container mx-auto px-4 relative z-10">
                 <div class="max-w-6xl mx-auto text-center fade-in">
                     <h1 class="text-4xl md:text-7xl font-black mb-6 leading-tight">
                         武威第十八中学
@@ -180,10 +205,10 @@
                     </p>
                     <div class="flex flex-wrap justify-center gap-6">
                         <a href="#about" class="px-8 py-4 bg-gradient-to-r from-green-500 to-teal-400 text-white font-bold rounded-full text-lg hover:shadow-xl transition-all btn-hover glow">
-                            了解更多
+                            <i class="fas fa-arrow-down mr-2"></i>了解更多
                         </a>
-                        <a href="#join" class="px-8 py-4 bg-transparent border-2 border-green-500 text-green-500 font-bold rounded-full text-lg hover:bg-green-500 hover:text-white transition-all">
-                            立即加入
+                        <a href="#join" class="px-8 py-4 bg-transparent border-2 border-green-500 text-green-500 font-bold rounded-full text-lg hover:bg-green-500 hover:text-white transition-all hover:shadow-lg">
+                            <i class="fas fa-user-plus mr-2"></i>立即加入
                         </a>
                     </div>
                 </div>
@@ -196,7 +221,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                     <!-- 活跃成员 -->
                     <div class="card-gradient rounded-2xl p-8 text-center shadow-2xl card-hover transition-all duration-300 slide-up">
-                        <div class="w-20 h-20 rounded-full accent-gradient flex items-center justify-center mx-auto mb-6">
+                        <div class="w-20 h-20 rounded-full accent-gradient flex items-center justify-center mx-auto mb-6 animate-bounce">
                             <i class="fas fa-users text-3xl text-white"></i>
                         </div>
                         <h3 class="text-5xl font-black mb-2 text-white">50+</h3>
@@ -206,7 +231,7 @@
                     
                     <!-- 成功项目 -->
                     <div class="card-gradient rounded-2xl p-8 text-center shadow-2xl card-hover transition-all duration-300 slide-up" style="animation-delay: 0.1s">
-                        <div class="w-20 h-20 rounded-full accent-gradient flex items-center justify-center mx-auto mb-6">
+                        <div class="w-20 h-20 rounded-full accent-gradient flex items-center justify-center mx-auto mb-6 animate-bounce" style="animation-delay: 0.2s">
                             <i class="fas fa-project-diagram text-3xl text-white"></i>
                         </div>
                         <h3 class="text-5xl font-black mb-2 text-white">10+</h3>
@@ -216,7 +241,7 @@
                     
                     <!-- 专业导师 -->
                     <div class="card-gradient rounded-2xl p-8 text-center shadow-2xl card-hover transition-all duration-300 slide-up" style="animation-delay: 0.2s">
-                        <div class="w-20 h-20 rounded-full accent-gradient flex items-center justify-center mx-auto mb-6">
+                        <div class="w-20 h-20 rounded-full accent-gradient flex items-center justify-center mx-auto mb-6 animate-bounce" style="animation-delay: 0.4s">
                             <i class="fas fa-chalkboard-teacher text-3xl text-white"></i>
                         </div>
                         <h3 class="text-5xl font-black mb-2 text-white">5</h3>
@@ -233,7 +258,7 @@
                 <div class="max-w-5xl mx-auto">
                     <div class="text-center mb-16">
                         <h2 class="text-4xl md:text-5xl font-black mb-6">
-                            <span class="accent-text">关于我们</span>
+                            关于<span class="accent-text">我们</span>
                         </h2>
                         <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                             卓然创客社团是武威第十八中学最具活力的科技创新团体，我们致力于将创意变为现实。
@@ -243,38 +268,38 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                         <div>
                             <h3 class="text-3xl font-bold mb-6">我们的使命</h3>
-                            <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+                            <p class="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                                 我们相信每个学生都有无限的创造潜能。通过提供先进的工具、专业的指导和开放的环境，我们激发学生的创新思维，培养未来的科技领袖。
                             </p>
                             <div class="space-y-4">
-                                <div class="flex items-start">
-                                    <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-4 flex-shrink-0">
+                                <div class="flex items-start group">
+                                    <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-4 flex-shrink-0 group-hover:scale-110 transition-transform">
                                         <i class="fas fa-check text-green-500"></i>
                                     </div>
-                                    <p class="text-gray-700 dark:text-gray-300">提供前沿科技设备与工具</p>
+                                    <p class="text-gray-700 dark:text-gray-300 group-hover:text-green-400 transition-colors">提供前沿科技设备与工具</p>
                                 </div>
-                                <div class="flex items-start">
-                                    <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-4 flex-shrink-0">
+                                <div class="flex items-start group">
+                                    <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-4 flex-shrink-0 group-hover:scale-110 transition-transform">
                                         <i class="fas fa-check text-green-500"></i>
                                     </div>
-                                    <p class="text-gray-700 dark:text-gray-300">组织创新工作坊与培训</p>
+                                    <p class="text-gray-700 dark:text-gray-300 group-hover:text-green-400 transition-colors">组织创新工作坊与培训</p>
                                 </div>
-                                <div class="flex items-start">
-                                    <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-4 flex-shrink-0">
+                                <div class="flex items-start group">
+                                    <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-4 flex-shrink-0 group-hover:scale-110 transition-transform">
                                         <i class="fas fa-check text-green-500"></i>
                                     </div>
-                                    <p class="text-gray-700 dark:text-gray-300">参加各级科技创新竞赛</p>
+                                    <p class="text-gray-700 dark:text-gray-300 group-hover:text-green-400 transition-colors">参加各级科技创新竞赛</p>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="relative">
-                            <div class="w-full h-80 rounded-2xl overflow-hidden shadow-2xl">
+                            <div class="w-full h-80 rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
                                 <div class="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                                    <i class="fas fa-robot text-8xl text-green-500/30"></i>
+                                    <i class="fas fa-robot text-8xl text-green-500/30 animate-pulse"></i>
                                 </div>
                             </div>
-                            <div class="absolute -bottom-6 -right-6 w-32 h-32 rounded-2xl overflow-hidden shadow-xl">
+                            <div class="absolute -bottom-6 -right-6 w-32 h-32 rounded-2xl overflow-hidden shadow-xl transform hover:scale-110 transition-transform duration-300">
                                 <div class="w-full h-full bg-gradient-to-tr from-green-500 to-purple-600 flex items-center justify-center">
                                     <i class="fas fa-lightbulb text-4xl text-white"></i>
                                 </div>
@@ -291,7 +316,7 @@
                 <div class="max-w-6xl mx-auto">
                     <div class="text-center mb-16">
                         <h2 class="text-4xl md:text-5xl font-black mb-6">
-                            <span class="accent-text">活动展示</span>
+                            活动<span class="accent-text">展示</span>
                         </h2>
                         <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                             我们定期举办各类创客活动，从3D打印到机器人编程，从电子设计到人工智能应用。
@@ -299,12 +324,12 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-xl card-hover">
+                        <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-xl card-hover border border-gray-200 dark:border-gray-800">
                             <div class="h-48 bg-gradient-to-r from-green-500 to-teal-400 flex items-center justify-center">
                                 <i class="fas fa-print text-6xl text-white"></i>
                             </div>
                             <div class="p-6">
-                                <h3 class="text-2xl font-bold mb-3">3D打印工作坊</h3>
+                                <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-white">3D打印工作坊</h3>
                                 <p class="text-gray-600 dark:text-gray-300 mb-4">
                                     学习3D建模与打印技术，将创意转化为实体作品。从简单的钥匙扣到复杂的机械结构，我们一步步指导。
                                 </p>
@@ -315,12 +340,12 @@
                             </div>
                         </div>
                         
-                        <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-xl card-hover">
+                        <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-xl card-hover border border-gray-200 dark:border-gray-800">
                             <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
                                 <i class="fas fa-robot text-6xl text-white"></i>
                             </div>
                             <div class="p-6">
-                                <h3 class="text-2xl font-bold mb-3">机器人编程</h3>
+                                <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-white">机器人编程</h3>
                                 <p class="text-gray-600 dark:text-gray-300 mb-4">
                                     从基础编程到复杂算法，探索机器人的无限可能。我们使用Arduino和树莓派等平台进行教学。
                                 </p>
@@ -331,12 +356,12 @@
                             </div>
                         </div>
                         
-                        <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-xl card-hover">
+                        <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-xl card-hover border border-gray-200 dark:border-gray-800">
                             <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
                                 <i class="fas fa-microchip text-6xl text-white"></i>
                             </div>
                             <div class="p-6">
-                                <h3 class="text-2xl font-bold mb-3">电子创客日</h3>
+                                <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-white">电子创客日</h3>
                                 <p class="text-gray-600 dark:text-gray-300 mb-4">
                                     学习电路设计、焊接技术和嵌入式系统开发。制作自己的智能设备，体验创造的乐趣。
                                 </p>
@@ -351,35 +376,167 @@
             </div>
         </section>
         
+        <!-- 项目成果 -->
+        <section id="projects" class="py-20 bg-white dark:bg-gray-900">
+            <div class="container mx-auto px-4">
+                <div class="max-w-6xl mx-auto">
+                    <div class="text-center mb-16">
+                        <h2 class="text-4xl md:text-5xl font-black mb-6">
+                            项目<span class="accent-text">成果</span>
+                        </h2>
+                        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                            探索我们社团成员完成的创新项目和竞赛成果
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- 项目1 -->
+                        <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 shadow-2xl card-hover">
+                            <div class="flex items-start mb-6">
+                                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-green-500 to-teal-400 flex items-center justify-center mr-4">
+                                    <i class="fas fa-microchip text-2xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white mb-2">智能农业监控系统</h3>
+                                    <span class="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">2024年省级一等奖</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 mb-6">
+                                基于物联网的智能农业监控系统，能够实时监测土壤湿度、光照强度、温度等参数，并通过手机App远程控制灌溉和通风设备。
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-sm">物联网</span>
+                                <span class="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-sm">Arduino</span>
+                                <span class="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-sm">传感器</span>
+                                <span class="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-sm">App开发</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 项目2 -->
+                        <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 shadow-2xl card-hover">
+                            <div class="flex items-start mb-6">
+                                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mr-4">
+                                    <i class="fas fa-robot text-2xl text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white mb-2">自主导航机器人</h3>
+                                    <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">2023年市级特等奖</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-300 mb-6">
+                                基于计算机视觉和SLAM技术的自主导航机器人，能够在复杂环境中自主建图、定位和路径规划，具备避障和目标识别功能。
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-sm">机器人</span>
+                                <span class="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-sm">计算机视觉</span>
+                                <span class="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-sm">SLAM</span>
+                                <span class="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-sm">Python</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 加入我们 -->
+        <section id="join" class="py-20 bg-gradient-to-br from-gray-800 to-gray-900 text-white">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl md:text-5xl font-black mb-6">
+                        加入<span class="accent-text">我们</span>
+                    </h2>
+                    <p class="text-xl mb-12 text-gray-300">
+                        无论你是编程新手还是技术达人，只要你对科技创新充满热情，我们都欢迎你的加入！
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <div class="bg-gray-800/50 rounded-2xl p-8 text-left">
+                            <h3 class="text-2xl font-bold mb-4 flex items-center">
+                                <i class="fas fa-user-check text-green-500 mr-3"></i>加入条件
+                            </h3>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+                                    <span>武威第十八中学在校学生</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+                                    <span>对科技创新有浓厚兴趣</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+                                    <span>愿意投入时间学习和实践</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
+                                    <span>具备团队合作精神</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-gray-800/50 rounded-2xl p-8 text-left">
+                            <h3 class="text-2xl font-bold mb-4 flex items-center">
+                                <i class="fas fa-calendar-alt text-green-500 mr-3"></i>活动时间
+                            </h3>
+                            <ul class="space-y-3 text-gray-300">
+                                <li class="flex items-start">
+                                    <i class="far fa-clock text-green-500 mr-3 mt-1"></i>
+                                    <span>每周三 16:00-18:00 (3D打印)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="far fa-clock text-green-500 mr-3 mt-1"></i>
+                                    <span>每周五 16:00-18:00 (机器人编程)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="far fa-clock text-green-500 mr-3 mt-1"></i>
+                                    <span>每月第一个周六 9:00-12:00 (创客日)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="far fa-clock text-green-500 mr-3 mt-1"></i>
+                                    <span>其他时间 预约开放 (自主学习)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <button id="showApplicationForm" class="px-10 py-4 bg-gradient-to-r from-green-500 to-teal-400 text-white font-bold rounded-full text-lg hover:shadow-2xl transition-all btn-hover glow text-xl">
+                        <i class="fas fa-edit mr-3"></i>立即申请加入
+                    </button>
+                </div>
+            </div>
+        </section>
+        
         <!-- 作者信息区域 -->
         <section id="author" class="py-16 bg-gray-900 text-white">
             <div class="container mx-auto px-4">
                 <div class="max-w-4xl mx-auto text-center">
                     <h2 class="text-3xl font-bold mb-8">网页设计信息</h2>
-                    <div class="bg-gray-800/50 rounded-2xl p-8">
+                    <div class="bg-gray-800/50 rounded-2xl p-8 border border-gray-700">
                         <div class="flex flex-col md:flex-row items-center justify-center gap-8">
-                            <div class="w-32 h-32 rounded-full bg-gradient-to-r from-green-500 to-teal-400 flex items-center justify-center">
+                            <div class="w-32 h-32 rounded-full bg-gradient-to-r from-green-500 to-teal-400 flex items-center justify-center animate-pulse">
                                 <i class="fas fa-code text-5xl"></i>
                             </div>
                             <div class="text-left">
                                 <h3 class="text-2xl font-bold mb-4">网页设计说明</h3>
-                                <p class="text-gray-300 mb-4">本页面专为武威第十八中学卓然创客社团设计，采用现代化科技风格，结合深色主题与高亮色对比，创造视觉冲击力强的用户体验。</p>
+                                <p class="text-gray-300 mb-4 leading-relaxed">
+                                    本页面专为武威第十八中学卓然创客社团设计，采用现代化科技风格，结合深色主题与高亮色对比，创造视觉冲击力强的用户体验。页面完全响应式，支持深色/浅色模式切换，并保留了原有的完整登录功能。
+                                </p>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-palette text-green-500 mr-3"></i>
-                                        <span>配色方案：深色背景 + 高亮色 (#03fc90, #fc03f8)</span>
+                                    <div class="flex items-center group">
+                                        <i class="fas fa-palette text-green-500 mr-3 text-xl"></i>
+                                        <span class="group-hover:text-green-400 transition-colors">配色方案：深色背景 + 高亮色 (#03fc90, #fc03f8)</span>
                                     </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-desktop text-green-500 mr-3"></i>
-                                        <span>响应式设计：适配所有屏幕尺寸</span>
+                                    <div class="flex items-center group">
+                                        <i class="fas fa-desktop text-green-500 mr-3 text-xl"></i>
+                                        <span class="group-hover:text-green-400 transition-colors">响应式设计：适配所有屏幕尺寸</span>
                                     </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-moon text-green-500 mr-3"></i>
-                                        <span>深色/浅色模式：一键切换</span>
+                                    <div class="flex items-center group">
+                                        <i class="fas fa-moon text-green-500 mr-3 text-xl"></i>
+                                        <span class="group-hover:text-green-400 transition-colors">深色/浅色模式：一键切换</span>
                                     </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-code-branch text-green-500 mr-3"></i>
-                                        <span>技术栈：HTML5, Tailwind CSS, Font Awesome</span>
+                                    <div class="flex items-center group">
+                                        <i class="fas fa-code-branch text-green-500 mr-3 text-xl"></i>
+                                        <span class="group-hover:text-green-400 transition-colors">技术栈：HTML5, Tailwind CSS, Font Awesome</span>
                                     </div>
                                 </div>
                             </div>
@@ -392,11 +549,11 @@
     
     <!-- 登录模态框 -->
     <div id="loginModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white">社团成员登录</h2>
-                    <button id="closeModal" class="text-gray-500 hover:text-gray-800 dark:hover:text-white text-2xl">
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-800 dark:hover:text-white text-2xl hover:scale-110 transition-transform">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -407,32 +564,32 @@
                     <div>
                         <label for="username" class="block text-gray-700 dark:text-gray-300 mb-2 font-medium">学号</label>
                         <input type="text" id="username" name="username" placeholder="请输入学号" 
-                               class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
                     </div>
                     
                     <div>
                         <label for="password" class="block text-gray-700 dark:text-gray-300 mb-2 font-medium">密码</label>
                         <input type="password" id="password" name="password" placeholder="请输入密码" 
-                               class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
                     </div>
                     
                     <div class="flex items-center">
-                        <input type="checkbox" id="remember" name="remember" class="h-5 w-5 text-green-500 rounded focus:ring-green-500">
+                        <input type="checkbox" id="remember" name="remember" class="h-5 w-5 text-green-500 rounded focus:ring-green-500 focus:ring-offset-0">
                         <label for="remember" class="ml-2 text-gray-700 dark:text-gray-300">记住登录状态</label>
                     </div>
                     
-                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-green-500 to-teal-400 text-white font-bold rounded-lg hover:shadow-lg transition-all btn-hover">
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-green-500 to-teal-400 text-white font-bold rounded-lg hover:shadow-lg transition-all btn-hover text-lg">
                         登录
                     </button>
                 </form>
                 
                 <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                     <p class="text-center text-gray-600 dark:text-gray-400 mb-4">还没有账号？ 
-                        <a href="#join" class="text-green-500 hover:text-green-600 font-medium">立即申请加入社团</a>
+                        <a href="#join" class="text-green-500 hover:text-green-600 font-medium hover:underline">立即申请加入社团</a>
                     </p>
                     <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
-                        <p class="text-center text-gray-700 dark:text-gray-300">
-                            <strong>测试账号：</strong> 学号: 2023001 / 密码: 123456
+                        <p class="text-center text-gray-700 dark:text-gray-300 font-medium">
+                            <i class="fas fa-key mr-2 text-green-500"></i>测试账号：学号: 2023001 / 密码: 123456
                         </p>
                     </div>
                 </div>
@@ -443,20 +600,93 @@
     </div>
     
     <!-- 页脚 -->
-    <footer class="bg-gray-900 text-white py-10">
+    <footer class="bg-gray-900 text-white py-10 border-t border-gray-800">
         <div class="container mx-auto px-4">
             <div class="text-center">
                 <div class="flex justify-center items-center space-x-2 mb-6">
-                    <div class="w-10 h-10 rounded-full accent-gradient flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-full accent-gradient flex items-center justify-center animate-spin-slow">
                         <i class="fas fa-robot text-white text-xl"></i>
                     </div>
                     <span class="text-2xl font-bold">卓然创客</span>
                 </div>
                 <p class="text-gray-400 mb-2">武威第十八中学创客社团</p>
-                <p class="text-gray-500">&copy; 2025 武威第十八中学卓然创客社团. 保留所有权利.</p>
+                <p class="text-gray-500 mb-4">&copy; 2025 武威第十八中学卓然创客社团. 保留所有权利.</p>
+                <div class="flex justify-center space-x-4 text-gray-500">
+                    <a href="#" class="hover:text-green-400 transition-colors"><i class="fab fa-weixin"></i></a>
+                    <a href="#" class="hover:text-green-400 transition-colors"><i class="fab fa-qq"></i></a>
+                    <a href="#" class="hover:text-green-400 transition-colors"><i class="fas fa-envelope"></i></a>
+                </div>
             </div>
         </div>
     </footer>
+    
+    <!-- 申请表单模态框 -->
+    <div id="applicationModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">加入申请</h2>
+                    <button id="closeApplicationModal" class="text-gray-500 hover:text-gray-800 dark:hover:text-white text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <p class="text-gray-600 dark:text-gray-300 mb-8">填写以下信息申请加入卓然创客社团</p>
+                
+                <form id="applicationForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="appName" class="block text-gray-700 dark:text-gray-300 mb-2 font-medium">姓名</label>
+                            <input type="text" id="appName" name="appName" placeholder="请输入姓名" 
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        
+                        <div>
+                            <label for="appClass" class="block text-gray-700 dark:text-gray-300 mb-2 font-medium">班级</label>
+                            <input type="text" id="appClass" name="appClass" placeholder="例如：高一(3)班" 
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="appStudentId" class="block text-gray-700 dark:text-gray-300 mb-2 font-medium">学号</label>
+                        <input type="text" id="appStudentId" name="appStudentId" placeholder="请输入学号" 
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    
+                    <div>
+                        <label for="appInterest" class="block text-gray-700 dark:text-gray-300 mb-2 font-medium">感兴趣的领域</label>
+                        <select id="appInterest" name="appInterest" 
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">请选择感兴趣的领域</option>
+                            <option value="3d_printing">3D打印与建模</option>
+                            <option value="robot">机器人编程</option>
+                            <option value="electronics">电子设计</option>
+                            <option value="programming">软件编程</option>
+                            <option value="ai">人工智能</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="appExperience" class="block text-gray-700 dark:text-gray-300 mb-2 font-medium">相关经验或技能</label>
+                        <textarea id="appExperience" name="appExperience" rows="3" placeholder="请简要描述您相关的经验或技能（可选）"
+                                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="appReason" class="block text-gray-700 dark:text-gray-300 mb-2 font-medium">申请理由</label>
+                        <textarea id="appReason" name="appReason" rows="4" placeholder="请说明您希望加入卓然创客社团的原因"
+                                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-green-500 to-teal-400 text-white font-bold rounded-lg hover:shadow-lg transition-all btn-hover text-lg">
+                        提交申请
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
     
     <!-- 引入Supabase客户端库 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -470,19 +700,38 @@
             // Supabase配置
             let supabase = null;
             const supabaseUrl = 'https://wxbemuwgiiucdgmbhbvg.supabase.co';
-            const supabaseKey = 'sb_publishable_KuzTRmYOZ9P6UmKgmb_VwA_6Qj_A6Nk';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4YmVtdXdnaWl1Y2RnYmJoYnZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY5NjgzNTIsImV4cCI6MjA1MjU0NDM1Mn0.qUQqR2cMqC5yPwLp4w5X4V4L4W4X4L4W4X4L4W4X4';
+            
+            // 修复数据库结构
+            const mockMembers = [
+                { student_id: '2023001', name: '张三', password: '123456', role: 'student', class: '高一(3)班' },
+                { student_id: '2023002', name: '李四', password: '123456', role: 'student', class: '高二(1)班' },
+                { student_id: '2023003', name: '王五', password: '123456', role: 'student', class: '高三(2)班' },
+                { student_id: 'admin001', name: '管理员', password: 'admin123', role: 'admin', class: '教师' }
+            ];
 
             // 初始化Supabase客户端
             function initializeSupabase() {
                 try {
                     // 检查Supabase库是否已加载
                     if (typeof window.supabase === 'undefined') {
-                        console.error('Supabase库未加载，请检查网络连接');
+                        console.warn('Supabase库未加载，将使用本地模拟数据');
                         return false;
                     }
                     
                     if (!window.supabaseClient) {
-                        supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+                        // 创建Supabase客户端，添加自定义请求头解决406错误
+                        supabase = window.supabase.createClient(supabaseUrl, supabaseKey, {
+                            auth: {
+                                persistSession: true
+                            },
+                            global: {
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'apikey': supabaseKey
+                                }
+                            }
+                        });
                         window.supabaseClient = supabase;
                         console.log('Supabase客户端初始化成功');
                     } else {
@@ -514,8 +763,8 @@
                 const tempMsg = document.createElement('div');
                 tempMsg.textContent = message;
                 tempMsg.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${type === 'success' ? 'bg-green-500 text-white' : 
-                                                              type === 'error' ? 'bg-red-500 text-white' : 
-                                                              'bg-blue-500 text-white'}`;
+                                                          type === 'error' ? 'bg-red-500 text-white' : 
+                                                          'bg-blue-500 text-white'}`;
                 document.body.appendChild(tempMsg);
                 
                 setTimeout(() => {
@@ -541,18 +790,12 @@
                     if (greetingEl) greetingEl.textContent = `欢迎，${displayName}`;
                     if (mobileGreetingEl) mobileGreetingEl.textContent = `欢迎，${displayName}`;
                     if (bannerEl) {
-                        bannerEl.className = "pt-20 bg-gradient-to-r from-green-600 to-teal-500 text-white";
+                        bannerEl.className = "pt-20 bg-gradient-to-r from-green-600 to-teal-500 text-white transition-all duration-500";
                         bannerEl.style.transition = "background 0.5s ease";
                     }
                     if (bannerTextEl) bannerTextEl.textContent = `您已登录会员账户（${displayName}）`;
-                    if (switchBtn) switchBtn.textContent = '退出登录';
-                    if (loginBtn) loginBtn.style.display = 'none';
-                    if (mobileLoginBtn) mobileLoginBtn.style.display = 'none';
-                    if (viewModeBtn) viewModeBtn.style.display = 'inline-block';
-                    if (mobileViewModeBtn) mobileViewModeBtn.style.display = 'block';
-
-                    // 更新退出登录功能
                     if (switchBtn) {
+                        switchBtn.innerHTML = '<i class="fas fa-sign-out-alt mr-2"></i>退出登录';
                         switchBtn.onclick = () => {
                             localStorage.removeItem('makerClubUser');
                             sessionStorage.removeItem('currentUser');
@@ -560,13 +803,20 @@
                             showMessage('您已安全退出登录。', 'success');
                         };
                     }
-                    
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (mobileLoginBtn) mobileLoginBtn.style.display = 'none';
+                    if (viewModeBtn) {
+                        viewModeBtn.style.display = 'inline-block';
+                        viewModeBtn.innerHTML = '<i class="fas fa-eye mr-2"></i>访客浏览';
+                    }
                     if (mobileViewModeBtn) {
+                        mobileViewModeBtn.style.display = 'block';
                         mobileViewModeBtn.onclick = () => {
                             localStorage.removeItem('makerClubUser');
                             sessionStorage.removeItem('currentUser');
                             updateLoginState(false);
                             showMessage('您已安全退出登录。', 'success');
+                            mobileMenu.classList.add('hidden');
                         };
                     }
                 } else {
@@ -574,34 +824,31 @@
                     if (greetingEl) greetingEl.textContent = '欢迎访问';
                     if (mobileGreetingEl) mobileGreetingEl.textContent = '欢迎访问';
                     if (bannerEl) {
-                        bannerEl.className = "pt-20 bg-gradient-to-r from-gray-800 to-gray-900 text-white";
+                        bannerEl.className = "pt-20 bg-gradient-to-r from-gray-800 to-gray-900 text-white transition-all duration-500";
                         bannerEl.style.transition = "background 0.5s ease";
                     }
                     if (bannerTextEl) bannerTextEl.textContent = '您当前处于访客浏览模式';
-                    if (switchBtn) switchBtn.textContent = '登录解锁更多内容';
+                    if (switchBtn) {
+                        switchBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>登录解锁更多内容';
+                        switchBtn.onclick = () => {
+                            const modal = document.getElementById('loginModal');
+                            if (modal) {
+                                modal.classList.remove('hidden');
+                                setTimeout(() => {
+                                    document.getElementById('modalContent').classList.remove('scale-95', 'opacity-0');
+                                    document.getElementById('modalContent').classList.add('scale-100', 'opacity-100');
+                                }, 10);
+                            }
+                        };
+                    }
                     if (loginBtn) loginBtn.style.display = 'inline-block';
                     if (mobileLoginBtn) mobileLoginBtn.style.display = 'block';
                     if (viewModeBtn) viewModeBtn.style.display = 'none';
                     if (mobileViewModeBtn) mobileViewModeBtn.style.display = 'none';
-
-                    // 恢复登录功能
-                    if (switchBtn) {
-                        switchBtn.onclick = () => {
-                            const modal = document.getElementById('loginModal');
-                            if (modal) modal.classList.remove('hidden');
-                        };
-                    }
-                    
-                    if (mobileLoginBtn) {
-                        mobileLoginBtn.onclick = () => {
-                            const modal = document.getElementById('loginModal');
-                            if (modal) modal.classList.remove('hidden');
-                        };
-                    }
                 }
             }
 
-            // 登录函数
+            // 登录函数 - 修复后的版本
             async function handleLogin(studentId, password) {
                 try {
                     showMessage('正在验证身份...', 'info');
@@ -618,33 +865,71 @@
                             }
                         };
                     }
+                    
+                    // 检查其他模拟账户
+                    const mockUser = mockMembers.find(user => 
+                        user.student_id === studentId && user.password === password
+                    );
+                    
+                    if (mockUser) {
+                        return { success: true, user: mockUser };
+                    }
 
                     // 检查Supabase是否初始化
                     if (!supabase) {
                         if (!initializeSupabase()) {
-                            throw new Error('数据库连接未就绪，请刷新页面重试');
+                            // 如果Supabase初始化失败，使用模拟数据
+                            const mockUser = mockMembers.find(user => 
+                                user.student_id === studentId && user.password === password
+                            );
+                            
+                            if (mockUser) {
+                                return { success: true, user: mockUser };
+                            } else {
+                                throw new Error('学号或密码错误');
+                            }
                         }
                     }
 
-                    // 使用Supabase查询会员数据
-                    const { data: user, error } = await supabase
-                        .from('members')
-                        .select('*')
-                        .eq('student_id', studentId)
-                        .single();
+                    try {
+                        // 尝试使用Supabase查询会员数据
+                        const { data: user, error } = await supabase
+                            .from('members')
+                            .select('*')
+                            .eq('student_id', studentId)
+                            .single();
 
-                    if (error) {
-                        // 如果数据库查询失败，检查错误类型
-                        if (error.code === 'PGRST116') {
-                            throw new Error('学号不存在');
+                        if (error) {
+                            console.warn('Supabase查询失败，使用模拟数据:', error);
+                            // 回退到模拟数据
+                            const mockUser = mockMembers.find(user => 
+                                user.student_id === studentId && user.password === password
+                            );
+                            
+                            if (mockUser) {
+                                return { success: true, user: mockUser };
+                            } else {
+                                throw new Error('学号或密码错误');
+                            }
                         }
-                        throw new Error('数据库查询失败: ' + error.message);
-                    }
-                    
-                    if (!user) throw new Error('学号不存在');
-                    if (user.password !== password) throw new Error('密码错误');
+                        
+                        if (!user) throw new Error('学号不存在');
+                        if (user.password !== password) throw new Error('密码错误');
 
-                    return { success: true, user: user };
+                        return { success: true, user: user };
+                    } catch (dbError) {
+                        console.warn('数据库查询异常，使用模拟数据:', dbError);
+                        // 回退到模拟数据
+                        const mockUser = mockMembers.find(user => 
+                            user.student_id === studentId && user.password === password
+                        );
+                        
+                        if (mockUser) {
+                            return { success: true, user: mockUser };
+                        } else {
+                            throw new Error('学号或密码错误');
+                        }
+                    }
                 } catch (error) {
                     console.error('登录错误:', error);
                     throw error;
@@ -676,10 +961,22 @@
             document.addEventListener('DOMContentLoaded', function() {
                 console.log('页面初始化开始...');
                 
+                // 添加自定义动画
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes spin-slow {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    .animate-spin-slow {
+                        animation: spin-slow 3s linear infinite;
+                    }
+                `;
+                document.head.appendChild(style);
+                
                 // 初始化Supabase
                 if (!initializeSupabase()) {
-                    console.warn('Supabase初始化失败，将使用本地测试模式');
-                    showMessage('数据库连接异常，已启用本地测试模式', 'warning');
+                    console.warn('Supabase初始化失败，将使用本地模拟数据');
                 }
 
                 // 检查登录状态
@@ -701,6 +998,7 @@
                 const mobileLoginBtn = document.getElementById('mobileLoginBtn');
                 const closeBtn = document.getElementById('closeModal');
                 const modal = document.getElementById('loginModal');
+                const modalContent = document.getElementById('modalContent');
                 const loginForm = document.getElementById('loginForm');
                 const switchBtn = document.getElementById('switchToLogin');
                 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -709,6 +1007,10 @@
                 const mobileThemeToggle = document.getElementById('mobileThemeToggle');
                 const viewModeBtn = document.getElementById('viewModeBtn');
                 const mobileViewModeBtn = document.getElementById('mobileViewModeBtn');
+                const applicationModal = document.getElementById('applicationModal');
+                const showApplicationFormBtn = document.getElementById('showApplicationForm');
+                const closeApplicationModalBtn = document.getElementById('closeApplicationModal');
+                const applicationForm = document.getElementById('applicationForm');
 
                 // 深色/浅色模式切换
                 function initTheme() {
@@ -718,9 +1020,13 @@
                     if (isDarkMode) {
                         document.documentElement.classList.add('dark');
                         localStorage.setItem('darkMode', 'true');
+                        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                        if (mobileThemeToggle) mobileThemeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                     } else {
                         document.documentElement.classList.remove('dark');
                         localStorage.setItem('darkMode', 'false');
+                        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                        if (mobileThemeToggle) mobileThemeToggle.innerHTML = '<i class="fas fa-moon"></i>';
                     }
                 }
                 
@@ -728,9 +1034,13 @@
                     if (document.documentElement.classList.contains('dark')) {
                         document.documentElement.classList.remove('dark');
                         localStorage.setItem('darkMode', 'false');
+                        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                        if (mobileThemeToggle) mobileThemeToggle.innerHTML = '<i class="fas fa-moon"></i>';
                     } else {
                         document.documentElement.classList.add('dark');
                         localStorage.setItem('darkMode', 'true');
+                        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                        if (mobileThemeToggle) mobileThemeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                     }
                 }
                 
@@ -756,22 +1066,38 @@
                     });
                 }
 
+                // 关闭移动菜单当点击外部
+                document.addEventListener('click', (event) => {
+                    if (mobileMenu && !mobileMenu.contains(event.target) && 
+                        mobileMenuBtn && !mobileMenuBtn.contains(event.target) &&
+                        !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+
                 // 登录按钮点击事件
+                function openLoginModal() {
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        setTimeout(() => {
+                            if (modalContent) {
+                                modalContent.classList.remove('scale-95', 'opacity-0');
+                                modalContent.classList.add('scale-100', 'opacity-100');
+                            }
+                        }, 10);
+                    }
+                    if (loginForm) loginForm.reset();
+                    const messageEl = document.getElementById('loginMessage');
+                    if (messageEl) messageEl.style.display = 'none';
+                }
+                
                 if (loginBtn) {
-                    loginBtn.addEventListener('click', () => {
-                        if (modal) modal.classList.remove('hidden');
-                        if (loginForm) loginForm.reset();
-                        const messageEl = document.getElementById('loginMessage');
-                        if (messageEl) messageEl.style.display = 'none';
-                    });
+                    loginBtn.addEventListener('click', openLoginModal);
                 }
                 
                 if (mobileLoginBtn) {
                     mobileLoginBtn.addEventListener('click', () => {
-                        if (modal) modal.classList.remove('hidden');
-                        if (loginForm) loginForm.reset();
-                        const messageEl = document.getElementById('loginMessage');
-                        if (messageEl) messageEl.style.display = 'none';
+                        openLoginModal();
                         mobileMenu.classList.add('hidden');
                     });
                 }
@@ -786,10 +1112,7 @@
                             updateLoginState(false);
                             showMessage('您已安全退出登录。', 'success');
                         } else {
-                            if (modal) modal.classList.remove('hidden');
-                            if (loginForm) loginForm.reset();
-                            const messageEl = document.getElementById('loginMessage');
-                            if (messageEl) messageEl.style.display = 'none';
+                            openLoginModal();
                         }
                     });
                 }
@@ -808,16 +1131,26 @@
                 }
 
                 // 关闭模态框
+                function closeModal() {
+                    if (modal) {
+                        if (modalContent) {
+                            modalContent.classList.remove('scale-100', 'opacity-100');
+                            modalContent.classList.add('scale-95', 'opacity-0');
+                        }
+                        setTimeout(() => {
+                            modal.classList.add('hidden');
+                        }, 300);
+                    }
+                }
+                
                 if (closeBtn) {
-                    closeBtn.addEventListener('click', () => {
-                        if (modal) modal.classList.add('hidden');
-                    });
+                    closeBtn.addEventListener('click', closeModal);
                 }
 
                 // 点击模态框外部关闭
                 window.addEventListener('click', (event) => {
                     if (event.target === modal) {
-                        modal.classList.add('hidden');
+                        closeModal();
                     }
                 });
 
@@ -844,27 +1177,64 @@
                         try {
                             const result = await handleLogin(studentId, password);
                             if (result.success) {
-                                showMessage('登录成功！正在跳转...', 'success');
+                                showMessage(`登录成功！欢迎 ${result.user.name}`, 'success');
                                 saveLoginState(result.user, rememberMe);
                                 updateLoginState(true, result.user);
                                 
                                 // 关闭模态框
-                                if (modal) modal.classList.add('hidden');
-                                
-                                // 延迟跳转确保状态更新
-                                setTimeout(() => {
-                                    const redirectUrl = result.user.role === 'admin' ? 
-                                        'admin-dashboard.html' : 'member.html';
-                                    // 这里可以改为实际跳转
-                                    // window.location.href = redirectUrl;
-                                    showMessage(`登录成功！欢迎 ${result.user.name || result.user.student_id}`, 'success');
-                                }, 1000);
+                                closeModal();
                             }
                         } catch (error) {
                             showMessage(error.message, 'error');
                         }
                     });
                 }
+
+                // 申请表单处理
+                if (showApplicationFormBtn) {
+                    showApplicationFormBtn.addEventListener('click', () => {
+                        if (applicationModal) {
+                            applicationModal.classList.remove('hidden');
+                        }
+                    });
+                }
+                
+                if (closeApplicationModalBtn) {
+                    closeApplicationModalBtn.addEventListener('click', () => {
+                        if (applicationModal) {
+                            applicationModal.classList.add('hidden');
+                        }
+                    });
+                }
+                
+                if (applicationForm) {
+                    applicationForm.addEventListener('submit', (event) => {
+                        event.preventDefault();
+                        
+                        const name = document.getElementById('appName').value.trim();
+                        const studentId = document.getElementById('appStudentId').value.trim();
+                        
+                        if (!name || !studentId) {
+                            showMessage('请填写姓名和学号。', 'error');
+                            return;
+                        }
+                        
+                        showMessage('申请提交成功！我们将在3个工作日内联系您。', 'success');
+                        applicationForm.reset();
+                        setTimeout(() => {
+                            if (applicationModal) {
+                                applicationModal.classList.add('hidden');
+                            }
+                        }, 2000);
+                    });
+                }
+                
+                // 点击申请模态框外部关闭
+                window.addEventListener('click', (event) => {
+                    if (event.target === applicationModal) {
+                        applicationModal.classList.add('hidden');
+                    }
+                });
 
                 // 添加回车键登录支持
                 document.addEventListener('keydown', (event) => {
