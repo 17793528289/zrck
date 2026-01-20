@@ -24,35 +24,42 @@ class Auth {
       const { data: { user } } = await supabase.auth.getUser();
       this.user = user;
       this.updateUI();
+      console.log('✓ 认证状态检查完成，当前用户:', user?.email || '未登录');
       return user;
     } catch (error) {
-      console.error('检查认证状态失败:', error);
+      const errorMsg = error?.message || '未知错误';
+      console.error('✗ 检查认证状态失败:', errorMsg, error);
       return null;
     }
   }
 
   async login(email, password) {
     try {
+      console.log('🔄 正在登录...', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
       
       if (error) {
+        console.error('✗ 登录失败:', error.message, error);
         throw error;
       }
       
       this.user = data.user;
       this.updateUI();
+      console.log('✓ 登录成功:', data.user.email);
       return data.user;
     } catch (error) {
-      console.error('登录失败:', error);
-      throw error;
+      const errorMsg = error?.message || '登录失败，请稍后重试';
+      console.error('✗ 登录失败:', errorMsg, error);
+      throw new Error(errorMsg);
     }
   }
 
   async register(email, password, metadata = {}) {
     try {
+      console.log('🔄 正在注册...', email);
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -62,33 +69,40 @@ class Auth {
       });
       
       if (error) {
+        console.error('✗ 注册失败:', error.message, error);
         throw error;
       }
       
       this.user = data.user;
       this.updateUI();
+      console.log('✓ 注册成功:', data.user.email);
       return data.user;
     } catch (error) {
-      console.error('注册失败:', error);
-      throw error;
+      const errorMsg = error?.message || '注册失败，请稍后重试';
+      console.error('✗ 注册失败:', errorMsg, error);
+      throw new Error(errorMsg);
     }
   }
 
   async logout() {
     try {
+      console.log('🔄 正在登出...');
       const { error } = await supabase.auth.signOut();
       
       if (error) {
+        console.error('✗ 登出失败:', error.message, error);
         throw error;
       }
       
       this.user = null;
       this.updateUI();
+      console.log('✓ 登出成功');
       // 重定向到首页
       window.location.href = '/';
     } catch (error) {
-      console.error('登出失败:', error);
-      throw error;
+      const errorMsg = error?.message || '登出失败，请稍后重试';
+      console.error('✗ 登出失败:', errorMsg, error);
+      throw new Error(errorMsg);
     }
   }
 
