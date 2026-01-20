@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社团活动 - 武威第十八中学卓然创客社团</title>
+    
+    <!-- CDN引入 -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#121212',
+                        secondary: '#1e1e1e',
+                        accent: {
+                            green: '#03fc90',
+                            pink: '#fc03f8'
+                        },
+                        text: {
+                            primary: '#ffffff',
+                            secondary: '#b3b3b3'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Roboto', 'sans-serif'],
+                        chinese: ['Microsoft YaHei', 'SimHei', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义CSS -->
+    <style>
+        /* 时间线样式 */
+        .timeline {
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #03fc90, #fc03f8);
+            transform: translateX(-50%);
+        }
+        
+        @media (max-width: 767px) {
+            .timeline::before {
+                left: 30px;
+            }
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            background: #121212;
+            border: 3px solid #03fc90;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        
+        @media (max-width: 767px) {
+            .timeline-item::before {
+                left: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                    <i class="fas fa-robot text-primary text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold gradient-text">卓然创客</span>
+            </a>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="index.html" class="nav-link font-semibold">首页</a>
+                <a href="showcase.html" class="nav-link font-semibold">社团展示</a>
+                <a href="activities.html" class="nav-link font-semibold text-accent-green">社团活动</a>
+                <a href="about.html" class="nav-link font-semibold">社团简介</a>
+                <a href="visitor-center.html" class="nav-link font-semibold">访客中心</a>
+                
+                <!-- 认证导航 -->
+                <div id="auth-nav" class="flex items-center space-x-4">
+                    <a href="login.html" class="nav-link btn btn-primary">
+                        <i class="fas fa-sign-in-alt mr-2"></i>登录
+                    </a>
+                </div>
+                
+                <!-- 主题切换 -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-sun text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <div class="md:hidden flex items-center space-x-4">
+                <!-- 主题切换 -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-sun text-xl"></i>
+                </button>
+                
+                <!-- 菜单按钮 -->
+                <button id="menu-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary border-t border-secondary">
+            <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                <a href="index.html" class="nav-link font-semibold">首页</a>
+                <a href="showcase.html" class="nav-link font-semibold">社团展示</a>
+                <a href="activities.html" class="nav-link font-semibold text-accent-green">社团活动</a>
+                <a href="about.html" class="nav-link font-semibold">社团简介</a>
+                <a href="visitor-center.html" class="nav-link font-semibold">访客中心</a>
+                
+                <!-- 认证导航 -->
+                <div id="auth-nav" class="flex flex-col space-y-3">
+                    <a href="login.html" class="nav-link btn btn-primary text-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>登录
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 页面标题 -->
+    <section class="pt-32 pb-16 px-4">
+        <div class="container mx-auto">
+            <div class="animate fade-in">
+                <h1 class="title gradient-text">社团活动</h1>
+                <p class="text-xl text-text-secondary mb-8 max-w-3xl">
+                    了解我们的最新活动和精彩瞬间，包括讲座、工作坊、比赛等多种形式，
+                    展示我们的社团文化和团队精神。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 分类筛选 -->
+    <section class="py-8 px-4 bg-secondary">
+        <div class="container mx-auto">
+            <div class="animate fade-in">
+                <div class="flex flex-wrap items-center gap-4 mb-8">
+                    <span class="text-text-secondary font-semibold">分类筛选：</span>
+                    <button class="filter-btn bg-accent-green text-primary px-4 py-2 rounded-full font-semibold" data-filter="all">全部</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="lecture">讲座</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="workshop">工作坊</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="competition">比赛</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="event">活动</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 活动时间线 -->
+    <section class="py-16 px-4">
+        <div class="container mx-auto">
+            <div class="timeline animate fade-in">
+                <!-- 活动项1 -->
+                <div class="timeline-item" data-category="workshop">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 text-right mb-6 md:mb-0">
+                            <div class="bg-secondary rounded-xl p-6 shadow-lg">
+                                <div class="flex justify-end items-center space-x-4 mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-sm">2024-01-20</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-pink"></i>
+                                        <span class="text-sm">创客实验室</span>
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">Python编程 workshop</h3>
+                                <p class="text-text-secondary mb-4">
+                                    学习Python编程语言的基础知识和应用，适合初学者参加。
+                                </p>
+                                <div class="flex justify-end">
+                                    <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">工作坊</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden md:block md:w-1/2 md:pl-12">
+                            <img src="https://picsum.photos/seed/activity1/600/400" alt="Python编程 workshop" class="w-full h-auto rounded-xl shadow-lg">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 活动项2 -->
+                <div class="timeline-item" data-category="competition">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="hidden md:block md:w-1/2 md:pr-12">
+                            <img src="https://picsum.photos/seed/activity2/600/400" alt="机器人竞赛" class="w-full h-auto rounded-xl shadow-lg">
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 mb-6 md:mb-0">
+                            <div class="bg-secondary rounded-xl p-6 shadow-lg">
+                                <div class="flex justify-start items-center space-x-4 mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-sm">2024-02-01</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-pink"></i>
+                                        <span class="text-sm">学校体育馆</span>
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">机器人竞赛</h3>
+                                <p class="text-text-secondary mb-4">
+                                    举办校园机器人竞赛，展示社员们的机器人作品和编程能力。
+                                </p>
+                                <div class="flex justify-start">
+                                    <span class="text-xs bg-accent-pink/20 text-accent-pink px-3 py-1 rounded-full">比赛</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 活动项3 -->
+                <div class="timeline-item" data-category="lecture">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 text-right mb-6 md:mb-0">
+                            <div class="bg-secondary rounded-xl p-6 shadow-lg">
+                                <div class="flex justify-end items-center space-x-4 mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-sm">2024-02-15</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-pink"></i>
+                                        <span class="text-sm">多媒体教室</span>
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">3D打印技术讲座</h3>
+                                <p class="text-text-secondary mb-4">
+                                    邀请专业人士讲解3D打印技术的原理、应用和发展前景。
+                                </p>
+                                <div class="flex justify-end">
+                                    <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">讲座</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden md:block md:w-1/2 md:pl-12">
+                            <img src="https://picsum.photos/seed/activity3/600/400" alt="3D打印技术讲座" class="w-full h-auto rounded-xl shadow-lg">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 活动项4 -->
+                <div class="timeline-item" data-category="event">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="hidden md:block md:w-1/2 md:pr-12">
+                            <img src="https://picsum.photos/seed/activity4/600/400" alt="社团招新" class="w-full h-auto rounded-xl shadow-lg">
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 mb-6 md:mb-0">
+                            <div class="bg-secondary rounded-xl p-6 shadow-lg">
+                                <div class="flex justify-start items-center space-x-4 mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-sm">2024-02-28</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-pink"></i>
+                                        <span class="text-sm">学校操场</span>
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">社团招新</h3>
+                                <p class="text-text-secondary mb-4">
+                                    新学期社团招新活动，欢迎有兴趣的同学加入我们的大家庭。
+                                </p>
+                                <div class="flex justify-start">
+                                    <span class="text-xs bg-accent-pink/20 text-accent-pink px-3 py-1 rounded-full">活动</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 活动项5 -->
+                <div class="timeline-item" data-category="workshop">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/2 md:pr-12 text-right mb-6 md:mb-0">
+                            <div class="bg-secondary rounded-xl p-6 shadow-lg">
+                                <div class="flex justify-end items-center space-x-4 mb-3">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-sm">2024-03-10</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-pink"></i>
+                                        <span class="text-sm">创客实验室</span>
+                                    </div>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">Web开发 workshop</h3>
+                                <p class="text-text-secondary mb-4">
+                                    学习HTML、CSS和JavaScript基础知识，创建简单的网站页面。
+                                </p>
+                                <div class="flex justify-end">
+                                    <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">工作坊</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden md:block md:w-1/2 md:pl-12">
+                            <img src="https://picsum.photos/seed/activity5/600/400" alt="Web开发 workshop" class="w-full h-auto rounded-xl shadow-lg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 活动详情模态框 -->
+    <div id="activity-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-start mb-6">
+                <h2 id="modal-title" class="subtitle"></h2>
+                <button class="text-text-secondary hover:text-text-primary text-2xl" onclick="closeActivityModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="py-12 px-4 bg-primary border-t border-secondary">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- 社团信息 -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                            <i class="fas fa-robot text-primary text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold gradient-text">卓然创客</span>
+                    </div>
+                    <p class="text-text-secondary mb-4">
+                        武威第十八中学卓然创客社团，致力于培养学生的创新精神和实践能力。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-weixin text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-qq text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-github text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-text-secondary hover:text-accent-green transition-colors">首页</a></li>
+                        <li><a href="showcase.html" class="text-text-secondary hover:text-accent-green transition-colors">社团展示</a></li>
+                        <li><a href="activities.html" class="text-text-secondary hover:text-accent-green transition-colors">社团活动</a></li>
+                        <li><a href="about.html" class="text-text-secondary hover:text-accent-green transition-colors">社团简介</a></li>
+                        <li><a href="visitor-center.html" class="text-text-secondary hover:text-accent-green transition-colors">访客中心</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系方式 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">联系方式</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-accent-green mt-1"></i>
+                            <span class="text-text-secondary">武威第十八中学创客实验室</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-accent-green"></i>
+                            <span class="text-text-secondary">138-XXXX-XXXX</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-accent-green"></i>
+                            <span class="text-text-secondary">maker@ww18z.com</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 作者信息 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">作者信息</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-user text-accent-green"></i>
+                            <span class="text-text-secondary">设计：张三</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-code text-accent-green"></i>
+                            <span class="text-text-secondary">开发：李四</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-calendar-alt text-accent-green"></i>
+                            <span class="text-text-secondary">更新时间：2024-01-18</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 版权信息 -->
+            <div class="text-center text-text-secondary text-sm pt-8 border-t border-secondary">
+                <p>&copy; 2024 武威第十八中学卓然创客社团. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript文件 -->
+    <script src="js/theme.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- 活动页脚本 -->
+    <script>
+        // 活动数据
+        const activities = {
+            1: {
+                title: "Python编程 workshop",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/activity1/800/600" alt="Python编程 workshop" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">活动信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">时间：2024-01-20 14:00-17:00</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">地点：创客实验室</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">主讲人：李老师</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-users text-accent-green"></i>
+                                        <span class="text-text-secondary">参与人数：30人</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：工作坊</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">活动简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                本次workshop将介绍Python编程语言的基础知识，包括变量、数据类型、控制流、函数等内容，
+                                通过实际案例演示Python的应用场景，适合零基础的同学参加。
+                                活动将提供电脑和学习资料，参与者无需自带设备。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">活动流程</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-clock text-accent-green mt-1"></i>
+                                    <span><strong>14:00-14:30</strong> - 签到和开场介绍</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-clock text-accent-green mt-1"></i>
+                                    <span><strong>14:30-15:30</strong> - Python基础知识讲解</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-clock text-accent-green mt-1"></i>
+                                    <span><strong>15:30-16:00</strong> - 休息和交流</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-clock text-accent-green mt-1"></i>
+                                    <span><strong>16:00-17:00</strong> - 实际案例练习和答疑</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            2: {
+                title: "机器人竞赛",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/activity2/800/600" alt="机器人竞赛" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">活动信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">时间：2024-02-01 9:00-16:00</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">地点：学校体育馆</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">主办方：卓然创客社团</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-users text-accent-green"></i>
+                                        <span class="text-text-secondary">参赛队伍：12支</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：比赛</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">活动简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                本次机器人竞赛分为避障赛和任务赛两个项目，参赛队伍需要自行设计和制作机器人，
+                                完成指定的任务和挑战。竞赛旨在检验社员们的机器人设计和编程能力，
+                                促进团队合作和技术交流。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">比赛规则</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>每支队伍由2-3名成员组成</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>机器人必须使用Arduino或树莓派作为控制器</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>避障赛：在规定时间内完成障碍物绕行</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>任务赛：完成指定的任务，如搬运物品、识别颜色等</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>根据完成时间和任务完成情况评分</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            3: {
+                title: "3D打印技术讲座",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/activity3/800/600" alt="3D打印技术讲座" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">活动信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">时间：2024-02-15 15:00-16:30</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">地点：多媒体教室</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">主讲人：张工程师</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-users text-accent-green"></i>
+                                        <span class="text-text-secondary">参与人数：50人</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：讲座</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">讲座简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                本次讲座将邀请专业的3D打印工程师讲解3D打印技术的原理、发展历程和应用领域，
+                                展示不同类型的3D打印机和打印材料，
+                                并通过实际案例演示3D打印在工业设计、医疗、教育等领域的应用。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">讲座内容</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>3D打印技术的基本原理和分类</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>3D打印机的工作原理和结构</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>3D打印材料的种类和特性</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>3D打印在各个领域的应用案例</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>3D打印技术的发展趋势和前景</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            4: {
+                title: "社团招新",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/activity4/800/600" alt="社团招新" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">活动信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">时间：2024-02-28 10:00-16:00</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">地点：学校操场</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">主办方：卓然创客社团</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-users text-accent-green"></i>
+                                        <span class="text-text-secondary">预计参与人数：200人</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：活动</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">活动简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                新学期社团招新活动，欢迎所有对科技创新有兴趣的同学加入我们的大家庭。
+                                活动现场将展示社团的优秀项目和作品，
+                                提供互动体验环节，让同学们亲身体验科技的魅力。
+                                社团招新面向全体在校学生，无需任何基础。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">招新要求</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>对科技创新有浓厚兴趣</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>有团队合作精神和责任感</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>能按时参加社团活动</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>无需任何基础，欢迎零基础同学</span>
+                                </li>
+                            </ul>
+                            <h3 class="text-lg font-bold mt-4 mb-2">报名方式</h3>
+                            <p class="text-text-secondary">
+                                现场填写报名表或通过社团公众号在线报名。
+                                报名截止时间：2024-03-05
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            5: {
+                title: "Web开发 workshop",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/activity5/800/600" alt="Web开发 workshop" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">活动信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">时间：2024-03-10 14:00-17:00</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">地点：创客实验室</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">主讲人：王同学</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-users text-accent-green"></i>
+                                        <span class="text-text-secondary">参与人数：25人</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：工作坊</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">活动简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                本次workshop将介绍Web开发的基础知识，包括HTML、CSS和JavaScript，
+                                学习如何创建简单的网站页面。参与者将通过实际操作，
+                                掌握网页的结构设计、样式美化和交互效果实现。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">活动内容</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-clock text-accent-green mt-1"></i>
+                                    <span><strong>14:00-14:30</strong> - HTML基础知识</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-clock text-accent-green mt-1"></i>
+                                    <span><strong>14:30-15:30</strong> - CSS样式设计</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-clock text-accent-green mt-1"></i>
+                                    <span><strong>15:30-16:00</strong> - 休息和交流</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fas fa-clock text-accent-green mt-1"></i>
+                                    <span><strong>16:00-17:00</strong> - JavaScript交互效果</span>
+                                </li>
+                            </ul>
+                            <h3 class="text-lg font-bold mt-4 mb-2">学习成果</h3>
+                            <p class="text-text-secondary">
+                                参与者将完成一个简单的个人网站页面，包括个人介绍、兴趣爱好、
+                                作品展示等内容，掌握Web开发的基本技能和工作流程。
+                            </p>
+                        </div>
+                    </div>
+                `
+            }
+        };
+        
+        // 分类筛选功能
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 更新按钮样式
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-accent-green', 'text-primary');
+                        b.classList.add('bg-secondary', 'text-text-secondary');
+                    });
+                    btn.classList.remove('bg-secondary', 'text-text-secondary');
+                    btn.classList.add('bg-accent-green', 'text-primary');
+                    
+                    // 筛选活动
+                    const filter = btn.dataset.filter;
+                    timelineItems.forEach(item => {
+                        if (filter === 'all' || item.dataset.category === filter) {
+                            item.style.display = 'block';
+                            item.classList.add('fade-in');
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+        
+        // 打开活动详情模态框
+        function openActivityModal(activityId) {
+            const modal = document.getElementById('activity-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            
+            const activity = activities[activityId];
+            if (activity) {
+                modalTitle.textContent = activity.title;
+                modalContent.innerHTML = activity.content;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // 关闭活动详情模态框
+        function closeActivityModal() {
+            const modal = document.getElementById('activity-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 点击模态框外部关闭
+        document.getElementById('activity-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeActivityModal();
+            }
+        });
+    </script>
+</body>
+</html>

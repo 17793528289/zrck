@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社团展示 - 武威第十八中学卓然创客社团</title>
+    
+    <!-- CDN引入 -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#121212',
+                        secondary: '#1e1e1e',
+                        accent: {
+                            green: '#03fc90',
+                            pink: '#fc03f8'
+                        },
+                        text: {
+                            primary: '#ffffff',
+                            secondary: '#b3b3b3'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Roboto', 'sans-serif'],
+                        chinese: ['Microsoft YaHei', 'SimHei', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                    <i class="fas fa-robot text-primary text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold gradient-text">卓然创客</span>
+            </a>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="index.html" class="nav-link font-semibold">首页</a>
+                <a href="showcase.html" class="nav-link font-semibold text-accent-green">社团展示</a>
+                <a href="activities.html" class="nav-link font-semibold">社团活动</a>
+                <a href="about.html" class="nav-link font-semibold">社团简介</a>
+                <a href="visitor-center.html" class="nav-link font-semibold">访客中心</a>
+                
+                <!-- 认证导航 -->
+                <div id="auth-nav" class="flex items-center space-x-4">
+                    <a href="login.html" class="nav-link btn btn-primary">
+                        <i class="fas fa-sign-in-alt mr-2"></i>登录
+                    </a>
+                </div>
+                
+                <!-- 主题切换 -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-sun text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <div class="md:hidden flex items-center space-x-4">
+                <!-- 主题切换 -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-sun text-xl"></i>
+                </button>
+                
+                <!-- 菜单按钮 -->
+                <button id="menu-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary border-t border-secondary">
+            <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                <a href="index.html" class="nav-link font-semibold">首页</a>
+                <a href="showcase.html" class="nav-link font-semibold text-accent-green">社团展示</a>
+                <a href="activities.html" class="nav-link font-semibold">社团活动</a>
+                <a href="about.html" class="nav-link font-semibold">社团简介</a>
+                <a href="visitor-center.html" class="nav-link font-semibold">访客中心</a>
+                
+                <!-- 认证导航 -->
+                <div id="auth-nav" class="flex flex-col space-y-3">
+                    <a href="login.html" class="nav-link btn btn-primary text-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>登录
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 页面标题 -->
+    <section class="pt-32 pb-16 px-4">
+        <div class="container mx-auto">
+            <div class="animate fade-in">
+                <h1 class="title gradient-text">社团展示</h1>
+                <p class="text-xl text-text-secondary mb-8 max-w-3xl">
+                    探索我们社员的优秀项目作品，涵盖编程、设计、硬件等多个领域，
+                    展示我们的创新精神和实践能力。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 分类筛选 -->
+    <section class="py-8 px-4 bg-secondary">
+        <div class="container mx-auto">
+            <div class="animate fade-in">
+                <div class="flex flex-wrap items-center gap-4 mb-8">
+                    <span class="text-text-secondary font-semibold">分类筛选：</span>
+                    <button class="filter-btn bg-accent-green text-primary px-4 py-2 rounded-full font-semibold" data-filter="all">全部</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="hardware">硬件</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="software">软件</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="design">设计</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="game">游戏</button>
+                    <button class="filter-btn bg-secondary text-text-secondary px-4 py-2 rounded-full font-semibold hover:bg-accent-green/20 hover:text-accent-green transition-colors" data-filter="ai">人工智能</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 项目展示 -->
+    <section class="py-16 px-4">
+        <div class="container mx-auto">
+            <div id="projects-grid" class="grid-layout animate fade-in" style="animation-delay: 0.2s;">
+                <!-- 项目卡片1 -->
+                <div class="project-card card item" data-category="hardware">
+                    <img src="https://picsum.photos/seed/project1/600/400" alt="智能机器人" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">硬件</span>
+                        <span class="text-xs bg-accent-pink/20 text-accent-pink px-3 py-1 rounded-full">编程</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">智能机器人</h3>
+                    <p class="text-text-secondary mb-4">
+                        基于Arduino的智能机器人，可以实现避障、跟随、语音控制等功能。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">Arduino</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">传感器</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">C++</span>
+                    </div>
+                    <button class="btn btn-primary w-full" onclick="openProjectModal(1)">
+                        <i class="fas fa-eye mr-2"></i>查看详情
+                    </button>
+                </div>
+                
+                <!-- 项目卡片2 -->
+                <div class="project-card card item" data-category="design">
+                    <img src="https://picsum.photos/seed/project2/600/400" alt="校园网站设计" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">设计</span>
+                        <span class="text-xs bg-accent-pink/20 text-accent-pink px-3 py-1 rounded-full">前端</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">校园网站设计</h3>
+                    <p class="text-text-secondary mb-4">
+                        为学校设计的现代化网站，采用响应式设计，支持多种设备访问。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">HTML5</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">CSS3</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">JavaScript</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">Tailwind CSS</span>
+                    </div>
+                    <button class="btn btn-primary w-full" onclick="openProjectModal(2)">
+                        <i class="fas fa-eye mr-2"></i>查看详情
+                    </button>
+                </div>
+                
+                <!-- 项目卡片3 -->
+                <div class="project-card card item" data-category="software">
+                    <img src="https://picsum.photos/seed/project3/600/400" alt="校园生活APP" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">移动开发</span>
+                        <span class="text-xs bg-accent-pink/20 text-accent-pink px-3 py-1 rounded-full">编程</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">校园生活APP</h3>
+                    <p class="text-text-secondary mb-4">
+                        方便学生校园生活的手机应用，包括课程表、成绩查询、校园资讯等功能。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">Flutter</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">Dart</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">Firebase</span>
+                    </div>
+                    <button class="btn btn-primary w-full" onclick="openProjectModal(3)">
+                        <i class="fas fa-eye mr-2"></i>查看详情
+                    </button>
+                </div>
+                
+                <!-- 项目卡片4 -->
+                <div class="project-card card item" data-category="game">
+                    <img src="https://picsum.photos/seed/project4/600/400" alt="2D冒险游戏" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">游戏</span>
+                        <span class="text-xs bg-accent-pink/20 text-accent-pink px-3 py-1 rounded-full">编程</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">2D冒险游戏</h3>
+                    <p class="text-text-secondary mb-4">
+                        一款基于Unity开发的2D冒险游戏，包含丰富的关卡和有趣的游戏机制。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">Unity</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">C#</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">2D游戏</span>
+                    </div>
+                    <button class="btn btn-primary w-full" onclick="openProjectModal(4)">
+                        <i class="fas fa-eye mr-2"></i>查看详情
+                    </button>
+                </div>
+                
+                <!-- 项目卡片5 -->
+                <div class="project-card card item" data-category="ai">
+                    <img src="https://picsum.photos/seed/project5/600/400" alt="图像识别系统" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">人工智能</span>
+                        <span class="text-xs bg-accent-pink/20 text-accent-pink px-3 py-1 rounded-full">机器学习</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">图像识别系统</h3>
+                    <p class="text-text-secondary mb-4">
+                        基于深度学习的图像识别系统，可以识别多种物体和场景。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">Python</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">TensorFlow</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">深度学习</span>
+                    </div>
+                    <button class="btn btn-primary w-full" onclick="openProjectModal(5)">
+                        <i class="fas fa-eye mr-2"></i>查看详情
+                    </button>
+                </div>
+                
+                <!-- 项目卡片6 -->
+                <div class="project-card card item" data-category="hardware">
+                    <img src="https://picsum.photos/seed/project6/600/400" alt="智能家居系统" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-xs bg-accent-green/20 text-accent-green px-3 py-1 rounded-full">硬件</span>
+                        <span class="text-xs bg-accent-pink/20 text-accent-pink px-3 py-1 rounded-full">物联网</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">智能家居系统</h3>
+                    <p class="text-text-secondary mb-4">
+                        基于ESP32的智能家居系统，可以远程控制灯光、温度、安防等设备。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">ESP32</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">物联网</span>
+                        <span class="text-xs bg-secondary/50 px-3 py-1 rounded-full">MQTT</span>
+                    </div>
+                    <button class="btn btn-primary w-full" onclick="openProjectModal(6)">
+                        <i class="fas fa-eye mr-2"></i>查看详情
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 加载更多按钮 -->
+            <div class="text-center mt-12 animate fade-in" style="animation-delay: 0.4s;">
+                <button id="load-more" class="btn btn-outline">
+                    <i class="fas fa-spinner mr-2"></i>加载更多
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 项目详情模态框 -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-start mb-6">
+                <h2 id="modal-title" class="subtitle"></h2>
+                <button class="text-text-secondary hover:text-text-primary text-2xl" onclick="closeProjectModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="py-12 px-4 bg-primary border-t border-secondary">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- 社团信息 -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                            <i class="fas fa-robot text-primary text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold gradient-text">卓然创客</span>
+                    </div>
+                    <p class="text-text-secondary mb-4">
+                        武威第十八中学卓然创客社团，致力于培养学生的创新精神和实践能力。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-weixin text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-qq text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-github text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-text-secondary hover:text-accent-green transition-colors">首页</a></li>
+                        <li><a href="showcase.html" class="text-text-secondary hover:text-accent-green transition-colors">社团展示</a></li>
+                        <li><a href="activities.html" class="text-text-secondary hover:text-accent-green transition-colors">社团活动</a></li>
+                        <li><a href="about.html" class="text-text-secondary hover:text-accent-green transition-colors">社团简介</a></li>
+                        <li><a href="visitor-center.html" class="text-text-secondary hover:text-accent-green transition-colors">访客中心</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系方式 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">联系方式</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-accent-green mt-1"></i>
+                            <span class="text-text-secondary">武威第十八中学创客实验室</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-accent-green"></i>
+                            <span class="text-text-secondary">138-XXXX-XXXX</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-accent-green"></i>
+                            <span class="text-text-secondary">maker@ww18z.com</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 作者信息 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">作者信息</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-user text-accent-green"></i>
+                            <span class="text-text-secondary">设计：张三</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-code text-accent-green"></i>
+                            <span class="text-text-secondary">开发：李四</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-calendar-alt text-accent-green"></i>
+                            <span class="text-text-secondary">更新时间：2024-01-18</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 版权信息 -->
+            <div class="text-center text-text-secondary text-sm pt-8 border-t border-secondary">
+                <p>&copy; 2024 武威第十八中学卓然创客社团. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript文件 -->
+    <script src="js/theme.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- 项目展示页脚本 -->
+    <script>
+        // 项目数据
+        const projects = {
+            1: {
+                title: "智能机器人",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/project1/800/600" alt="智能机器人" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">项目信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">作者：张明</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">完成时间：2024-01-15</span>
+
+
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：硬件、编程</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">项目简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                基于Arduino的智能机器人，可以实现避障、跟随、语音控制等功能。
+                                该机器人采用了超声波传感器、红外传感器和语音模块，
+                                可以通过手机APP或语音指令进行控制。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">技术栈</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">Arduino</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">传感器</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">C++</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">蓝牙</span>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">功能特性</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>超声波避障</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>红外跟随</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>语音控制</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>手机APP控制</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>自动充电</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            2: {
+                title: "校园网站设计",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/project2/800/600" alt="校园网站设计" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">项目信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">作者：李华</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">完成时间：2024-01-10</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：设计、前端</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">项目简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                为学校设计的现代化网站，采用响应式设计，支持多种设备访问。
+                                网站包含学校介绍、新闻动态、师资力量、招生信息等多个模块，
+                                设计简洁美观，用户体验良好。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">技术栈</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">HTML5</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">CSS3</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">JavaScript</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">Tailwind CSS</span>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">设计特点</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>响应式设计，适配多种设备</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>现代化的UI设计</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>良好的用户体验</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>快速的加载速度</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>易于维护和更新</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            3: {
+                title: "校园生活APP",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/project3/800/600" alt="校园生活APP" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">项目信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">作者：王芳</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">完成时间：2024-01-05</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：移动开发、编程</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">项目简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                方便学生校园生活的手机应用，包括课程表、成绩查询、校园资讯等功能。
+                                该APP采用了现代化的设计风格，提供了良好的用户体验，
+                                帮助学生更好地管理校园生活。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">技术栈</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">Flutter</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">Dart</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">Firebase</span>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">核心功能</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>课程表查询和提醒</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>成绩查询和分析</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>校园资讯推送</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>校园地图导航</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>失物招领功能</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            4: {
+                title: "2D冒险游戏",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/project4/800/600" alt="2D冒险游戏" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">项目信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">作者：赵强</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">完成时间：2023-12-28</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：游戏、编程</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">项目简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                一款基于Unity开发的2D冒险游戏，包含丰富的关卡和有趣的游戏机制。
+                                玩家将扮演一名勇敢的冒险者，探索神秘的世界，
+                                战胜各种敌人和 Boss，收集宝藏和道具。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">技术栈</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">Unity</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">C#</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">2D游戏</span>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">游戏特点</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>精美的2D画面和动画</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>流畅的游戏操作</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>丰富的关卡设计</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>多样化的敌人和Boss</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>有趣的游戏机制和道具系统</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            5: {
+                title: "图像识别系统",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/project5/800/600" alt="图像识别系统" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">项目信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">作者：刘阳</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">完成时间：2023-12-20</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：人工智能、机器学习</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">项目简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                基于深度学习的图像识别系统，可以识别多种物体和场景。
+                                该系统使用了卷积神经网络（CNN），
+                                在大量图像数据集上进行训练，取得了较高的识别准确率。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">技术栈</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">Python</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">TensorFlow</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">深度学习</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">计算机视觉</span>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">系统特点</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>高精度的图像识别</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>支持多种物体和场景识别</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>快速的识别速度</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>易于扩展和部署</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>提供友好的API接口</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            6: {
+                title: "智能家居系统",
+                content: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <img src="https://picsum.photos/seed/project6/800/600" alt="智能家居系统" class="w-full h-auto rounded-lg mb-4">
+                            <div class="bg-secondary p-4 rounded-lg">
+                                <h3 class="text-lg font-bold mb-2">项目信息</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                        <span class="text-text-secondary">作者：陈杰</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-alt text-accent-green"></i>
+                                        <span class="text-text-secondary">完成时间：2023-12-15</span>
+                                    </li>
+                                    <li class="flex items-center space-x-2">
+                                        <i class="fas fa-tags text-accent-green"></i>
+                                        <span class="text-text-secondary">分类：硬件、物联网</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold mb-2">项目简介</h3>
+                            <p class="text-text-secondary mb-4">
+                                基于ESP32的智能家居系统，可以远程控制灯光、温度、安防等设备。
+                                该系统采用了物联网技术，
+                                用户可以通过手机APP或语音助手控制家中的各种设备。
+                            </p>
+                            <h3 class="text-lg font-bold mb-2">技术栈</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">ESP32</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">物联网</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">MQTT</span>
+                                <span class="text-xs bg-secondary px-3 py-1 rounded-full">Python</span>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">系统功能</h3>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>远程控制灯光开关和亮度</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>温度和湿度监测与控制</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>安防监控和报警</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>智能门锁控制</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check-circle text-accent-green"></i>
+                                    <span>语音助手集成</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        };
+        
+        // 分类筛选功能
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // 更新按钮样式
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-accent-green', 'text-primary');
+                        b.classList.add('bg-secondary', 'text-text-secondary');
+                    });
+                    btn.classList.remove('bg-secondary', 'text-text-secondary');
+                    btn.classList.add('bg-accent-green', 'text-primary');
+                    
+                    // 筛选项目
+                    const filter = btn.dataset.filter;
+                    projectCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                            card.classList.add('fade-in');
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+        
+        // 打开项目详情模态框
+        function openProjectModal(projectId) {
+            const modal = document.getElementById('project-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            
+            const project = projects[projectId];
+            if (project) {
+                modalTitle.textContent = project.title;
+                modalContent.innerHTML = project.content;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // 关闭项目详情模态框
+        function closeProjectModal() {
+            const modal = document.getElementById('project-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 点击模态框外部关闭
+        document.getElementById('project-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeProjectModal();
+            }
+        });
+        
+        // 加载更多功能
+        document.getElementById('load-more').addEventListener('click', () => {
+            // 模拟加载更多
+            const btn = document.getElementById('load-more');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>加载中...';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i>没有更多项目了';
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

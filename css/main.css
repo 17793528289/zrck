@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --accent-green: #03fc90;
+  --accent-pink: #fc03f8;
+}
+
+body {
+  @apply bg-primary text-text-primary font-chinese;
+  transition: all 0.3s ease;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* 按钮样式 */
+.btn {
+  @apply px-6 py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105;
+}
+
+.btn-primary {
+  @apply bg-accent-green text-primary hover:bg-accent-green/80;
+}
+
+.btn-secondary {
+  @apply bg-accent-pink text-primary hover:bg-accent-pink/80;
+}
+
+.btn-outline {
+  @apply border-2 border-accent-green text-accent-green hover:bg-accent-green/10;
+}
+
+/* 卡片样式 */
+.card {
+  @apply bg-secondary rounded-xl p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+}
+
+/* 标题样式 */
+.title {
+  @apply text-4xl md:text-5xl lg:text-6xl font-bold mb-4;
+}
+
+.subtitle {
+  @apply text-2xl md:text-3xl lg:text-4xl font-bold mb-3;
+}
+
+/* 渐变文本 */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-green to-accent-pink;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* 网格布局 */
+.grid-layout {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* 响应式导航 */
+.nav-link {
+  @apply px-4 py-2 rounded-lg transition-all duration-300 hover:bg-secondary;
+}
+
+/* 模态框 */
+.modal {
+  @apply fixed inset-0 bg-black/70 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300;
+}
+
+.modal.active {
+  @apply opacity-100 pointer-events-auto;
+}
+
+.modal-content {
+  @apply bg-secondary rounded-xl p-8 max-w-2xl w-full mx-4 transform scale-95 transition-transform duration-300;
+}
+
+.modal.active .modal-content {
+  @apply scale-100;
+}

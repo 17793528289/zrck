@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理系统 - 武威第十八中学卓然创客社团</title>
+    
+    <!-- CDN引入 -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#121212',
+                        secondary: '#1e1e1e',
+                        accent: {
+                            green: '#03fc90',
+                            pink: '#fc03f8'
+                        },
+                        text: {
+                            primary: '#ffffff',
+                            secondary: '#b3b3b3'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Roboto', 'sans-serif'],
+                        chinese: ['Microsoft YaHei', 'SimHei', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                    <i class="fas fa-robot text-primary text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold gradient-text">卓然创客</span>
+            </a>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="index.html" class="nav-link font-semibold">首页</a>
+                <a href="#" class="nav-link font-semibold text-accent-green">后台管理</a>
+                
+                <!-- 认证导航 -->
+                <div id="auth-nav" class="flex items-center space-x-4">
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-text-primary hover:text-accent-green transition-colors">
+                            <i class="fas fa-user-shield text-2xl"></i>
+                            <span class="hidden md:inline">管理员</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <!-- 下拉菜单 -->
+                        <div class="absolute right-0 mt-2 w-48 bg-secondary rounded-lg shadow-lg py-2 hidden group-hover:block z-50">
+                            <a href="#" class="block px-4 py-2 text-text-secondary hover:text-accent-green hover:bg-primary/50 transition-colors">
+                                <i class="fas fa-user mr-2"></i>个人信息
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-text-secondary hover:text-accent-green hover:bg-primary/50 transition-colors">
+                                <i class="fas fa-cog mr-2"></i>设置
+                            </a>
+                            <div class="border-t border-primary my-1"></div>
+                            <a href="#" id="logout-btn" class="block px-4 py-2 text-text-secondary hover:text-red-500 hover:bg-primary/50 transition-colors">
+                                <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="mobile-menu-btn" class="md:hidden text-text-primary text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- 主题切换按钮 -->
+            <button id="theme-toggle" class="ml-4 text-text-primary text-xl">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary border-t border-secondary">
+            <div class="container mx-auto px-4 py-4 space-y-4">
+                <a href="index.html" class="block py-2 font-semibold nav-link">首页</a>
+                <a href="#" class="block py-2 font-semibold nav-link text-accent-green">后台管理</a>
+                <a href="#" id="mobile-logout-btn" class="block py-2 font-semibold text-red-500">
+                    <i class="fas fa-sign-out-alt mr-2"></i>退出登录
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="container mx-auto px-4 py-24">
+        <!-- 页面标题 -->
+        <section class="mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2 gradient-text">后台管理系统</h1>
+            <p class="text-text-secondary">欢迎回来，管理员！这里是社团网站的管理中心。</p>
+        </section>
+
+        <!-- 主要内容区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <!-- 侧边栏 -->
+            <aside class="lg:col-span-1">
+                <div class="bg-secondary rounded-lg p-6 sticky top-24">
+                    <!-- 导航菜单 -->
+                    <nav class="space-y-1">
+                        <a href="#dashboard" class="nav-item active">
+                            <i class="fas fa-tachometer-alt mr-3"></i>仪表盘
+                        </a>
+                        <a href="#users" class="nav-item">
+                            <i class="fas fa-users mr-3"></i>用户管理
+                        </a>
+                        <a href="#projects" class="nav-item">
+                            <i class="fas fa-project-diagram mr-3"></i>项目管理
+                        </a>
+                        <a href="#activities" class="nav-item">
+                            <i class="fas fa-calendar-alt mr-3"></i>活动管理
+                        </a>
+                        <a href="#resources" class="nav-item">
+                            <i class="fas fa-folder-open mr-3"></i>资源管理
+                        </a>
+                        <a href="#content" class="nav-item">
+                            <i class="fas fa-file-alt mr-3"></i>内容管理
+                        </a>
+                        <a href="#settings" class="nav-item">
+                            <i class="fas fa-cog mr-3"></i>系统设置
+                        </a>
+                        <a href="#logs" class="nav-item">
+                            <i class="fas fa-history mr-3"></i>操作日志
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- 主内容区 -->
+            <div class="lg:col-span-4 space-y-8">
+                <!-- 仪表盘 -->
+                <section id="dashboard" class="bg-secondary rounded-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6">仪表盘</h2>
+
+                    <!-- 统计卡片 -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <!-- 用户数量 -->
+                        <div class="bg-primary/50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-text-secondary text-sm">用户数量</h3>
+                                <i class="fas fa-users text-accent-green"></i>
+                            </div>
+                            <div class="flex items-baseline">
+                                <span class="text-3xl font-bold">45</span>
+                                <span class="text-accent-green text-sm ml-2">+8 本月</span>
+                            </div>
+                        </div>
+
+                        <!-- 项目数量 -->
+                        <div class="bg-primary/50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-text-secondary text-sm">项目数量</h3>
+                                <i class="fas fa-project-diagram text-accent-green"></i>
+                            </div>
+                            <div class="flex items-baseline">
+                                <span class="text-3xl font-bold">15</span>
+                                <span class="text-accent-green text-sm ml-2">+3 本月</span>
+                            </div>
+                        </div>
+
+                        <!-- 活动数量 -->
+                        <div class="bg-primary/50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-text-secondary text-sm">活动数量</h3>
+                                <i class="fas fa-calendar-alt text-accent-green"></i>
+                            </div>
+                            <div class="flex items-baseline">
+                                <span class="text-3xl font-bold">20</span>
+                                <span class="text-accent-green text-sm ml-2">+5 本月</span>
+                            </div>
+                        </div>
+
+                        <!-- 资源数量 -->
+                        <div class="bg-primary/50 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-text-secondary text-sm">资源数量</h3>
+                                <i class="fas fa-folder-open text-accent-green"></i>
+                            </div>
+                            <div class="flex items-baseline">
+                                <span class="text-3xl font-bold">52</span>
+                                <span class="text-accent-green text-sm ml-2">+12 本月</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 最近动态 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 最近用户注册 -->
+                        <div>
+                            <h3 class="font-semibold mb-4">最近用户注册</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-primary text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">张三</p>
+                                        <p class="text-text-secondary text-xs">2024-01-16 14:30</p>
+                                    </div>
+                                    <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">社员</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-primary text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">李四</p>
+                                        <p class="text-text-secondary text-xs">2024-01-16 10:15</p>
+                                    </div>
+                                    <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">社员</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-primary text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">王五</p>
+                                        <p class="text-text-secondary text-xs">2024-01-15 16:30</p>
+                                    </div>
+                                    <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">社员</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 最近项目 -->
+                        <div>
+                            <h3 class="font-semibold mb-4">最近项目</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center">
+                                        <i class="fas fa-project-diagram text-primary text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">智能机器人</p>
+                                        <p class="text-text-secondary text-xs">2024-01-16 10:15</p>
+                                    </div>
+                                    <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">进行中</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center">
+                                        <i class="fas fa-project-diagram text-primary text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">校园生活APP</p>
+                                        <p class="text-text-secondary text-xs">2023-12-15 14:30</p>
+                                    </div>
+                                    <span class="bg-accent-pink/20 text-accent-pink text-xs px-2 py-1 rounded-full">已完成</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center">
+                                        <i class="fas fa-project-diagram text-primary text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">智能家居系统</p>
+                                        <p class="text-text-secondary text-xs">2023-11-30 16:00</p>
+                                    </div>
+                                    <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">测试中</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 用户管理 -->
+                <section id="users" class="bg-secondary rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">用户管理</h2>
+                        <div class="flex gap-2">
+                            <div class="relative">
+                                <input type="text" placeholder="搜索用户..." class="input pl-10 pr-4 py-2">
+                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary"></i>
+                            </div>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus mr-1"></i>添加用户
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-text-secondary">
+                                    <th class="text-left py-4 px-6 text-text-secondary">姓名</th>
+                                    <th class="text-left py-4 px-6 text-text-secondary">邮箱</th>
+                                    <th class="text-left py-4 px-6 text-text-secondary">角色</th>
+                                    <th class="text-left py-4 px-6 text-text-secondary">状态</th>
+                                    <th class="text-left py-4 px-6 text-text-secondary">注册时间</th>
+                                    <th class="text-left py-4 px-6 text-text-secondary">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-text-secondary">
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center mr-3">
+                                                <i class="fas fa-user text-primary text-xs"></i>
+                                            </div>
+                                            <span>张明</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6 text-text-secondary">zhangming@example.com</td>
+                                    <td class="py-4 px-6">
+                                        <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">社员</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">活跃</span>
+                                    </td>
+                                    <td class="py-4 px-6 text-text-secondary">2023-09-01</td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex gap-2">
+                                            <button class="btn btn-outline btn-xs">查看</button>
+                                            <button class="btn btn-primary btn-xs">编辑</button>
+                                            <button class="btn btn-danger btn-xs">删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-text-secondary">
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center mr-3">
+                                                <i class="fas fa-user-tie text-primary text-xs"></i>
+                                            </div>
+                                            <span>李老师</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6 text-text-secondary">li_teacher@ww18z.com</td>
+                                    <td class="py-4 px-6">
+                                        <span class="bg-blue-500/20 text-blue-500 text-xs px-2 py-1 rounded-full">指导教师</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">活跃</span>
+                                    </td>
+                                    <td class="py-4 px-6 text-text-secondary">2022-09-01</td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex gap-2">
+                                            <button class="btn btn-outline btn-xs">查看</button>
+                                            <button class="btn btn-primary btn-xs">编辑</button>
+                                            <button class="btn btn-danger btn-xs">删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-text-secondary">
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center mr-3">
+                                                <i class="fas fa-user-shield text-primary text-xs"></i>
+                                            </div>
+                                            <span>管理员</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6 text-text-secondary">admin@ww18z.com</td>
+                                    <td class="py-4 px-6">
+                                        <span class="bg-accent-pink/20 text-accent-pink text-xs px-2 py-1 rounded-full">管理员</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">活跃</span>
+                                    </td>
+                                    <td class="py-4 px-6 text-text-secondary">2022-08-01</td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex gap-2">
+                                            <button class="btn btn-outline btn-xs">查看</button>
+                                            <button class="btn btn-primary btn-xs">编辑</button>
+                                            <button class="btn btn-danger btn-xs" disabled>删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-accent-green to-accent-pink rounded-full flex items-center justify-center mr-3">
+                                                <i class="fas fa-user text-primary text-xs"></i>
+                                            </div>
+                                            <span>王芳</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6 text-text-secondary">wangfang@example.com</td>
+                                    <td class="py-4 px-6">
+                                        <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">社员</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">活跃</span>
+                                    </td>
+                                    <td class="py-4 px-6 text-text-secondary">2023-10-01</td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex gap-2">
+                                            <button class="btn btn-outline btn-xs">查看</button>
+                                            <button class="btn btn-primary btn-xs">编辑</button>
+                                            <button class="btn btn-danger btn-xs">删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="flex justify-between items-center mt-6">
+                        <p class="text-text-secondary text-sm">显示 1-4 条，共 45 条</p>
+                        <div class="flex gap-2">
+                            <button class="btn btn-outline btn-sm">上一页</button>
+                            <button class="btn btn-primary btn-sm">1</button>
+                            <button class="btn btn-outline btn-sm">2</button>
+                            <button class="btn btn-outline btn-sm">3</button>
+                            <button class="btn btn-outline btn-sm">...</button>
+                            <button class="btn btn-outline btn-sm">12</button>
+                            <button class="btn btn-outline btn-sm">下一页</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 项目管理 -->
+                <section id="projects" class="bg-secondary rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">项目管理</h2>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus mr-1"></i>添加项目
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- 项目卡片 -->
+                        <div class="bg-primary/50 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <h3 class="font-bold">智能机器人</h3>
+                                        <span class="bg-accent-green/20 text-accent-green text-xs px-2 py-1 rounded-full">进行中</span>
+                                    </div>
+                                    <p class="text-text-secondary text-sm mb-3">基于Arduino的智能机器人，可以实现避障、跟随、语音控制等功能。</p>
+                                    <div class="flex flex-wrap gap-2 mb-3">
+                                        <span class="text-xs bg-secondary px-2 py-1 rounded-full">Arduino</span>
+                                        <span class="text-xs bg-secondary px-2 py-1 rounded-full">传感器</span>
+                                        <span class="text-xs bg-secondary px-2 py-1 rounded-full">C++</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-text-secondary">
+                                    <i class="fas fa-users mr-1"></i>
+                                    <span>参与人数：5人</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="btn btn-outline btn-xs">查看详情</button>
+                                    <button class="btn btn-primary btn-xs">编辑</button>
+                                    <button class="btn btn-danger btn-xs">删除</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 项目卡片 -->
+                        <div class="bg-primary/50 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <h3 class="font-bold">校园生活APP</h3>
+                                        <span class="bg-accent-pink/20 text-accent-pink text-xs px-2 py-1 rounded-full">已完成</span>
+                                    </div>
+                                    <p class="text-text-secondary text-sm mb-3">方便学生校园生活的手机应用，包括课程表、成绩查询、校园资讯等功能。</p>
+                                    <div class="flex flex-wrap gap-2 mb-3">
+                                        <span class="text-xs bg-secondary px-2 py-1 rounded-full">Flutter</span>
+                                        <span class="text-xs bg-secondary px-2 py-1 rounded-full">Dart</span>
+                                        <span class="text-xs bg-secondary px-2 py-1 rounded-full">Firebase</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-sm text-text-secondary">
+                                    <i class="fas fa-users mr-1"></i>
+                                    <span>参与人数：8人</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="btn btn-outline btn-xs">查看详情</button>
+                                    <button class="btn btn-primary btn-xs">编辑</button>
+                                    <button class="btn btn-danger btn-xs">删除</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-outline w-full mt-6">
+                        <i class="fas fa-list mr-2"></i>查看所有项目
+                    </button>
+                </section>
+
+                <!-- 系统设置 -->
+                <section id="settings" class="bg-secondary rounded-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6">系统设置</h2>
+
+                    <div class="space-y-6">
+                        <!-- 基本设置 -->
+                        <div>
+                            <h3 class="font-semibold mb-4">基本设置</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="site-name" class="block text-text-primary font-medium mb-2">网站名称</label>
+                                    <input type="text" id="site-name" class="input w-full" value="卓然创客社团">
+                                </div>
+                                <div>
+                                    <label for="site-description" class="block text-text-primary font-medium mb-2">网站描述</label>
+                                    <input type="text" id="site-description" class="input w-full" value="武威第十八中学卓然创客社团官方网站">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="site-logo" class="block text-text-primary font-medium mb-2">网站Logo</label>
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-16 h-16 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-robot text-primary text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary btn-sm">
+                                                <i class="fas fa-upload mr-1"></i>上传Logo
+                                            </button>
+                                            <p class="text-text-secondary text-xs mt-1">支持 PNG, JPG 格式，建议尺寸 200x200px</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 招新设置 -->
+                        <div>
+                            <h3 class="font-semibold mb-4">招新设置</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium">招新状态</p>
+                                        <p class="text-text-secondary text-sm">开启或关闭社团招新</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label for="recruitment-deadline" class="block text-text-primary font-medium mb-2">招新截止时间</label>
+                                    <input type="datetime-local" id="recruitment-deadline" class="input w-full" value="2024-02-29T23:59">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 保存设置 -->
+                        <div class="flex justify-end">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-save mr-1"></i>保存设置
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-secondary py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Logo和简介 -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                            <i class="fas fa-robot text-primary text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold gradient-text">卓然创客</span>
+                    </div>
+                    <p class="text-text-secondary mb-4">
+                        武威第十八中学卓然创客社团，致力于培养学生的创新能力和实践能力，
+                        探索科技的无限可能。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-text-secondary hover:text-accent-green transition-colors">
+                            <i class="fab fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-text-secondary hover:text-accent-green transition-colors">
+                            <i class="fab fa-weibo text-xl"></i>
+                        </a>
+                        <a href="#" class="text-text-secondary hover:text-accent-green transition-colors">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-text-secondary hover:text-accent-green transition-colors">首页</a></li>
+                        <li><a href="showcase.html" class="text-text-secondary hover:text-accent-green transition-colors">社团展示</a></li>
+                        <li><a href="activities.html" class="text-text-secondary hover:text-accent-green transition-colors">社团活动</a></li>
+                        <li><a href="about.html" class="text-text-secondary hover:text-accent-green transition-colors">社团简介</a></li>
+                        <li><a href="visitor-center.html" class="text-text-secondary hover:text-accent-green transition-colors">访客中心</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系我们 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">联系我们</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center space-x-2 text-text-secondary">
+                            <i class="fas fa-map-marker-alt text-accent-green"></i>
+                            <span>武威第十八中学</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-text-secondary">
+                            <i class="fas fa-envelope text-accent-green"></i>
+                            <span>zrck@ww18z.com</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-text-secondary">
+                            <i class="fas fa-phone text-accent-green"></i>
+                            <span>0935-1234567</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 订阅 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">订阅通知</h3>
+                    <p class="text-text-secondary mb-4">
+                        订阅我们的最新动态，获取社团活动和项目更新信息。
+                    </p>
+                    <form class="flex">
+                        <input type="email" placeholder="您的邮箱" class="input flex-1 mr-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- 版权信息 -->
+            <div class="border-t border-primary pt-8 text-center text-text-secondary">
+                <p>&copy; 2024 武威第十八中学卓然创客社团. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/theme.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- 后台管理脚本 -->
+    <script>
+        // 导航菜单切换
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // 移除所有活动状态
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                
+                // 添加当前活动状态
+                item.classList.add('active');
+                
+                // 滚动到对应区域
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        
+        // 退出登录
+        document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (confirm('确定要退出登录吗？')) {
+                // 调用退出登录函数
+                await signOut();
+                // 重定向到登录页
+                window.location.href = 'login.html';
+            }
+        });
+        
+        // 移动端退出登录
+        document.getElementById('mobile-logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (confirm('确定要退出登录吗？')) {
+                // 调用退出登录函数
+                await signOut();
+                // 重定向到登录页
+                window.location.href = 'login.html';
+            }
+        });
+        
+        // 检查用户是否已登录
+        checkAuth();
+    </script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社员登录 - 武威第十八中学卓然创客社团</title>
+    
+    <!-- CDN引入 -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#121212',
+                        secondary: '#1e1e1e',
+                        accent: {
+                            green: '#03fc90',
+                            pink: '#fc03f8'
+                        },
+                        text: {
+                            primary: '#ffffff',
+                            secondary: '#b3b3b3'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Roboto', 'sans-serif'],
+                        chinese: ['Microsoft YaHei', 'SimHei', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-primary to-secondary">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                    <i class="fas fa-robot text-primary text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold gradient-text">卓然创客</span>
+            </a>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="index.html" class="nav-link font-semibold">首页</a>
+                <a href="showcase.html" class="nav-link font-semibold">社团展示</a>
+                <a href="activities.html" class="nav-link font-semibold">社团活动</a>
+                <a href="about.html" class="nav-link font-semibold">社团简介</a>
+                <a href="visitor-center.html" class="nav-link font-semibold">访客中心</a>
+                
+                <!-- 认证导航 -->
+                <div id="auth-nav" class="flex items-center space-x-4">
+                    <a href="login.html" class="nav-link btn btn-primary">
+                        <i class="fas fa-sign-in-alt mr-2"></i>登录
+                    </a>
+                </div>
+                
+                <!-- 主题切换 -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-sun text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <div class="md:hidden flex items-center space-x-4">
+                <!-- 主题切换 -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-sun text-xl"></i>
+                </button>
+                
+                <!-- 菜单按钮 -->
+                <button id="menu-toggle" class="p-2 rounded-full hover:bg-secondary transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary border-t border-secondary">
+            <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                <a href="index.html" class="nav-link font-semibold">首页</a>
+                <a href="showcase.html" class="nav-link font-semibold">社团展示</a>
+                <a href="activities.html" class="nav-link font-semibold">社团活动</a>
+                <a href="about.html" class="nav-link font-semibold">社团简介</a>
+                <a href="visitor-center.html" class="nav-link font-semibold">访客中心</a>
+                
+                <!-- 认证导航 -->
+                <div id="auth-nav" class="flex flex-col space-y-3">
+                    <a href="login.html" class="nav-link btn btn-primary text-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>登录
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 登录页面 -->
+    <section class="pt-32 pb-16 px-4 min-h-screen flex items-center justify-center">
+        <div class="container mx-auto">
+            <div class="max-w-md mx-auto animate fade-in">
+                <!-- 登录卡片 -->
+                <div class="bg-secondary rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+                    <!-- 背景装饰 -->
+                    <div class="absolute -top-20 -right-20 w-40 h-40 bg-accent-green/20 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-accent-pink/20 rounded-full blur-3xl"></div>
+                    
+                    <!-- 卡片内容 -->
+                    <div class="relative z-10">
+                        <!-- Logo和标题 -->
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-robot text-primary text-2xl"></i>
+                            </div>
+                            <h1 class="text-3xl font-bold gradient-text">社员登录</h1>
+                            <p class="text-text-secondary mt-2">欢迎回到卓然创客社团</p>
+                        </div>
+                        
+                        <!-- 登录表单 -->
+                        <form id="login-form" class="space-y-6">
+                            <!-- 邮箱/用户名 -->
+                            <div>
+                                <label for="email" class="block text-sm font-medium mb-2">邮箱/用户名</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-accent-green"></i>
+                                    </div>
+                                    <input type="text" id="email" name="email" class="w-full bg-primary border border-secondary rounded-lg px-10 py-3 focus:outline-none focus:border-accent-green transition-colors" placeholder="请输入邮箱或用户名" required>
+                                </div>
+                            </div>
+                            
+                            <!-- 密码 -->
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="password" class="block text-sm font-medium">密码</label>
+                                    <a href="#" class="text-sm text-accent-green hover:underline">忘记密码？</a>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-accent-green"></i>
+                                    </div>
+                                    <input type="password" id="password" name="password" class="w-full bg-primary border border-secondary rounded-lg px-10 py-3 focus:outline-none focus:border-accent-green transition-colors" placeholder="请输入密码" required>
+                                    <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-secondary hover:text-text-primary transition-colors">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- 记住我和登录按钮 -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="remember-me" name="remember-me" class="w-4 h-4 text-accent-green rounded focus:ring-accent-green border-secondary bg-primary">
+                                    <label for="remember-me" class="ml-2 text-sm text-text-secondary">记住我</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>登录
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- 分隔线 -->
+                        <div class="relative my-8">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-secondary"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-4 bg-secondary text-text-secondary">或使用其他方式登录</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 第三方登录 -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <button type="button" class="flex items-center justify-center space-x-2 bg-primary border border-secondary rounded-lg py-3 hover:bg-accent-green/10 hover:border-accent-green transition-colors">
+                                <i class="fab fa-weixin text-xl text-green-500"></i>
+                                <span>微信登录</span>
+                            </button>
+                            <button type="button" class="flex items-center justify-center space-x-2 bg-primary border border-secondary rounded-lg py-3 hover:bg-accent-green/10 hover:border-accent-green transition-colors">
+                                <i class="fab fa-qq text-xl text-blue-500"></i>
+                                <span>QQ登录</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 注册链接 -->
+                        <div class="text-center mt-8">
+                            <p class="text-text-secondary">还没有账号？
+                                <a href="#" class="text-accent-green font-semibold hover:underline">立即注册</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="py-12 px-4 bg-primary border-t border-secondary">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- 社团信息 -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-accent-green to-accent-pink rounded-lg flex items-center justify-center">
+                            <i class="fas fa-robot text-primary text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold gradient-text">卓然创客</span>
+                    </div>
+                    <p class="text-text-secondary mb-4">
+                        武威第十八中学卓然创客社团，致力于培养学生的创新精神和实践能力。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-weixin text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-qq text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-accent-green/20 transition-colors">
+                            <i class="fab fa-github text-text-secondary hover:text-accent-green"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-text-secondary hover:text-accent-green transition-colors">首页</a></li>
+                        <li><a href="showcase.html" class="text-text-secondary hover:text-accent-green transition-colors">社团展示</a></li>
+                        <li><a href="activities.html" class="text-text-secondary hover:text-accent-green transition-colors">社团活动</a></li>
+                        <li><a href="about.html" class="text-text-secondary hover:text-accent-green transition-colors">社团简介</a></li>
+                        <li><a href="visitor-center.html" class="text-text-secondary hover:text-accent-green transition-colors">访客中心</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系方式 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">联系方式</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-accent-green mt-1"></i>
+                            <span class="text-text-secondary">武威第十八中学创客实验室</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-accent-green"></i>
+                            <span class="text-text-secondary">138-XXXX-XXXX</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-accent-green"></i>
+                            <span class="text-text-secondary">maker@ww18z.com</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 作者信息 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">作者信息</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-user text-accent-green"></i>
+                            <span class="text-text-secondary">设计：张三</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-code text-accent-green"></i>
+                            <span class="text-text-secondary">开发：李四</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fas fa-calendar-alt text-accent-green"></i>
+                            <span class="text-text-secondary">更新时间：2024-01-18</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 版权信息 -->
+            <div class="text-center text-text-secondary text-sm pt-8 border-t border-secondary">
+                <p>&copy; 2024 武威第十八中学卓然创客社团. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript文件 -->
+    <script src="js/theme.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- 登录页脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 密码可见性切换
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const passwordInput = document.getElementById('password');
+            
+            togglePasswordBtn.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // 更新图标
+                const icon = togglePasswordBtn.querySelector('i');
+                icon.className = type === 'password' ? 'fas fa-eye-slash' : 'fas fa-eye';
+            });
+            
+            // 登录表单提交
+            const loginForm = document.getElementById('login-form');
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                try {
+                    // 调用Supabase登录函数
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email,
+                        password
+                    });
+                    
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    // 登录成功，重定向到用户中心
+                    window.location.href = 'member-center.html';
+                } catch (error) {
+                    console.error('登录失败:', error);
+                    alert('登录失败: ' + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

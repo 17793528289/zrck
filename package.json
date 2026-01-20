@@ -1,0 +1,19 @@
+{
+  "name": "zrck1",
+  "version": "1.0.0",
+  "description": "武威第十八中学卓然创客社团官网",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./css/main.css -o ./css/output.css --watch",
+    "build": "npx tailwindcss -i ./css/main.css -o ./css/output.css --minify"
+  },
+  "keywords": ["school", "club", "maker", "website"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}
