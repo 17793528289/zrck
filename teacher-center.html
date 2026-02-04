@@ -104,7 +104,7 @@
                     <button id="theme-toggle" class="p-2 rounded-lg bg-dark-light hover:bg-dark-lighter transition-colors">
                         <i class="fas fa-moon"></i>
                     </button>
-                    <button id="mobile-menu-toggle" class="p-2 rounded-lg bg-dark-light hover:bg-dark-lighter transition-colors">
+                    <button id="mobile-menu-button" class="p-2 rounded-lg bg-dark-light hover:bg-dark-lighter transition-colors">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
@@ -503,24 +503,57 @@
     <!-- JavaScript -->
     <script src="assets/js/main.js"></script>
     <script>
+        // 教师中心页面脚本
         document.addEventListener('DOMContentLoaded', function() {
-            // 侧边栏导航
-            const sidebarLinks = document.querySelectorAll('.teacher-sidebar-link');
-            const sections = document.querySelectorAll('section[id]');
-            
-            // 切换内容区域
-            function showSection(sectionId) {
-                // 隐藏所有区域
-                document.querySelectorAll('section').forEach(section => {
-                    section.classList.add('hidden');
-                });
+            try {
+                // 侧边栏导航
+                const sidebarLinks = document.querySelectorAll('.teacher-sidebar-link');
+                const sections = document.querySelectorAll('section[id]');
                 
-                // 显示目标区域
-                const targetSection = document.getElementById(sectionId);
-                if (targetSection) {
-                    targetSection.classList.remove('hidden');
+                // 切换内容区域
+                function showSection(sectionId) {
+                    try {
+                        // 隐藏所有区域
+                        document.querySelectorAll('section').forEach(section => {
+                            section.classList.add('hidden');
+                        });
+                        
+                        // 显示目标区域
+                        const targetSection = document.getElementById(sectionId);
+                        if (targetSection) {
+                            targetSection.classList.remove('hidden');
+                        } else {
+                            console.warn(`未找到ID为 ${sectionId} 的区域`);
+                        }
+                        
+                        // 更新活动状态
+                        sidebarLinks.forEach(link => link.classList.remove('active'));
+                        const activeLink = document.querySelector(`.teacher-sidebar-link[href="#${sectionId}"]`);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                        }
+                    } catch (error) {
+                        console.error('切换内容区域失败:', error);
+                    }
                 }
                 
-                // 更新活动状态
-                sidebarLinks.forEach(link => link.classList.remove('active'));
-                const
+                // 侧边栏链接点击事件
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        try {
+                            e.preventDefault();
+                            const sectionId = this.getAttribute('href').substring(1);
+                            showSection(sectionId);
+                        } catch (error) {
+                            console.error('侧边栏链接点击事件处理失败:', error);
+                        }
+                    });
+                });
+                
+                // 初始化显示默认区域
+                showSection('dashboard');
+            } catch (error) {
+                console.error('教师中心页面脚本初始化失败:', error);
+            }
+        });
+    </script>

@@ -31,7 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 主题切换功能
     function initTheme() {
-        const savedTheme = window.App?.utils?.getStorage('theme') || 'dark';
+        // 获取保存的主题，提供降级方案
+        let savedTheme = 'dark';
+        try {
+            savedTheme = localStorage.getItem('theme') || 'dark';
+        } catch (error) {
+            console.warn('获取主题设置失败:', error);
+        }
         document.documentElement.classList.toggle('dark', savedTheme === 'dark');
         
         // 主题切换按钮
@@ -42,12 +48,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 const newTheme = isDark ? 'light' : 'dark';
                 
                 document.documentElement.classList.toggle('dark');
-                if (window.App?.utils?.setStorage) {
-                    window.App.utils.setStorage('theme', newTheme);
+                // 保存主题设置，提供降级方案
+                try {
+                    localStorage.setItem('theme', newTheme);
+                } catch (error) {
+                    console.warn('保存主题设置失败:', error);
                 }
                 
-                if (window.App?.utils?.notification) {
+                // 显示通知，提供降级方案
+                if (window.App && window.App.utils && window.App.utils.notification) {
                     window.App.utils.notification.success(`已切换到${newTheme === 'dark' ? '深色' : '浅色'}模式`);
+                } else {
+                    console.log(`已切换到${newTheme === 'dark' ? '深色' : '浅色'}模式`);
                 }
             });
         }
@@ -101,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target.closest('[data-close-modal]')) {
                 const modal = e.target.closest('.modal');
                 if (modal) {
-                    if (window.App?.utils?.dom?.hide) {
+                    if (window.App && window.App.utils && window.App.utils.dom && window.App.utils.dom.hide) {
                         window.App.utils.dom.hide(modal);
                     } else {
                         modal.classList.add('hidden');
@@ -111,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 点击模态框外部关闭
             if (e.target.classList.contains('modal')) {
-                if (window.App?.utils?.dom?.hide) {
+                if (window.App && window.App.utils && window.App.utils.dom && window.App.utils.dom.hide) {
                     window.App.utils.dom.hide(e.target);
                 } else {
                     e.target.classList.add('hidden');
@@ -126,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const modalId = openButton.getAttribute('data-open-modal');
                 const modal = document.getElementById(modalId);
                 if (modal) {
-                    if (window.App?.utils?.dom?.show) {
+                    if (window.App && window.App.utils && window.App.utils.dom && window.App.utils.dom.show) {
                         window.App.utils.dom.show(modal);
                     } else {
                         modal.classList.remove('hidden');
@@ -305,21 +317,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageInput.style.height = 'auto';
                 
                 // 显示成功提示
-                if (window.App?.utils?.notification) {
+                if (window.App && window.App.utils && window.App.utils.notification) {
                     window.App.utils.notification.success('消息发送成功');
+                } else {
+                    console.log('消息发送成功');
                 }
             }
         }
     }
 
     // 初始化所有功能
-    initTheme();
-    initCardHover();
-    initLazyLoad();
-    initModals();
-    initFormValidation();
-    initTabs();
-    initChatSystem();
+    try {
+        initTheme();
+        initCardHover();
+        initLazyLoad();
+        initModals();
+        initFormValidation();
+        initTabs();
+        initChatSystem();
+    } catch (error) {
+        console.error('初始化功能失败:', error);
+    }
 
     // 滚动时导航栏效果
     let lastScrollTop = 0;
@@ -352,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 全局函数
 function showNotification(message, type = 'success') {
-    if (window.App?.utils?.notification) {
+    if (window.App && window.App.utils && window.App.utils.notification && window.App.utils.notification[type]) {
         window.App.utils.notification[type](message);
     } else {
         // 降级处理
@@ -363,17 +381,21 @@ function showNotification(message, type = 'success') {
 function setLoading(button, isLoading) {
     if (!button) return;
     
-    if (isLoading) {
-        button.disabled = true;
-        const originalText = button.innerHTML;
-        button.setAttribute('data-original-text', originalText);
-        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>加载中...';
-    } else {
-        button.disabled = false;
-        const originalText = button.getAttribute('data-original-text');
-        if (originalText) {
-            button.innerHTML = originalText;
+    try {
+        if (isLoading) {
+            button.disabled = true;
+            const originalText = button.innerHTML;
+            button.setAttribute('data-original-text', originalText);
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>加载中...';
+        } else {
+            button.disabled = false;
+            const originalText = button.getAttribute('data-original-text');
+            if (originalText) {
+                button.innerHTML = originalText;
+            }
+            button.removeAttribute('data-original-text');
         }
-        button.removeAttribute('data-original-text');
+    } catch (error) {
+        console.error('设置加载状态失败:', error);
     }
 }

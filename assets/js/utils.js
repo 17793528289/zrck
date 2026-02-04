@@ -1,4 +1,9 @@
 // 通用工具函数库
+// 确保App对象存在
+window.App = window.App || {};
+window.App.utils = window.App.utils || {};
+
+// 通用工具函数库
 window.App.utils = {
     // DOM操作相关
     dom: {
@@ -234,22 +239,22 @@ window.App.utils = {
     notification: {
         // 显示成功消息
         success: (message, duration = 3000) => {
-            return this.show(message, 'success', duration);
+            return window.App.utils.notification.show(message, 'success', duration);
         },
 
         // 显示错误消息
         error: (message, duration = 5000) => {
-            return this.show(message, 'error', duration);
+            return window.App.utils.notification.show(message, 'error', duration);
         },
 
         // 显示警告消息
         warning: (message, duration = 4000) => {
-            return this.show(message, 'warning', duration);
+            return window.App.utils.notification.show(message, 'warning', duration);
         },
 
         // 显示信息消息
         info: (message, duration = 3000) => {
-            return this.show(message, 'info', duration);
+            return window.App.utils.notification.show(message, 'info', duration);
         },
 
         // 显示消息（核心方法）
@@ -259,7 +264,7 @@ window.App.utils = {
             
             // 创建消息元素
             const notification = document.createElement('div');
-            notification.className = `notification notification-${type} animate__animated animate__fadeInRight`;
+            notification.className = `notification notification-${type}`;
             
             const icons = {
                 success: 'fa-check-circle',
@@ -280,17 +285,27 @@ window.App.utils = {
             
             container.appendChild(notification);
             
+            // 添加简单的动画效果
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
+            notification.style.transition = 'all 0.3s ease';
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
             // 自动消失
             if (duration > 0) {
                 setTimeout(() => {
                     if (notification.parentNode) {
-                        notification.classList.remove('animate__fadeInRight');
-                        notification.classList.add('animate__fadeOutRight');
+                        notification.style.opacity = '0';
+                        notification.style.transform = 'translateX(100%)';
                         setTimeout(() => {
                             if (notification.parentNode) {
                                 notification.parentNode.removeChild(notification);
                             }
-                        }, 500);
+                        }, 300);
                     }
                 }, duration);
             }
