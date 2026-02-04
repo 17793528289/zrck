@@ -659,6 +659,15 @@
                 if (firstChat) {
                     firstChat.click();
                 }
+            } else {
+                // 如果未登录，禁用所有聊天功能
+                messageInput.disabled = true;
+                sendMessageBtn.disabled = true;
+                newChatBtn.disabled = true;
+                document.querySelectorAll('.chat-list-item').forEach(item => {
+                    item.style.pointerEvents = 'none';
+                    item.style.opacity = '0.5';
+                });
             }
             
             // 发送消息按钮点击
@@ -673,8 +682,14 @@
             
             // 新聊天按钮点击
             newChatBtn.addEventListener('click', () => {
-                newChatModal.classList.remove('hidden');
-                newChatModal.classList.add('flex');
+                if (isLoggedIn) {
+                    newChatModal.classList.remove('hidden');
+                    newChatModal.classList.add('flex');
+                } else {
+                    // 显示登录提示
+                    loginModal.classList.remove('hidden');
+                    loginModal.classList.add('flex');
+                }
             });
             
             // 关闭新聊天模态框
