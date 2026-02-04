@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>访客中心 - 卓然创客社团</title>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- 自定义 Tailwind 配置 -->
     <script>
         tailwind.config = {
@@ -22,108 +25,154 @@
                         'dark-lighter': '#2a2a2a'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'Roboto', 'sans-serif']
+                        sans: ['Inter', 'Roboto', 'system-ui', 'sans-serif']
                     }
                 }
             }
         }
     </script>
+    
     <style type="text/tailwindcss">
         @layer utilities {
             .text-gradient {
-                @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+                background: linear-gradient(135deg, #03fc90 0%, #fc03f8 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
             }
             .bg-glass {
-                @apply bg-dark/80 backdrop-blur-md border border-white/10;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
             }
             .card-hover {
-                @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1;
+                transition: all 0.3s ease;
             }
-            .form-input {
-                @apply w-full px-4 py-3 bg-dark-lighter border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors;
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 40px rgba(3, 252, 144, 0.1);
             }
-            .btn-primary {
-                @apply w-full py-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold hover:opacity-90 transition-opacity;
+            .nav-link {
+                @apply font-medium hover:text-primary transition-colors;
             }
-            .btn-secondary {
-                @apply w-full py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary/10 transition-colors;
+            .nav-link.active {
+                @apply text-primary border-b-2 border-primary;
+            }
+            .nav-link-mobile {
+                @apply font-medium py-2 px-4 rounded-lg hover:bg-white/5 transition-colors;
+            }
+            .nav-link-mobile.active {
+                @apply bg-primary/20 text-primary;
             }
         }
     </style>
 </head>
-<body class="bg-dark text-white min-h-screen">
+<body class="bg-dark text-white min-h-screen font-sans">
     <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-glass">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-glass border-b border-white/10">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
-                <a href="index.html" class="flex items-center space-x-2">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-                        <i class="fas fa-robot text-dark text-xl font-bold"></i>
+                <a href="index.html" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fas fa-robot text-white text-xl"></i>
                     </div>
                     <span class="text-xl font-bold text-gradient">卓然创客</span>
                 </a>
 
                 <!-- 桌面端导航 -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="font-medium hover:text-primary transition-colors">首页</a>
-                    <a href="about.html" class="font-medium hover:text-primary transition-colors">社团简介</a>
-                    <a href="activities.html" class="font-medium hover:text-primary transition-colors">社团活动</a>
-                    <a href="showcase.html" class="font-medium hover:text-primary transition-colors">社团展示</a>
-                    <a href="visitor-center.html" class="font-medium text-primary border-b-2 border-primary">访客中心</a>
-                    <a href="chat.html" class="font-medium hover:text-primary transition-colors">聊天系统</a>
-                    <a href="login.html" class="px-4 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-dark font-medium hover:opacity-90 transition-opacity">登录</a>
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">首页</a>
+                    <a href="about.html" class="nav-link">社团简介</a>
+                    <a href="activities.html" class="nav-link">社团活动</a>
+                    <a href="showcase.html" class="nav-link">社团展示</a>
+                    <a href="visitor-center.html" class="nav-link active">访客中心</a>
+                    <a href="chat.html" class="nav-link">聊天系统</a>
+                    <a href="login.html" class="bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-white font-bold px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105">
+                        登录/注册
+                    </a>
                 </div>
 
-                <!-- 移动端汉堡菜单 -->
-                <div class="md:hidden">
-                    <button id="menu-toggle" class="text-white focus:outline-none">
+                <!-- 移动端菜单按钮 -->
+                <div class="lg:hidden flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-light hover:bg-dark-lighter transition-colors">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="mobile-menu-toggle" class="p-2 rounded-lg bg-dark-light hover:bg-dark-lighter transition-colors">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
 
             <!-- 移动端导航菜单 -->
-            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4">
+            <div id="mobile-menu" class="lg:hidden hidden mt-4 pb-4 border-t border-white/10 pt-4">
                 <div class="flex flex-col space-y-4">
-                    <a href="index.html" class="font-medium hover:text-primary transition-colors py-2">首页</a>
-                    <a href="about.html" class="font-medium hover:text-primary transition-colors py-2">社团简介</a>
-                    <a href="activities.html" class="font-medium hover:text-primary transition-colors py-2">社团活动</a>
-                    <a href="showcase.html" class="font-medium hover:text-primary transition-colors py-2">社团展示</a>
-                    <a href="visitor-center.html" class="font-medium text-primary border-l-4 border-primary pl-2">访客中心</a>
-                    <a href="chat.html" class="font-medium hover:text-primary transition-colors py-2">聊天系统</a>
-                    <a href="login.html" class="px-4 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-dark font-medium hover:opacity-90 transition-opacity text-center">登录</a>
+                    <a href="index.html" class="nav-link-mobile">首页</a>
+                    <a href="about.html" class="nav-link-mobile">社团简介</a>
+                    <a href="activities.html" class="nav-link-mobile">社团活动</a>
+                    <a href="showcase.html" class="nav-link-mobile">社团展示</a>
+                    <a href="visitor-center.html" class="nav-link-mobile active">访客中心</a>
+                    <a href="chat.html" class="nav-link-mobile">聊天系统</a>
+                    <div class="pt-4 border-t border-white/10">
+                        <a href="login.html" class="w-full bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-white font-bold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 inline-block text-center">
+                            登录/注册
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- 页面标题 -->
-    <section class="pt-32 pb-16 px-4">
+    <section class="pt-32 pb-16 px-4 bg-gradient-to-r from-dark to-dark-light">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl lg:text-6xl font-bold mb-6 text-gradient">访客中心</h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                了解卓然创客社团，浏览活动信息，留下您的留言，申请加入社团
+            </p>
+        </div>
+    </section>
+
+    <!-- 快速导航 -->
+    <section class="py-12 px-4 bg-dark-light">
         <div class="container mx-auto">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">访客中心</h1>
-            <p class="text-gray-400 text-lg">了解卓然创客社团，浏览活动信息，留下您的留言，申请加入社团</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#info" class="bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-dark font-bold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-info-circle mr-2"></i>社团信息
+                </a>
+                <a href="#activities" class="border-2 border-primary text-primary hover:bg-primary/10 font-bold px-6 py-3 rounded-full transition-all duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>活动查看
+                </a>
+                <a href="#messages" class="border-2 border-secondary text-secondary hover:bg-secondary/10 font-bold px-6 py-3 rounded-full transition-all duration-300">
+                    <i class="fas fa-comments mr-2"></i>留言板
+                </a>
+                <a href="#join" class="border-2 border-white text-white hover:bg-white/10 font-bold px-6 py-3 rounded-full transition-all duration-300">
+                    <i class="fas fa-user-plus mr-2"></i>加入我们
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- 社团信息浏览 -->
-    <section class="py-20 px-4 bg-dark-light">
+    <section id="info" class="py-20 px-4">
         <div class="container mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">社团信息</h2>
-                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
-                <p class="text-gray-400 mt-6 max-w-2xl mx-auto">
+                <h2 class="text-3xl lg:text-4xl font-bold mb-4">社团信息</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
                     了解卓然创客社团的基本信息、发展历程和核心价值观
                 </p>
             </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- 信息卡片 1 -->
-                <div class="bg-dark rounded-xl p-6 border border-white/10 card-hover">
+                <!-- 信息卡片1 -->
+                <div class="bg-dark-light rounded-2xl p-6 border border-white/10 card-hover">
                     <div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-6">
                         <i class="fas fa-info-circle text-primary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">社团简介</h3>
-                    <p class="text-gray-400 mb-6">
+                    <p class="text-gray-400 mb-6 leading-relaxed">
                         卓然创客社团成立于2020年，是武威第十八中学重点打造的科技社团。
                         社团以"培养创新精神，提升实践能力"为宗旨，通过开展软件编程、硬件设计、
                         机器人制作、学科竞赛等活动，为学生提供了一个展示才华、实践创新的平台。
@@ -132,13 +181,14 @@
                         了解更多 <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
-                <!-- 信息卡片 2 -->
-                <div class="bg-dark rounded-xl p-6 border border-white/10 card-hover">
+
+                <!-- 信息卡片2 -->
+                <div class="bg-dark-light rounded-2xl p-6 border border-white/10 card-hover">
                     <div class="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mb-6">
                         <i class="fas fa-history text-secondary text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">发展历程</h3>
-                    <p class="text-gray-400 mb-6">
+                    <p class="text-gray-400 mb-6 leading-relaxed">
                         社团自成立以来，不断发展壮大，成员从最初的20人增长到现在的50余人。
                         在各级科技竞赛中屡获佳绩，先后获得市级机器人竞赛一等奖、
                         省级科技创新大赛二等奖等荣誉。
@@ -147,13 +197,14 @@
                         了解更多 <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
-                <!-- 信息卡片 3 -->
-                <div class="bg-dark rounded-xl p-6 border border-white/10 card-hover">
+
+                <!-- 信息卡片3 -->
+                <div class="bg-dark-light rounded-2xl p-6 border border-white/10 card-hover">
                     <div class="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center mb-6">
-                        <i class="fas fa-users text-dark text-2xl"></i>
+                        <i class="fas fa-users text-white text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">组织架构</h3>
-                    <p class="text-gray-400 mb-6">
+                    <p class="text-gray-400 mb-6 leading-relaxed">
                         社团设有社长、副社长和软件部、硬件部、竞赛部等部门。
                         由学校信息技术、物理、数学等学科的教师担任指导教师，
                         为社团活动提供专业指导。
@@ -167,76 +218,91 @@
     </section>
 
     <!-- 活动查看 -->
-    <section class="py-20 px-4">
+    <section id="activities" class="py-20 px-4 bg-dark-light">
         <div class="container mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">近期活动</h2>
-                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
-                <p class="text-gray-400 mt-6 max-w-2xl mx-auto">
+                <h2 class="text-3xl lg:text-4xl font-bold mb-4">近期活动</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
                     浏览卓然创客社团的近期活动，了解社团的动态和精彩瞬间
                 </p>
             </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- 活动卡片 1 -->
-                <div class="bg-dark-light rounded-xl overflow-hidden border border-white/10 card-hover">
-                    <div class="relative">
-                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=high%20school%20students%20participating%20in%20robotics%20competition%20event&image_size=landscape_4_3" alt="机器人竞赛" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 left-4 bg-primary text-dark text-sm font-bold px-3 py-1 rounded-full">
-                            进行中
+                <!-- 活动卡片1 -->
+                <div class="bg-dark rounded-2xl overflow-hidden border border-white/10 card-hover">
+                    <div class="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                        <i class="fas fa-robot text-6xl text-white opacity-20"></i>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-primary text-dark text-sm font-bold px-3 py-1 rounded-full">进行中</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">机器人设计与编程竞赛</h3>
-                        <p class="text-gray-400 mb-4">
+                        <h3 class="text-xl font-bold mb-3">机器人设计与编程竞赛</h3>
+                        <p class="text-gray-400 mb-4 line-clamp-2">
                             社团成员组队参加市级机器人竞赛，展示我们的创意和技术实力。
                         </p>
                         <div class="flex items-center text-gray-500 text-sm mb-4">
-                            <i class="far fa-calendar-alt mr-2"></i>
+                            <i class="fas fa-calendar-alt mr-2"></i>
                             <span>2024-03-15 至 2024-03-16</span>
+                        </div>
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>学校科技楼创客空间</span>
                         </div>
                         <a href="activities.html" class="text-primary hover:underline flex items-center">
                             查看详情 <i class="fas fa-arrow-right ml-2"></i>
                         </a>
                     </div>
                 </div>
-                <!-- 活动卡片 2 -->
-                <div class="bg-dark-light rounded-xl overflow-hidden border border-white/10 card-hover">
-                    <div class="relative">
-                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=students%20learning%20python%20programming%20in%20a%20computer%20lab&image_size=landscape_4_3" alt="Python编程培训" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 left-4 bg-secondary text-dark text-sm font-bold px-3 py-1 rounded-full">
-                            即将开始
+
+                <!-- 活动卡片2 -->
+                <div class="bg-dark rounded-2xl overflow-hidden border border-white/10 card-hover">
+                    <div class="relative h-48 bg-gradient-to-br from-secondary/20 to-primary/20 flex items-center justify-center">
+                        <i class="fas fa-code text-6xl text-white opacity-20"></i>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-secondary text-dark text-sm font-bold px-3 py-1 rounded-full">即将开始</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Python编程基础培训</h3>
-                        <p class="text-gray-400 mb-4">
+                        <h3 class="text-xl font-bold mb-3">Python编程基础培训</h3>
+                        <p class="text-gray-400 mb-4 line-clamp-2">
                             为新成员提供Python编程入门培训，包括基础语法、函数和简单项目实践。
                         </p>
                         <div class="flex items-center text-gray-500 text-sm mb-4">
-                            <i class="far fa-calendar-alt mr-2"></i>
+                            <i class="fas fa-calendar-alt mr-2"></i>
                             <span>2024-03-20 14:00-16:00</span>
                         </div>
-                        <a href="activities.html" class="text-primary hover:underline flex items-center">
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>学校电脑室</span>
+                        </div>
+                        <a href="activities.html" class="text-secondary hover:underline flex items-center">
                             查看详情 <i class="fas fa-arrow-right ml-2"></i>
                         </a>
                     </div>
                 </div>
-                <!-- 活动卡片 3 -->
-                <div class="bg-dark-light rounded-xl overflow-hidden border border-white/10 card-hover">
-                    <div class="relative">
-                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=students%20participating%20in%203D%20printing%20workshop&image_size=landscape_4_3" alt="3D打印工作坊" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 left-4 bg-secondary text-dark text-sm font-bold px-3 py-1 rounded-full">
-                            即将开始
+
+                <!-- 活动卡片3 -->
+                <div class="bg-dark rounded-2xl overflow-hidden border border-white/10 card-hover">
+                    <div class="relative h-48 bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                        <i class="fas fa-print text-6xl text-white opacity-20"></i>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-secondary text-dark text-sm font-bold px-3 py-1 rounded-full">即将开始</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">3D打印技术工作坊</h3>
-                        <p class="text-gray-400 mb-4">
+                        <h3 class="text-xl font-bold mb-3">3D打印技术工作坊</h3>
+                        <p class="text-gray-400 mb-4 line-clamp-2">
                             学习3D建模和3D打印技术，制作创意模型和实用物品。
                         </p>
                         <div class="flex items-center text-gray-500 text-sm mb-4">
-                            <i class="far fa-calendar-alt mr-2"></i>
+                            <i class="fas fa-calendar-alt mr-2"></i>
                             <span>2024-03-25 16:00-18:00</span>
+                        </div>
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>科技楼创客空间</span>
                         </div>
                         <a href="activities.html" class="text-primary hover:underline flex items-center">
                             查看详情 <i class="fas fa-arrow-right ml-2"></i>
@@ -244,56 +310,57 @@
                     </div>
                 </div>
             </div>
+
             <div class="text-center mt-12">
-                <a href="activities.html" class="inline-block px-8 py-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold hover:opacity-90 transition-opacity">
-                    查看全部活动
+                <a href="activities.html" class="bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-dark font-bold px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 inline-flex items-center">
+                    查看全部活动 <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
         </div>
     </section>
 
     <!-- 留言板 -->
-    <section class="py-20 px-4 bg-dark-light">
+    <section id="messages" class="py-20 px-4">
         <div class="container mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">留言板</h2>
-                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
-                <p class="text-gray-400 mt-6 max-w-2xl mx-auto">
+                <h2 class="text-3xl lg:text-4xl font-bold mb-4">留言板</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
                     留下您的留言，对社团提出建议或表达您的想法
                 </p>
             </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <!-- 留言表单 -->
                 <div>
-                    <div class="bg-dark rounded-xl p-8 border border-white/10">
+                    <div class="bg-dark-light rounded-2xl p-8 border border-white/10">
                         <h3 class="text-2xl font-bold mb-6">发表留言</h3>
                         <form id="message-form" class="space-y-6">
                             <div>
                                 <label for="name" class="block text-sm font-medium text-gray-300 mb-2">姓名</label>
-                                <input type="text" id="name" name="name" class="form-input" placeholder="请输入您的姓名" required>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-3 bg-dark border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" placeholder="请输入您的姓名" required>
                             </div>
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-300 mb-2">邮箱</label>
-                                <input type="email" id="email" name="email" class="form-input" placeholder="请输入您的邮箱" required>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-3 bg-dark border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" placeholder="请输入您的邮箱" required>
                             </div>
                             <div>
                                 <label for="content" class="block text-sm font-medium text-gray-300 mb-2">留言内容</label>
-                                <textarea id="content" name="content" rows="5" class="form-input" placeholder="请输入您的留言内容" required></textarea>
+                                <textarea id="content" name="content" rows="5" class="w-full px-4 py-3 bg-dark border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" placeholder="请输入您的留言内容" required></textarea>
                             </div>
-                            <div>
-                                <button type="submit" class="btn-primary">
-                                    提交留言
-                                </button>
-                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-dark font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105">
+                                提交留言
+                            </button>
                         </form>
                     </div>
                 </div>
+
                 <!-- 留言列表 -->
                 <div>
                     <h3 class="text-2xl font-bold mb-6">最新留言</h3>
                     <div class="space-y-6">
-                        <!-- 留言 1 -->
-                        <div class="bg-dark rounded-xl p-6 border border-white/10">
+                        <!-- 留言1 -->
+                        <div class="bg-dark-light rounded-2xl p-6 border border-white/10">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
                                     <h4 class="text-lg font-bold">王同学</h4>
@@ -303,13 +370,14 @@
                                     已审核
                                 </div>
                             </div>
-                            <p class="text-gray-400">
+                            <p class="text-gray-400 leading-relaxed">
                                 社团的活动非常有意思，我参加了3D打印工作坊，学到了很多知识。希望以后能多举办类似的活动，
                                 让更多同学了解科技的魅力。
                             </p>
                         </div>
-                        <!-- 留言 2 -->
-                        <div class="bg-dark rounded-xl p-6 border border-white/10">
+
+                        <!-- 留言2 -->
+                        <div class="bg-dark-light rounded-2xl p-6 border border-white/10">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
                                     <h4 class="text-lg font-bold">李老师</h4>
@@ -319,13 +387,14 @@
                                     已审核
                                 </div>
                             </div>
-                            <p class="text-gray-400">
+                            <p class="text-gray-400 leading-relaxed">
                                 卓然创客社团的同学们表现非常出色，在市级机器人竞赛中取得了优异的成绩。
                                 作为指导教师，我为他们感到骄傲，希望社团能继续发扬光大，培养更多的科技人才。
                             </p>
                         </div>
-                        <!-- 留言 3 -->
-                        <div class="bg-dark rounded-xl p-6 border border-white/10">
+
+                        <!-- 留言3 -->
+                        <div class="bg-dark-light rounded-2xl p-6 border border-white/10">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
                                     <h4 class="text-lg font-bold">张家长</h4>
@@ -335,7 +404,7 @@
                                     已审核
                                 </div>
                             </div>
-                            <p class="text-gray-400">
+                            <p class="text-gray-400 leading-relaxed">
                                 我的孩子参加了卓然创客社团后，对科技产生了浓厚的兴趣，学习积极性也提高了很多。
                                 感谢社团老师的悉心指导，希望社团越办越好。
                             </p>
@@ -347,43 +416,44 @@
     </section>
 
     <!-- 加入我们 -->
-    <section id="join-us" class="py-20 px-4">
+    <section id="join" class="py-20 px-4 bg-dark-light">
         <div class="container mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">加入我们</h2>
-                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
-                <p class="text-gray-400 mt-6 max-w-2xl mx-auto">
+                <h2 class="text-3xl lg:text-4xl font-bold mb-4">加入我们</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
                     如果您对科技充满热情，喜欢动手实践，想要结交志同道合的朋友，
                     那么卓然创客社团欢迎您的加入！
                 </p>
             </div>
+
             <div class="max-w-3xl mx-auto">
-                <div class="bg-dark-light rounded-2xl p-8 border border-white/10">
+                <div class="bg-dark rounded-2xl p-8 border border-white/10">
                     <h3 class="text-2xl font-bold mb-8 text-center">申请加入社团</h3>
                     <form id="join-form" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="join-name" class="block text-sm font-medium text-gray-300 mb-2">姓名</label>
-                                <input type="text" id="join-name" name="name" class="form-input" placeholder="请输入您的姓名" required>
+                                <input type="text" id="join-name" name="name" class="w-full px-4 py-3 bg-dark-light border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" placeholder="请输入您的姓名" required>
                             </div>
                             <div>
                                 <label for="join-grade" class="block text-sm font-medium text-gray-300 mb-2">年级</label>
-                                <input type="text" id="join-grade" name="grade" class="form-input" placeholder="请输入您的年级" required>
+                                <input type="text" id="join-grade" name="grade" class="w-full px-4 py-3 bg-dark-light border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" placeholder="请输入您的年级" required>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="join-email" class="block text-sm font-medium text-gray-300 mb-2">邮箱</label>
-                                <input type="email" id="join-email" name="email" class="form-input" placeholder="请输入您的邮箱" required>
+                                <input type="email" id="join-email" name="email" class="w-full px-4 py-3 bg-dark-light border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" placeholder="请输入您的邮箱" required>
                             </div>
                             <div>
                                 <label for="join-phone" class="block text-sm font-medium text-gray-300 mb-2">联系电话</label>
-                                <input type="tel" id="join-phone" name="phone" class="form-input" placeholder="请输入您的联系电话" required>
+                                <input type="tel" id="join-phone" name="phone" class="w-full px-4 py-3 bg-dark-light border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" placeholder="请输入您的联系电话" required>
                             </div>
                         </div>
                         <div>
                             <label for="join-interest" class="block text-sm font-medium text-gray-300 mb-2">兴趣领域</label>
-                            <select id="join-interest" name="interest" class="form-input" required>
+                            <select id="join-interest" name="interest" class="w-full px-4 py-3 bg-dark-light border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" required>
                                 <option value="">请选择您的兴趣领域</option>
                                 <option value="programming">编程开发</option>
                                 <option value="electronics">电子电路</option>
@@ -394,153 +464,13 @@
                         </div>
                         <div>
                             <label for="join-reason" class="block text-sm font-medium text-gray-300 mb-2">加入原因</label>
-                            <textarea id="join-reason" name="reason" rows="4" class="form-input" placeholder="请简要说明您加入社团的原因" required></textarea>
+                            <textarea id="join-reason" name="reason" rows="4" class="w-full px-4 py-3 bg-dark-light border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors" placeholder="请简要说明您加入社团的原因" required></textarea>
                         </div>
-                        <div>
-                            <button type="submit" class="btn-primary">
-                                提交申请
-                            </button>
-                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-dark font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105">
+                            提交申请
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- 加入我们 -->
-    <section class="py-20 px-4 bg-gradient-to-r from-dark to-dark-light">
-        <div class="container mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">联系我们</h2>
-            <p class="text-gray-400 mb-10 max-w-2xl mx-auto">
-                如果您有任何疑问或建议，欢迎通过以下方式联系我们
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                <div class="bg-dark-light p-6 rounded-xl border border-white/10">
-                    <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-map-marker-alt text-primary text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2">地址</h3>
-                    <p class="text-gray-400">武威第十八中学科技楼</p>
-                </div>
-                <div class="bg-dark-light p-6 rounded-xl border border-white/10">
-                    <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-phone text-secondary text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2">电话</h3>
-                    <p class="text-gray-400">0935-1234567</p>
-                </div>
-                <div class="bg-dark-light p-6 rounded-xl border border-white/10">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-envelope text-dark text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2">邮箱</h3>
-                    <p class="text-gray-400">zrck@ww18zx.com</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 页脚 -->
-    <footer class="bg-dark py-12 px-4 border-t border-white/10">
-        <div class="container mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- 社团信息 -->
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-                            <i class="fas fa-robot text-dark text-sm font-bold"></i>
-                        </div>
-                        <span class="text-lg font-bold text-gradient">卓然创客</span>
-                    </div>
-                    <p class="text-gray-400 mb-4">
-                        武威第十八中学卓然创客社团
-                        培养创新精神，提升实践能力
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-                            <i class="fab fa-weixin text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-                            <i class="fab fa-qq text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
-                            <i class="fas fa-envelope text-xl"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- 快速链接 -->
-                <div>
-                    <h3 class="text-white font-bold mb-4">快速链接</h3>
-                    <ul class="space-y-2">
-                        <li><a href="index.html" class="text-gray-400 hover:text-primary transition-colors">首页</a></li>
-                        <li><a href="about.html" class="text-gray-400 hover:text-primary transition-colors">社团简介</a></li>
-                        <li><a href="activities.html" class="text-gray-400 hover:text-primary transition-colors">社团活动</a></li>
-                        <li><a href="showcase.html" class="text-gray-400 hover:text-primary transition-colors">社团展示</a></li>
-                        <li><a href="visitor-center.html" class="text-gray-400 hover:text-primary transition-colors">访客中心</a></li>
-                    </ul>
-                </div>
-                <!-- 联系我们 -->
-                <div>
-                    <h3 class="text-white font-bold mb-4">联系我们</h3>
-                    <ul class="space-y-2">
-                        <li class="flex items-center text-gray-400">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            <span>武威第十八中学科技楼</span>
-                        </li>
-                        <li class="flex items-center text-gray-400">
-                            <i class="fas fa-phone mr-2"></i>
-                            <span>0935-1234567</span>
-                        </li>
-                        <li class="flex items-center text-gray-400">
-                            <i class="fas fa-envelope mr-2"></i>
-                            <span>zrck@ww18zx.com</span>
-                        </li>
-                    </ul>
-                </div>
-                <!-- 订阅 -->
-                <div>
-                    <h3 class="text-white font-bold mb-4">订阅通知</h3>
-                    <p class="text-gray-400 mb-4">
-                        输入邮箱订阅社团最新活动和通知
-                    </p>
-                    <div class="flex">
-                        <input type="email" placeholder="你的邮箱" class="flex-1 bg-dark-lighter border border-white/10 rounded-l-full px-4 py-2 focus:outline-none focus:border-primary text-white">
-                        <button class="bg-primary text-dark font-bold px-4 py-2 rounded-r-full hover:opacity-90 transition-opacity">
-                            订阅
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-white/10 mt-12 pt-8 text-center text-gray-500">
-                <p>&copy; 2024 武威第十八中学卓然创客社团. 保留所有权利.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript -->
-    <script src="assets/js/main.js"></script>
-    <script>
-        // 留言表单提交
-        const messageForm = document.getElementById('message-form');
-        if (messageForm) {
-            messageForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                // 模拟提交
-                alert('留言提交成功，我们会尽快处理！');
-                messageForm.reset();
-            });
-        }
-
-        // 加入表单提交
-        const joinForm = document.getElementById('join-form');
-        if (joinForm) {
-            joinForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                // 模拟提交
-                alert('申请提交成功，我们会尽快与您联系！');
-                joinForm.reset();
-            });
-        }
-    </script>
-</body>
-</html>
+    </section

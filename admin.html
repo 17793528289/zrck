@@ -3,115 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>后台管理 - 武威第十八中学卓然创客社团</title>
+    <title>后台管理 - 卓然创客社团</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- 自定义 Tailwind 配置 -->
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
                         primary: '#03fc90',
                         secondary: '#fc03f8',
                         dark: '#121212',
+                        'dark-light': '#1e1e1e',
+                        'dark-lighter': '#2a2a2a'
                     },
                     fontFamily: {
-                        inter: ['Inter', 'sans-serif'],
-                    },
-                },
+                        sans: ['Inter', 'Roboto', 'system-ui', 'sans-serif']
+                    }
+                }
             }
         }
     </script>
+    
     <style type="text/tailwindcss">
         @layer utilities {
-            .content-auto {
-                content-visibility: auto;
+            .text-gradient {
+                background: linear-gradient(135deg, #03fc90 0%, #fc03f8 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
             }
-            .glass {
+            .bg-glass {
                 background: rgba(255, 255, 255, 0.1);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
                 border: 1px solid rgba(255, 255, 255, 0.2);
             }
-            .text-gradient {
-                background: linear-gradient(90deg, #03fc90, #fc03f8);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
+            .card-hover {
+                transition: all 0.3s ease;
             }
+            .card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(3, 252, 144, 0.1);
+            }
+            .admin-sidebar-link {
+                @apply flex items-center space-x-3 p-3 rounded-lg transition-colors;
+            }
+            .admin-sidebar-link.active {
+                @apply bg-primary/20 text-primary border-r-4 border-primary;
+            }
+            .admin-sidebar-link:not(.active) {
+                @apply text-gray-400 hover:bg-dark-lighter hover:text-white;
+            }
+            .tab-button {
+                @apply px-6 py-3 font-medium transition-colors border-b-2;
+            }
+            .tab-button.active {
+                @apply text-primary border-primary;
+            }
+            .tab-button:not(.active) {
+                @apply text-gray-400 border-transparent hover:text-primary hover:border-primary/50;
+            }
+            .status-badge {
+                @apply text-xs font-bold px-3 py-1 rounded-full;
+            }
+            .status-active { @apply bg-green-500/20 text-green-500; }
+            .status-pending { @apply bg-yellow-500/20 text-yellow-500; }
+            .status-inactive { @apply bg-red-500/20 text-red-500; }
+            .role-admin { @apply bg-red-500/20 text-red-500; }
+            .role-teacher { @apply bg-blue-500/20 text-blue-500; }
+            .role-member { @apply bg-green-500/20 text-green-500; }
         }
     </style>
 </head>
-<body class="bg-dark text-white min-h-screen">
+<body class="bg-dark text-white min-h-screen font-sans">
     <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="index.html" class="flex items-center space-x-2">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-                    <i class="fas fa-cogs text-white text-xl"></i>
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-glass border-b border-white/10">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center transition-transform group-hover:scale-110">
+                        <i class="fas fa-robot text-white text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-gradient">卓然创客</span>
+                </a>
+
+                <!-- 桌面端导航 -->
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="index.html" class="nav-link">首页</a>
+                    <a href="about.html" class="nav-link">社团简介</a>
+                    <a href="activities.html" class="nav-link">社团活动</a>
+                    <a href="showcase.html" class="nav-link">社团展示</a>
+                    <a href="visitor-center.html" class="nav-link">访客中心</a>
+                    <a href="chat.html" class="nav-link">聊天系统</a>
+                    <a href="admin.html" class="nav-link active">后台管理</a>
+                    <a href="login.html" class="bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-white font-bold px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105">
+                        退出登录
+                    </a>
                 </div>
-                <span class="text-xl font-bold text-gradient">卓然创客</span>
-            </a>
-            
-            <!-- 桌面导航 -->
-            <div class="hidden md:flex space-x-8">
-                <a href="index.html" class="hover:text-primary transition-colors">首页</a>
-                <a href="about.html" class="hover:text-primary transition-colors">社团简介</a>
-                <a href="activities.html" class="hover:text-primary transition-colors">社团活动</a>
-                <a href="showcase.html" class="hover:text-primary transition-colors">社团展示</a>
-                <a href="admin.html" class="text-primary font-medium">后台管理</a>
+
+                <!-- 移动端菜单按钮 -->
+                <div class="lg:hidden flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-light hover:bg-dark-lighter transition-colors">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="mobile-menu-toggle" class="p-2 rounded-lg bg-dark-light hover:bg-dark-lighter transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
             </div>
-            
-            <!-- 移动端菜单按钮 -->
-            <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
-        </div>
-        
-        <!-- 移动端菜单 -->
-        <div id="mobile-menu" class="md:hidden hidden glass">
-            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
-                <a href="index.html" class="py-2 hover:text-primary transition-colors">首页</a>
-                <a href="about.html" class="py-2 hover:text-primary transition-colors">社团简介</a>
-                <a href="activities.html" class="py-2 hover:text-primary transition-colors">社团活动</a>
-                <a href="showcase.html" class="py-2 hover:text-primary transition-colors">社团展示</a>
-                <a href="admin.html" class="py-2 text-primary font-medium">后台管理</a>
+
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="lg:hidden hidden mt-4 pb-4 border-t border-white/10 pt-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="index.html" class="nav-link-mobile">首页</a>
+                    <a href="about.html" class="nav-link-mobile">社团简介</a>
+                    <a href="activities.html" class="nav-link-mobile">社团活动</a>
+                    <a href="showcase.html" class="nav-link-mobile">社团展示</a>
+                    <a href="visitor-center.html" class="nav-link-mobile">访客中心</a>
+                    <a href="chat.html" class="nav-link-mobile">聊天系统</a>
+                    <a href="admin.html" class="nav-link-mobile active">后台管理</a>
+                    <div class="pt-4 border-t border-white/10">
+                        <a href="login.html" class="w-full bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-white font-bold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 inline-block text-center">
+                            退出登录
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- 主内容 -->
-    <main class="container mx-auto px-4 pt-24 pb-16">
-        <!-- 页面标题 -->
-        <section class="mb-12 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gradient">后台管理</h1>
-            <p class="text-gray-400 max-w-2xl mx-auto">欢迎回来，管理员！这里是后台管理中心，您可以管理用户、内容、活动和查看数据统计。</p>
-        </section>
-
-        <!-- 验证登录状态 -->
-        <div id="login-required" class="hidden">
-            <div class="bg-gray-800 rounded-xl p-8 text-center">
-                <i class="fas fa-lock text-4xl text-primary mb-4"></i>
-                <h2 class="text-2xl font-bold mb-2">请先登录</h2>
-                <p class="text-gray-400 mb-6">您需要登录后才能访问后台管理</p>
-                <a href="login.html" class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-3 px-8 rounded-full transition-all transform hover:scale-105">
-                    去登录
-                </a>
+    <!-- 后台管理主容器 -->
+    <div class="pt-20 min-h-screen">
+        <div class="container mx-auto px-4 py-8">
+            <!-- 页面标题 -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl lg:text-5xl font-bold mb-4 text-gradient">后台管理系统</h1>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    欢迎回来，管理员！这里是后台管理中心，可以管理用户、内容、活动和查看数据统计
+                </p>
             </div>
-        </div>
 
-        <!-- 后台管理内容 -->
-        <div id="admin-content" class="hidden">
             <!-- 控制面板概览 -->
             <section class="mb-12">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- 用户数量 -->
-                    <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors">
+                    <div class="bg-dark-light rounded-2xl p-6 border border-white/10 card-hover">
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-gray-400 mb-1">总用户数</p>
-                                <h3 class="text-3xl font-bold">42</h3>
-                                <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up mr-1"></i>12% 较上月</p>
+                                <h3 class="text-3xl font-bold text-primary">52</h3>
+                                <p class="text-green-500 text-sm mt-2">
+                                    <i class="fas fa-arrow-up mr-1"></i>12% 较上月
+                                </p>
                             </div>
                             <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
                                 <i class="fas fa-users text-primary text-xl"></i>
@@ -120,12 +175,14 @@
                     </div>
                     
                     <!-- 活动数量 -->
-                    <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors">
+                    <div class="bg-dark-light rounded-2xl p-6 border border-white/10 card-hover">
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-gray-400 mb-1">活动总数</p>
-                                <h3 class="text-3xl font-bold">18</h3>
-                                <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up mr-1"></i>8% 较上月</p>
+                                <h3 class="text-3xl font-bold text-secondary">18</h3>
+                                <p class="text-green-500 text-sm mt-2">
+                                    <i class="fas fa-arrow-up mr-1"></i>8% 较上月
+                                </p>
                             </div>
                             <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center">
                                 <i class="fas fa-calendar-alt text-secondary text-xl"></i>
@@ -134,12 +191,14 @@
                     </div>
                     
                     <!-- 项目数量 -->
-                    <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors">
+                    <div class="bg-dark-light rounded-2xl p-6 border border-white/10 card-hover">
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-gray-400 mb-1">项目总数</p>
-                                <h3 class="text-3xl font-bold">25</h3>
-                                <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up mr-1"></i>15% 较上月</p>
+                                <h3 class="text-3xl font-bold text-blue-500">25</h3>
+                                <p class="text-green-500 text-sm mt-2">
+                                    <i class="fas fa-arrow-up mr-1"></i>15% 较上月
+                                </p>
                             </div>
                             <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
                                 <i class="fas fa-project-diagram text-blue-500 text-xl"></i>
@@ -148,12 +207,14 @@
                     </div>
                     
                     <!-- 签到率 -->
-                    <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-colors">
+                    <div class="bg-dark-light rounded-2xl p-6 border border-white/10 card-hover">
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-gray-400 mb-1">平均签到率</p>
-                                <h3 class="text-3xl font-bold">87%</h3>
-                                <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up mr-1"></i>3% 较上月</p>
+                                <h3 class="text-3xl font-bold text-green-500">87%</h3>
+                                <p class="text-green-500 text-sm mt-2">
+                                    <i class="fas fa-arrow-up mr-1"></i>3% 较上月
+                                </p>
                             </div>
                             <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
                                 <i class="fas fa-clipboard-check text-green-500 text-xl"></i>
@@ -165,8 +226,8 @@
 
             <!-- 数据统计图表 -->
             <section class="mb-12">
-                <div class="bg-gray-800 rounded-xl p-6">
-                    <h2 class="text-xl font-bold mb-6">数据统计</h2>
+                <div class="bg-dark-light rounded-2xl p-6 border border-white/10">
+                    <h2 class="text-2xl font-bold mb-6">数据统计</h2>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- 用户增长趋势 -->
                         <div>
@@ -190,16 +251,16 @@
             <!-- 标签页导航 -->
             <div class="mb-8">
                 <div class="flex flex-wrap border-b border-gray-700">
-                    <button class="tab-button active px-6 py-3 font-medium text-primary border-b-2 border-primary" data-tab="users">
+                    <button class="tab-button active" data-tab="users">
                         <i class="fas fa-users-cog mr-2"></i>用户管理
                     </button>
-                    <button class="tab-button px-6 py-3 font-medium text-gray-400 hover:text-primary transition-colors" data-tab="activities">
+                    <button class="tab-button" data-tab="activities">
                         <i class="fas fa-calendar-check mr-2"></i>活动管理
                     </button>
-                    <button class="tab-button px-6 py-3 font-medium text-gray-400 hover:text-primary transition-colors" data-tab="content">
+                    <button class="tab-button" data-tab="content">
                         <i class="fas fa-pen-to-square mr-2"></i>内容管理
                     </button>
-                    <button class="tab-button px-6 py-3 font-medium text-gray-400 hover:text-primary transition-colors" data-tab="settings">
+                    <button class="tab-button" data-tab="settings">
                         <i class="fas fa-gear mr-2"></i>系统设置
                     </button>
                 </div>
@@ -209,12 +270,12 @@
             <div class="tab-content">
                 <!-- 用户管理 -->
                 <div id="users-tab" class="tab-pane active">
-                    <div class="bg-gray-800 rounded-xl p-6">
+                    <div class="bg-dark-light rounded-2xl p-6 border border-white/10">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">用户管理</h3>
                             <div class="flex space-x-4">
                                 <div class="relative">
-                                    <input type="text" placeholder="搜索用户..." class="bg-gray-700 text-white px-4 py-2 rounded-full pl-10 focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <input type="text" placeholder="搜索用户..." class="bg-dark border border-white/10 text-white px-4 py-2 rounded-full pl-10 focus:outline-none focus:border-primary">
                                     <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 </div>
                                 <button class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
@@ -237,71 +298,159 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+                                    <!-- 管理员用户 -->
+                                    <tr class="border-b border-gray-700 hover:bg-dark-lighter transition-colors">
                                         <td class="py-3 px-4">1</td>
-                                        <td class="py-3 px-4">admin</td>
+                                        <td class="py-3 px-4">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                                                    <i class="fas fa-user text-primary text-sm"></i>
+                                                </div>
+                                                <span>admin</span>
+                                            </div>
+                                        </td>
                                         <td class="py-3 px-4">admin@example.com</td>
-                                        <td class="py-3 px-4"><span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">管理员</span></td>
+                                        <td class="py-3 px-4">
+                                            <span class="role-admin status-badge">管理员</span>
+                                        </td>
                                         <td class="py-3 px-4">2024-01-01</td>
-                                        <td class="py-3 px-4"><span class="bg-green-500 text-dark text-xs font-bold px-3 py-1 rounded-full">活跃</span></td>
+                                        <td class="py-3 px-4">
+                                            <span class="status-badge status-active">活跃</span>
+                                        </td>
                                         <td class="py-3 px-4">
                                             <div class="flex space-x-2">
-                                                <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                                <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
+                                                <button class="text-primary hover:text-primary/80" title="编辑">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-400" title="删除">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+                                    
+                                    <!-- 教师用户 -->
+                                    <tr class="border-b border-gray-700 hover:bg-dark-lighter transition-colors">
                                         <td class="py-3 px-4">2</td>
-                                        <td class="py-3 px-4">teacher1</td>
-                                        <td class="py-3 px-4">teacher1@example.com</td>
-                                        <td class="py-3 px-4"><span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">教师</span></td>
+                                        <td class="py-3 px-4">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                                    <i class="fas fa-user-tie text-blue-500 text-sm"></i>
+                                                </div>
+                                                <span>张老师</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-3 px-4">zhang@example.com</td>
+                                        <td class="py-3 px-4">
+                                            <span class="role-teacher status-badge">教师</span>
+                                        </td>
                                         <td class="py-3 px-4">2024-01-05</td>
-                                        <td class="py-3 px-4"><span class="bg-green-500 text-dark text-xs font-bold px-3 py-1 rounded-full">活跃</span></td>
+                                        <td class="py-3 px-4">
+                                            <span class="status-badge status-active">活跃</span>
+                                        </td>
                                         <td class="py-3 px-4">
                                             <div class="flex space-x-2">
-                                                <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                                <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
+                                                <button class="text-primary hover:text-primary/80" title="编辑">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-400" title="删除">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+                                    
+                                    <!-- 社员用户 -->
+                                    <tr class="border-b border-gray-700 hover:bg-dark-lighter transition-colors">
                                         <td class="py-3 px-4">3</td>
-                                        <td class="py-3 px-4">member1</td>
-                                        <td class="py-3 px-4">member1@example.com</td>
-                                        <td class="py-3 px-4"><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">社员</span></td>
+                                        <td class="py-3 px-4">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+                                                    <i class="fas fa-user-graduate text-green-500 text-sm"></i>
+                                                </div>
+                                                <span>张明</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-3 px-4">zhangming@example.com</td>
+                                        <td class="py-3 px-4">
+                                            <span class="role-member status-badge">社员</span>
+                                        </td>
                                         <td class="py-3 px-4">2024-01-10</td>
-                                        <td class="py-3 px-4"><span class="bg-green-500 text-dark text-xs font-bold px-3 py-1 rounded-full">活跃</span></td>
+                                        <td class="py-3 px-4">
+                                            <span class="status-badge status-active">活跃</span>
+                                        </td>
                                         <td class="py-3 px-4">
                                             <div class="flex space-x-2">
-                                                <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                                <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
+                                                <button class="text-primary hover:text-primary/80" title="编辑">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-400" title="删除">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-gray-700 transition-colors">
+                                    
+                                    <!-- 待验证用户 -->
+                                    <tr class="hover:bg-dark-lighter transition-colors">
                                         <td class="py-3 px-4">4</td>
-                                        <td class="py-3 px-4">member2</td>
-                                        <td class="py-3 px-4">member2@example.com</td>
-                                        <td class="py-3 px-4"><span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">社员</span></td>
+                                        <td class="py-3 px-4">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center">
+                                                    <i class="fas fa-user-clock text-yellow-500 text-sm"></i>
+                                                </div>
+                                                <span>李华</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-3 px-4">lihua@example.com</td>
+                                        <td class="py-3 px-4">
+                                            <span class="role-member status-badge">社员</span>
+                                        </td>
                                         <td class="py-3 px-4">2024-01-15</td>
-                                        <td class="py-3 px-4"><span class="bg-yellow-500 text-dark text-xs font-bold px-3 py-1 rounded-full">待验证</span></td>
+                                        <td class="py-3 px-4">
+                                            <span class="status-badge status-pending">待验证</span>
+                                        </td>
                                         <td class="py-3 px-4">
                                             <div class="flex space-x-2">
-                                                <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                                <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
+                                                <button class="text-green-500 hover:text-green-400" title="通过">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button class="text-primary hover:text-primary/80" title="编辑">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-red-500 hover:text-red-400" title="删除">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <!-- 分页 -->
+                        <div class="flex justify-between items-center mt-6 pt-6 border-t border-gray-700">
+                            <div class="text-sm text-gray-400">
+                                显示 1-4 条，共 52 条记录
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:border-primary hover:text-primary transition-colors">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="w-10 h-10 rounded-full bg-primary text-dark font-bold flex items-center justify-center">1</button>
+                                <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-300 hover:border-primary hover:text-primary transition-colors">2</button>
+                                <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-300 hover:border-primary hover:text-primary transition-colors">3</button>
+                                <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:border-primary hover:text-primary transition-colors">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 活动管理 -->
                 <div id="activities-tab" class="tab-pane hidden">
-                    <div class="bg-gray-800 rounded-xl p-6">
+                    <div class="bg-dark-light rounded-2xl p-6 border border-white/10">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">活动管理</h3>
                             <button class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
@@ -310,367 +459,66 @@
                         </div>
                         
                         <div class="space-y-4">
-                            <!-- 活动项 -->
-                            <div class="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors">
+                            <!-- 活动项1 -->
+                            <div class="bg-dark rounded-lg p-4 border border-white/10 card-hover">
                                 <div class="flex justify-between items-start">
-                                    <h4 class="font-bold text-lg">2024春季创客工作坊</h4>
-                                    <span class="bg-green-500 text-dark text-xs font-bold px-3 py-1 rounded-full">已完成</span>
+                                    <h4 class="font-bold text-lg">机器人设计与编程竞赛</h4>
+                                    <span class="status-badge status-active">进行中</span>
                                 </div>
-                                <p class="text-gray-400 mt-1">学习Arduino基础和传感器应用</p>
+                                <p class="text-gray-400 mt-1">社团成员组队参加市级机器人竞赛，展示创意和技术实力</p>
                                 <div class="flex justify-between items-center mt-3">
-                                    <div class="flex items-center space-x-4">
-                                        <span class="text-sm text-gray-400"><i class="fas fa-calendar mr-1"></i> 2024-03-15</span>
-                                        <span class="text-sm text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> 创客空间</span>
-                                        <span class="text-sm text-gray-400"><i class="fas fa-user-friends mr-1"></i> 32人参与</span>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span><i class="fas fa-calendar mr-1"></i>2024-03-15</span>
+                                        <span><i class="fas fa-map-marker-alt mr-1"></i>创客空间</span>
+                                        <span><i class="fas fa-user-friends mr-1"></i>25人参与</span>
                                     </div>
                                     <div class="flex space-x-2">
-                                        <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
+                                        <button class="text-primary hover:text-primary/80" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-500 hover:text-red-400" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors">
+                            <!-- 活动项2 -->
+                            <div class="bg-dark rounded-lg p-4 border border-white/10 card-hover">
                                 <div class="flex justify-between items-start">
-                                    <h4 class="font-bold text-lg">人工智能入门讲座</h4>
-                                    <span class="bg-blue-500 text-dark text-xs font-bold px-3 py-1 rounded-full">进行中</span>
+                                    <h4 class="font-bold text-lg">Python编程基础培训</h4>
+                                    <span class="status-badge status-pending">即将开始</span>
                                 </div>
-                                <p class="text-gray-400 mt-1">了解AI基础概念和应用场景</p>
+                                <p class="text-gray-400 mt-1">为新成员提供Python编程入门培训，包括基础语法和项目实践</p>
                                 <div class="flex justify-between items-center mt-3">
-                                    <div class="flex items-center space-x-4">
-                                        <span class="text-sm text-gray-400"><i class="fas fa-calendar mr-1"></i> 2024-04-10</span>
-                                        <span class="text-sm text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> 阶梯教室</span>
-                                        <span class="text-sm text-gray-400"><i class="fas fa-user-friends mr-1"></i> 28人参与</span>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span><i class="fas fa-calendar mr-1"></i>2024-03-20</span>
+                                        <span><i class="fas fa-map-marker-alt mr-1"></i>电脑室</span>
+                                        <span><i class="fas fa-user-friends mr-1"></i>20人报名</span>
                                     </div>
                                     <div class="flex space-x-2">
-                                        <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
+                                        <button class="text-primary hover:text-primary/80" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-500 hover:text-red-400" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors">
+                            <!-- 活动项3 -->
+                            <div class="bg-dark rounded-lg p-4 border border-white/10 card-hover">
                                 <div class="flex justify-between items-start">
-                                    <h4 class="font-bold text-lg">机器人竞赛培训</h4>
-                                    <span class="bg-yellow-500 text-dark text-xs font-bold px-3 py-1 rounded-full">未开始</span>
+                                    <h4 class="font-bold text-lg">3D打印技术工作坊</h4>
+                                    <span class="status-badge status-inactive">已结束</span>
                                 </div>
-                                <p class="text-gray-400 mt-1">为即将到来的机器人竞赛做准备</p>
+                                <p class="text-gray-400 mt-1">学习3D建模和3D打印技术，制作创意模型和实用物品</p>
                                 <div class="flex justify-between items-center mt-3">
-                                    <div class="flex items-center space-x-4">
-                                        <span class="text-sm text-gray-400"><i class="fas fa-calendar mr-1"></i> 2024-05-05</span>
-                                        <span class="text-sm text-gray-400"><i class="fas fa-map-marker-alt mr-1"></i> 创客空间</span>
-                                        <span class="text-sm text-gray-400"><i class="fas fa-user-friends mr-1"></i> 15人参与</span>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span><i class="fas fa-calendar mr-1"></i>2024-03-10</span>
+                                        <span><i class="fas fa-map-marker-alt mr-1"></i>创客空间</span>
+                                        <span><i class="fas fa-user-friends mr-1"></i>18人参与</span>
                                     </div>
                                     <div class="flex space-x-2">
-                                        <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 内容管理 -->
-                <div id="content-tab" class="tab-pane hidden">
-                    <div class="bg-gray-800 rounded-xl p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-bold">内容管理</h3>
-                            <button class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
-                                <i class="fas fa-plus mr-2"></i>添加内容
-                            </button>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <!-- 内容项 -->
-                            <div class="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors">
-                                <div class="flex justify-between items-start">
-                                    <h4 class="font-bold text-lg">社团简介</h4>
-                                    <span class="bg-green-500 text-dark text-xs font-bold px-3 py-1 rounded-full">已发布</span>
-                                </div>
-                                <p class="text-gray-400 mt-1">社团的历史、宗旨和组织结构介绍</p>
-                                <div class="flex justify-between items-center mt-3">
-                                    <span class="text-sm text-gray-400"><i class="fas fa-calendar mr-1"></i> 最后更新: 2024-01-01</span>
-                                    <div class="flex space-x-2">
-                                        <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors">
-                                <div class="flex justify-between items-start">
-                                    <h4 class="font-bold text-lg">社团活动</h4>
-                                    <span class="bg-green-500 text-dark text-xs font-bold px-3 py-1 rounded-full">已发布</span>
-                                </div>
-                                <p class="text-gray-400 mt-1">社团的活动列表和详情</p>
-                                <div class="flex justify-between items-center mt-3">
-                                    <span class="text-sm text-gray-400"><i class="fas fa-calendar mr-1"></i> 最后更新: 2024-03-15</span>
-                                    <div class="flex space-x-2">
-                                        <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 transition-colors">
-                                <div class="flex justify-between items-start">
-                                    <h4 class="font-bold text-lg">社团展示</h4>
-                                    <span class="bg-green-500 text-dark text-xs font-bold px-3 py-1 rounded-full">已发布</span>
-                                </div>
-                                <p class="text-gray-400 mt-1">社团的成果展示和成员介绍</p>
-                                <div class="flex justify-between items-center mt-3">
-                                    <span class="text-sm text-gray-400"><i class="fas fa-calendar mr-1"></i> 最后更新: 2024-02-20</span>
-                                    <div class="flex space-x-2">
-                                        <button class="text-primary hover:text-primary/80"><i class="fas fa-edit"></i></button>
-                                        <button class="text-red-500 hover:text-red-400"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 系统设置 -->
-                <div id="settings-tab" class="tab-pane hidden">
-                    <div class="bg-gray-800 rounded-xl p-6">
-                        <h3 class="text-xl font-bold mb-6">系统设置</h3>
-                        
-                        <div class="space-y-6">
-                            <!-- 基本设置 -->
-                            <div>
-                                <h4 class="text-lg font-medium mb-4">基本设置</h4>
-                                <div class="space-y-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-gray-400 mb-2">社团名称</label>
-                                            <input type="text" value="武威第十八中学卓然创客社团" class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full">
-                                        </div>
-                                        <div>
-                                            <label class="block text-gray-400 mb-2">联系邮箱</label>
-                                            <input type="email" value="contact@example.com" class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-400 mb-2">社团简介</label>
-                                        <textarea class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full h-32">武威第十八中学卓然创客社团成立于2018年，是一个致力于培养学生创新能力和实践技能的社团组织。</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 安全设置 -->
-                            <div>
-                                <h4 class="text-lg font-medium mb-4">安全设置</h4>
-                                <div class="space-y-4">
-                                    <div>
-                                        <label class="block text-gray-400 mb-2">密码强度要求</label>
-                                        <select class="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full">
-                                            <option>弱 (6位以上)</option>
-                                            <option selected>中 (8位以上，包含字母和数字)</option>
-                                            <option>强 (10位以上，包含字母、数字和特殊字符)</option>
-                                        </select>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <label class="text-gray-400">启用邮箱验证</label>
-                                        <div class="relative inline-block w-12 h-6">
-                                            <input type="checkbox" checked class="opacity-0 w-0 h-0">
-                                            <span class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-600 rounded-full transition-all before:absolute before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all checked:bg-primary checked:before:translate-x-6"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 保存按钮 -->
-                            <div class="flex justify-end">
-                                <button class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-8 rounded-full transition-all transform hover:scale-105">
-                                    保存设置
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 登出按钮 -->
-    <div class="fixed bottom-6 right-6 z-40">
-        <button id="logout-button" class="bg-gray-800 hover:bg-gray-700 text-white w-14 h-14 rounded-full flex items-center justify-center transition-all transform hover:scale-110 shadow-lg">
-            <i class="fas fa-sign-out-alt text-xl"></i>
-        </button>
-    </div>
-
-    <!-- Supabase配置 -->
-    <script src="lib/supabase.js"></script>
-    <!-- 通用脚本 -->
-    <script src="assets/js/main.js"></script>
-    <!-- 后台管理脚本 -->
-    <script>
-        // 页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', async function() {
-            // 检查登录状态
-            await checkLoginStatus();
-            
-            // 初始化标签页
-            initTabs();
-            
-            // 初始化图表
-            initCharts();
-            
-            // 登出按钮事件
-            document.getElementById('logout-button').addEventListener('click', async function() {
-                if (confirm('确定要登出吗？')) {
-                    await window.App.auth.signOut();
-                    window.location.href = 'login.html';
-                }
-            });
-        });
-        
-        // 检查登录状态
-        async function checkLoginStatus() {
-            const user = await window.App.auth.getCurrentUser();
-            if (user) {
-                document.getElementById('admin-content').classList.remove('hidden');
-            } else {
-                document.getElementById('login-required').classList.remove('hidden');
-            }
-        }
-        
-        // 初始化标签页
-        function initTabs() {
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabPanes = document.querySelectorAll('.tab-pane');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // 移除所有标签页按钮的活动状态
-                    tabButtons.forEach(btn => {
-                        btn.classList.remove('active', 'text-primary', 'border-primary');
-                        btn.classList.add('text-gray-400');
-                    });
-                    
-                    // 添加当前按钮的活动状态
-                    this.classList.add('active', 'text-primary', 'border-primary');
-                    this.classList.remove('text-gray-400');
-                    
-                    // 隐藏所有标签页内容
-                    tabPanes.forEach(pane => {
-                        pane.classList.add('hidden');
-                        pane.classList.remove('active');
-                    });
-                    
-                    // 显示当前标签页内容
-                    const tabId = this.getAttribute('data-tab');
-                    const currentPane = document.getElementById(tabId + '-tab');
-                    currentPane.classList.remove('hidden');
-                    currentPane.classList.add('active');
-                });
-            });
-        }
-        
-        // 初始化图表
-        function initCharts() {
-            // 用户增长趋势图表
-            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
-            const userGrowthChart = new Chart(userGrowthCtx, {
-                type: 'line',
-                data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
-                    datasets: [{
-                        label: '用户数量',
-                        data: [10, 15, 22, 28, 35, 42],
-                        borderColor: '#03fc90',
-                        backgroundColor: 'rgba(3, 252, 144, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        }
-                    }
-                }
-            });
-            
-            // 活动参与情况图表
-            const activityCtx = document.getElementById('activityChart').getContext('2d');
-            const activityChart = new Chart(activityCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['春季工作坊', 'AI讲座', '机器人培训', '编程竞赛', '3D打印'],
-                    datasets: [{
-                        label: '参与人数',
-                        data: [32, 28, 15, 22, 18],
-                        backgroundColor: [
-                            'rgba(3, 252, 144, 0.7)',
-                            'rgba(252, 3, 248, 0.7)',
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(75, 192, 192, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(3, 252, 144, 1)',
-                            'rgba(252, 3, 248, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.7)'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+                                        <button class="text-primary hover:text-primary/
