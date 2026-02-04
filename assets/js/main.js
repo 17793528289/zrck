@@ -26,15 +26,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 function toggleTheme() {
     document.documentElement.classList.toggle('dark');
     const isDark = document.documentElement.classList.contains('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    try {
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    } catch (e) {
+        console.warn('无法保存主题设置:', e);
+    }
 }
 
 // 加载保存的主题
 function loadTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-        document.documentElement.classList.remove('dark');
-    } else {
+    try {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+    } catch (e) {
+        console.warn('无法加载主题设置:', e);
+        // 默认使用深色模式
         document.documentElement.classList.add('dark');
     }
 }
