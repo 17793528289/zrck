@@ -476,4 +476,301 @@
                     <div class="grid grid-cols-1 md:grid-cols-3">
                         <div class="md:col-span-1">
                             <div class="h-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center p-8">
-                                <i class="fas
+                                <i class="fas fa-microchip text-4xl text-white opacity-20"></i>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 p-6">
+                            <div class="flex items-center text-gray-400 text-sm mb-3">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                <span>2024-02-15</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">社团新成员培训顺利开展</h3>
+                            <p class="text-gray-400 mb-4 line-clamp-3">
+                                新学期开始，社团组织了为期一周的新成员培训，内容包括社团介绍、安全知识、基础技能培训等，帮助新成员快速融入社团。
+                            </p>
+                            <a href="#" class="text-purple-400 hover:underline flex items-center text-sm font-semibold">
+                                查看详情 <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark-light py-16 px-4 border-t border-white/10">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 社团信息 -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                            <i class="fas fa-robot text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-gradient">卓然创客</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        武威第十八中学卓然创客社团致力于培养学生的创新精神和实践能力，通过软件学习、硬件制作和学科竞赛等活动，激发学生的科技兴趣。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-qq text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 快速链接 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">快速链接</h3>
+                    <ul class="space-y-3">
+                        <li><a href="index.html" class="text-gray-400 hover:text-primary transition-colors">首页</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-primary transition-colors">社团简介</a></li>
+                        <li><a href="activities.html" class="text-gray-400 hover:text-primary transition-colors">社团活动</a></li>
+                        <li><a href="showcase.html" class="text-gray-400 hover:text-primary transition-colors">社团展示</a></li>
+                        <li><a href="visitor-center.html" class="text-gray-400 hover:text-primary transition-colors">访客中心</a></li>
+                        <li><a href="chat.html" class="text-gray-400 hover:text-primary transition-colors">聊天系统</a></li>
+                    </ul>
+                </div>
+
+                <!-- 联系我们 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">联系我们</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-3 text-gray-400">
+                            <i class="fas fa-map-marker-alt text-primary"></i>
+                            <span>武威第十八中学科技楼</span>
+                        </li>
+                        <li class="flex items-center space-x-3 text-gray-400">
+                            <i class="fas fa-phone text-primary"></i>
+                            <span>123-4567-8910</span>
+                        </li>
+                        <li class="flex items-center space-x-3 text-gray-400">
+                            <i class="fas fa-envelope text-primary"></i>
+                            <span>contact@zhuoranch创客.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 订阅 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">订阅资讯</h3>
+                    <p class="text-gray-400 mb-4">
+                        订阅我们的资讯，获取社团最新活动和成果信息。
+                    </p>
+                    <div class="flex">
+                        <input type="email" placeholder="请输入邮箱" class="bg-dark border border-white/10 text-white px-4 py-2 rounded-l-full focus:outline-none focus:border-primary flex-1">
+                        <button class="bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-white font-bold px-4 py-2 rounded-r-full transition-all duration-300">
+                            订阅
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 版权信息 -->
+            <div class="border-t border-white/10 mt-12 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 卓然创客社团. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Supabase 配置 -->
+    <script src="lib/supabase.js"></script>
+    <!-- 主脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Activities JavaScript loaded');
+
+            // 活动筛选功能
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    filterActivities(filter);
+                });
+            });
+
+            // 筛选活动
+            function filterActivities(filter) {
+                const activityCards = document.querySelectorAll('.activity-card');
+                activityCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const status = card.getAttribute('data-status');
+                        if (status === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            }
+
+            // 加载活动数据
+            async function loadActivities() {
+                try {
+                    if (window.App && window.App.db) {
+                        console.log('Loading activities...');
+                        const { data, error } = await window.App.db.getActivities();
+                        
+                        if (error) {
+                            throw error;
+                        }
+
+                        if (data) {
+                            console.log('Activities loaded:', data);
+                            renderActivities(data);
+                        }
+                    } else {
+                        console.warn('数据库功能未初始化，使用模拟数据');
+                        useMockActivities();
+                    }
+                } catch (error) {
+                    console.error('加载活动数据失败:', error);
+                    useMockActivities();
+                }
+            }
+
+            // 渲染活动列表
+            function renderActivities(activities) {
+                const activitiesContainer = document.querySelector('.grid.grid-cols-1.lg\:grid-cols-3.gap-8');
+                if (!activitiesContainer) return;
+
+                // 清空现有内容
+                activitiesContainer.innerHTML = '';
+
+                // 添加活动数据
+                activities.forEach(activity => {
+                    const activityItem = document.createElement('div');
+                    activityItem.className = 'activity-card bg-dark-light rounded-2xl overflow-hidden border border-white/10 card-hover';
+                    activityItem.setAttribute('data-status', activity.status);
+                    activityItem.setAttribute('data-category', activity.category || 'general');
+
+                    activityItem.innerHTML = `
+                        <div class="relative">
+                            <div class="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                                <i class="fas fa-robot text-6xl text-white opacity-20"></i>
+                            </div>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-${activity.status === 'ongoing' ? 'primary' : activity.status === 'upcoming' ? 'secondary' : 'gray-500'} text-${activity.status === 'ongoing' || activity.status === 'upcoming' ? 'dark' : 'white'} text-sm font-bold px-3 py-1 rounded-full">
+                                    ${activity.status === 'ongoing' ? '进行中' : activity.status === 'upcoming' ? '即将开始' : '已结束'}
+                                </span>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <span class="bg-blue-500 text-dark text-sm font-bold px-3 py-1 rounded-full">
+                                    ${activity.category || '活动'}
+                                </span>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-transparent"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-3">${activity.title}</h3>
+                            <p class="text-gray-400 mb-4 line-clamp-2">
+                                ${activity.description}
+                            </p>
+                            <div class="flex items-center text-gray-500 text-sm mb-4">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                <span>${new Date(activity.start_date).toLocaleDateString()}</span>
+                            </div>
+                            <div class="flex items-center text-gray-500 text-sm mb-6">
+                                <i class="fas fa-map-marker-alt mr-2"></i>
+                                <span>${activity.location}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-${activity.status === 'ongoing' ? 'primary' : activity.status === 'upcoming' ? 'secondary' : 'gray-500'} text-sm font-semibold">
+                                    <i class="fas fa-users mr-1"></i>${activity.participants || 0}人参与
+                                </span>
+                                <button class="activity-detail-btn bg-${activity.status === 'ongoing' ? 'primary' : activity.status === 'upcoming' ? 'secondary' : 'gray-600'} hover:bg-${activity.status === 'ongoing' ? 'primary/90' : activity.status === 'upcoming' ? 'secondary/90' : 'gray-500'} text-${activity.status === 'ongoing' || activity.status === 'upcoming' ? 'dark' : 'white'} font-bold px-4 py-2 rounded-full transition-colors" data-activity-id="${activity.id}">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    activitiesContainer.appendChild(activityItem);
+                });
+            }
+
+            // 使用模拟活动数据
+            function useMockActivities() {
+                console.log('Using mock activities data');
+                
+                const mockActivities = [
+                    {
+                        id: 1,
+                        title: '机器人设计与编程竞赛',
+                        description: '社团成员组队参加市级机器人竞赛，展示创意和技术实力，在规定时间内设计、制作和编程机器人完成指定任务。',
+                        start_date: new Date('2024-03-15'),
+                        location: '科技楼创客空间',
+                        status: 'ongoing',
+                        category: 'competition',
+                        participants: 25
+                    },
+                    {
+                        id: 2,
+                        title: 'Python编程基础培训',
+                        description: '为新成员提供Python编程入门培训，包括基础语法、函数和简单项目实践，帮助快速掌握编程技能。',
+                        start_date: new Date('2024-03-20'),
+                        location: '学校电脑室',
+                        status: 'upcoming',
+                        category: 'training',
+                        participants: 20
+                    },
+                    {
+                        id: 3,
+                        title: '3D打印技术工作坊',
+                        description: '学习3D建模和3D打印技术，制作创意模型和实用物品，体验从设计到成品的完整制作流程。',
+                        start_date: new Date('2024-03-25'),
+                        location: '科技楼创客空间',
+                        status: 'upcoming',
+                        category: 'workshop',
+                        participants: 15
+                    },
+                    {
+                        id: 4,
+                        title: '社团项目展示日',
+                        description: '展示社团成员的优秀项目，邀请学校领导和其他社团成员参观交流，分享创新成果和经验。',
+                        start_date: new Date('2024-03-18'),
+                        location: '科技楼大厅',
+                        status: 'ongoing',
+                        category: 'exhibition',
+                        participants: 30
+                    },
+                    {
+                        id: 5,
+                        title: 'Web前端开发培训',
+                        description: '学习HTML、CSS和JavaScript基础知识，开发简单的网页应用，掌握现代Web开发技术。',
+                        start_date: new Date('2024-03-05'),
+                        location: '学校电脑室',
+                        status: 'past',
+                        category: 'training',
+                        participants: 18
+                    },
+                    {
+                        id: 6,
+                        title: 'Arduino创意项目工作坊',
+                        description: '使用Arduino开发板制作创意电子项目，如智能小车、环境监测设备等，学习电子电路和嵌入式系统知识。',
+                        start_date: new Date('2024-03-10'),
+                        location: '科技楼创客空间',
+                        status: 'past',
+                        category: 'workshop',
+                        participants: 22
+                    }
+                ];
+                
+                renderActivities(mockActivities);
+            }
+
+            // 加载数据
+            loadActivities();
+        });
+    </script>
+</body>
+</html>

@@ -523,4 +523,250 @@
     <section class="py-20 px-4 bg-gradient-to-r from-dark to-dark-light">
         <div class="container mx-auto text-center">
             <h2 class="text-3xl lg:text-4xl font-bold mb-6">加入卓然创客社团</h2>
-            <p class="text
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+                如果你对科技充满热情，喜欢动手实践，欢迎加入卓然创客社团，与我们一起探索科技的奥秘，创造精彩的作品。
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="login.html" class="bg-gradient hover:shadow-lg text-white font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    立即加入
+                </a>
+                <a href="about.html" class="border-2 border-primary text-primary hover:bg-primary/10 font-bold px-8 py-4 rounded-full transition-all duration-300 inline-flex items-center justify-center">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    了解更多
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark-light py-16 px-4 border-t border-white/10">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 社团信息 -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                            <i class="fas fa-robot text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-gradient">卓然创客</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        武威第十八中学卓然创客社团致力于培养学生的创新精神和实践能力，通过软件学习、硬件制作和学科竞赛等活动，激发学生的科技兴趣。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-qq text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 快速链接 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">快速链接</h3>
+                    <ul class="space-y-3">
+                        <li><a href="index.html" class="text-gray-400 hover:text-primary transition-colors">首页</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-primary transition-colors">社团简介</a></li>
+                        <li><a href="activities.html" class="text-gray-400 hover:text-primary transition-colors">社团活动</a></li>
+                        <li><a href="showcase.html" class="text-gray-400 hover:text-primary transition-colors">社团展示</a></li>
+                        <li><a href="visitor-center.html" class="text-gray-400 hover:text-primary transition-colors">访客中心</a></li>
+                        <li><a href="chat.html" class="text-gray-400 hover:text-primary transition-colors">聊天系统</a></li>
+                    </ul>
+                </div>
+
+                <!-- 联系我们 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">联系我们</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-3 text-gray-400">
+                            <i class="fas fa-map-marker-alt text-primary"></i>
+                            <span>武威第十八中学科技楼</span>
+                        </li>
+                        <li class="flex items-center space-x-3 text-gray-400">
+                            <i class="fas fa-phone text-primary"></i>
+                            <span>123-4567-8910</span>
+                        </li>
+                        <li class="flex items-center space-x-3 text-gray-400">
+                            <i class="fas fa-envelope text-primary"></i>
+                            <span>contact@zhuoranch创客.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 订阅 -->
+                <div>
+                    <h3 class="text-lg font-bold mb-6">订阅资讯</h3>
+                    <p class="text-gray-400 mb-4">
+                        订阅我们的资讯，获取社团最新活动和成果信息。
+                    </p>
+                    <div class="flex">
+                        <input type="email" placeholder="请输入邮箱" class="bg-dark border border-white/10 text-white px-4 py-2 rounded-l-full focus:outline-none focus:border-primary flex-1">
+                        <button class="bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-white font-bold px-4 py-2 rounded-r-full transition-all duration-300">
+                            订阅
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 版权信息 -->
+            <div class="border-t border-white/10 mt-12 pt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2024 卓然创客社团. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Supabase 配置 -->
+    <script src="lib/supabase.js"></script>
+    <!-- 主脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Showcase JavaScript loaded');
+
+            // 加载项目数据
+            async function loadProjects() {
+                try {
+                    if (window.App && window.App.db) {
+                        console.log('Loading projects...');
+                        const { data, error } = await window.App.db.getProjects();
+                        
+                        if (error) {
+                            throw error;
+                        }
+
+                        if (data) {
+                            console.log('Projects loaded:', data);
+                            renderProjects(data);
+                        }
+                    } else {
+                        console.warn('数据库功能未初始化，使用模拟数据');
+                        useMockProjects();
+                    }
+                } catch (error) {
+                    console.error('加载项目数据失败:', error);
+                    useMockProjects();
+                }
+            }
+
+            // 加载资源数据
+            async function loadResources() {
+                try {
+                    if (window.App && window.App.db) {
+                        console.log('Loading resources...');
+                        const { data, error } = await window.App.db.getResources();
+                        
+                        if (error) {
+                            throw error;
+                        }
+
+                        if (data) {
+                            console.log('Resources loaded:', data);
+                            renderResources(data);
+                        }
+                    } else {
+                        console.warn('数据库功能未初始化，使用模拟数据');
+                        useMockResources();
+                    }
+                } catch (error) {
+                    console.error('加载资源数据失败:', error);
+                    useMockResources();
+                }
+            }
+
+            // 渲染项目列表
+            function renderProjects(projects) {
+                const projectsContainer = document.querySelector('.grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3.gap-8');
+                if (!projectsContainer) return;
+
+                // 清空现有内容
+                projectsContainer.innerHTML = '';
+
+                // 添加项目数据
+                projects.forEach(project => {
+                    const projectItem = document.createElement('div');
+                    projectItem.className = 'bg-dark-light rounded-2xl overflow-hidden border border-white/10 card-hover';
+
+                    projectItem.innerHTML = `
+                        <div class="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                            <i class="fas fa-project-diagram text-6xl text-white opacity-20"></i>
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-${project.status === 'active' ? 'primary' : project.status === 'in_progress' ? 'secondary' : 'gray-500'} text-${project.status === 'active' || project.status === 'in_progress' ? 'dark' : 'white'} text-sm font-bold px-3 py-1 rounded-full">
+                                    ${project.status === 'active' ? '活跃' : project.status === 'in_progress' ? '进行中' : '已完成'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-3">${project.title}</h3>
+                            <p class="text-gray-400 mb-4 leading-relaxed">
+                                ${project.description || '无描述'}
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500">${new Date(project.created_at).toLocaleDateString()}</span>
+                                <button class="text-${project.status === 'active' ? 'primary' : project.status === 'in_progress' ? 'secondary' : 'gray-400'} hover:text-${project.status === 'active' ? 'primary/80' : project.status === 'in_progress' ? 'secondary/80' : 'white'} flex items-center text-sm font-semibold">
+                                    查看详情 <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    projectsContainer.appendChild(projectItem);
+                });
+            }
+
+            // 渲染资源列表
+            function renderResources(resources) {
+                // 这里可以添加资源列表的渲染逻辑
+            }
+
+            // 使用模拟项目数据
+            function useMockProjects() {
+                console.log('Using mock projects data');
+                
+                const mockProjects = [
+                    {
+                        id: 1,
+                        title: '智能机器人',
+                        description: '基于Arduino的智能机器人，可实现避障和自动导航',
+                        author: '张明',
+                        status: 'active',
+                        created_at: new Date('2024-02-01')
+                    },
+                    {
+                        id: 2,
+                        title: '智能家居控制系统',
+                        description: '使用ESP8266构建的智能家居控制系统，可远程控制家电',
+                        author: '李华',
+                        status: 'in_progress',
+                        created_at: new Date('2024-02-05')
+                    },
+                    {
+                        id: 3,
+                        title: '环保监测系统',
+                        description: '基于树莓派的环境监测系统，可监测温度、湿度和空气质量',
+                        author: '王强',
+                        status: 'completed',
+                        created_at: new Date('2024-01-20')
+                    }
+                ];
+                
+                renderProjects(mockProjects);
+            }
+
+            // 使用模拟资源数据
+            function useMockResources() {
+                console.log('Using mock resources data');
+                // 这里可以添加模拟资源数据的使用逻辑
+            }
+
+            // 加载数据
+            loadProjects();
+            loadResources();
+        });
+    </script>
+</body>
+</html>

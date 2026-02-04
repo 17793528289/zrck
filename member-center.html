@@ -146,12 +146,8 @@
                     <div class="bg-dark-light rounded-2xl border border-white/10 p-6 sticky top-24">
                         <!-- 用户信息 -->
                         <div class="text-center mb-6">
-                            <div class="relative w-20 h-20 rounded-full bg-gradient-to-r from-primary to-secondary mx-auto mb-4 flex items-center justify-center">
-                                <img id="current-avatar" src="https://placehold.co/200x200" alt="用户头像" class="w-full h-full rounded-full object-cover">
-                                <div class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer" id="avatar-upload-btn">
-                                    <i class="fas fa-camera text-white"></i>
-                                </div>
-                                <input type="file" id="avatar-file" accept="image/*" class="hidden">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-r from-primary to-secondary mx-auto mb-4 flex items-center justify-center">
+                                <i class="fas fa-user text-white text-2xl"></i>
                             </div>
                             <h3 class="text-xl font-bold">张明</h3>
                             <p class="text-gray-400 text-sm">高三(1)班</p>
@@ -471,64 +467,6 @@
             }
 
             window.addEventListener('scroll', updateActiveNav);
-
-            // 头像上传功能
-            const avatarUploadBtn = document.getElementById('avatar-upload-btn');
-            const avatarFileInput = document.getElementById('avatar-file');
-            const currentAvatar = document.getElementById('current-avatar');
-
-            // 点击上传按钮触发文件选择
-            if (avatarUploadBtn) {
-                avatarUploadBtn.addEventListener('click', function() {
-                    avatarFileInput.click();
-                });
-            }
-
-            // 处理文件选择
-            if (avatarFileInput) {
-                avatarFileInput.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        // 预览头像
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            currentAvatar.src = e.target.result;
-                        };
-                        reader.readAsDataURL(file);
-
-                        // 上传头像
-                        uploadAvatar(file);
-                    }
-                });
-            }
-
-            // 上传头像
-            async function uploadAvatar(file) {
-                try {
-                    // 获取当前用户ID（实际应用中需要从认证系统获取）
-                    const userId = 'user123'; // 示例ID，实际需要替换
-
-                    // 上传头像
-                    const { url, error } = await window.App.storage.updateAvatar(userId, file);
-
-                    if (error) {
-                        console.error('上传失败:', error);
-                        alert('头像上传失败，请重试');
-                        // 恢复原头像
-                        currentAvatar.src = 'https://placehold.co/200x200';
-                    } else {
-                        console.log('上传成功:', url);
-                        // 更新头像显示
-                        currentAvatar.src = url;
-                        alert('头像上传成功');
-                    }
-                } catch (error) {
-                    console.error('上传过程出错:', error);
-                    alert('上传过程出错，请重试');
-                    // 恢复原头像
-                    currentAvatar.src = 'https://placehold.co/200x200';
-                }
-            }
         });
     </script>
 </body>
