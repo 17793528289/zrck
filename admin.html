@@ -636,46 +636,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 渲染活动列表
-    function renderActivities(activities) {
-        const activityContainer = document.getElementById('activities-container');
-        if (!activityContainer) return;
+            function renderActivities(activities) {
+                const activityContainer = document.getElementById('activities-container');
+                if (!activityContainer) return;
 
-        // 清空现有内容
-        activityContainer.innerHTML = '';
+                // 清空现有内容
+                activityContainer.innerHTML = '';
 
-        // 添加活动数据
-        activities.forEach(activity => {
-            const activityItem = document.createElement('div');
-            activityItem.className = 'bg-dark rounded-lg p-4 border border-white/10 card-hover';
+                // 添加活动数据
+                activities.forEach(activity => {
+                    const activityItem = document.createElement('div');
+                    activityItem.className = 'bg-dark rounded-lg p-4 border border-white/10 card-hover';
 
-            activityItem.innerHTML = `
-                <div class="flex justify-between items-start">
-                    <h4 class="font-bold text-lg">${activity.title}</h4>
-                    <span class="status-badge ${activity.status === 'ongoing' ? 'status-active' : activity.status === 'upcoming' ? 'status-pending' : 'status-inactive'}">
-                        ${activity.status === 'ongoing' ? '进行中' : activity.status === 'upcoming' ? '即将开始' : '已结束'}
-                    </span>
-                </div>
-                <p class="text-gray-400 mt-1">${activity.description}</p>
-                <div class="flex justify-between items-center mt-3">
-                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                        <span><i class="fas fa-calendar mr-1"></i>${new Date(activity.start_date).toLocaleDateString()}</span>
-                        <span><i class="fas fa-map-marker-alt mr-1"></i>${activity.location}</span>
-                        <span><i class="fas fa-user-friends mr-1"></i>${activity.participants || 0}人参与</span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="text-primary hover:text-primary/80" title="编辑">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="text-red-500 hover:text-red-400" title="删除">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
+                    activityItem.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-lg">${activity.title}</h4>
+                            <span class="status-badge ${activity.status === 'ongoing' ? 'status-active' : activity.status === 'upcoming' ? 'status-pending' : 'status-inactive'}">
+                                ${activity.status === 'ongoing' ? '进行中' : activity.status === 'upcoming' ? '即将开始' : '已结束'}
+                            </span>
+                        </div>
+                        <p class="text-gray-400 mt-1">${activity.description}</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <span><i class="fas fa-calendar mr-1"></i>${new Date(activity.start_date).toLocaleDateString()}</span>
+                                <span><i class="fas fa-map-marker-alt mr-1"></i>${activity.location}</span>
+                                <span><i class="fas fa-user mr-1"></i>${activity.organizer || '未知'}</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-primary hover:text-primary/80" title="编辑">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-400" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
 
-            activityContainer.appendChild(activityItem);
-        });
-    }
+                    activityContainer.appendChild(activityItem);
+                });
+            }
 
     // 更新用户数量
     function updateUserCount(count) {
@@ -756,84 +756,86 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 渲染资源列表
-    function renderResources(resources) {
-        const resourcesContainer = document.getElementById('resources-container');
-        if (!resourcesContainer) return;
+            function renderResources(resources) {
+                const resourcesContainer = document.getElementById('resources-container');
+                if (!resourcesContainer) return;
 
-        // 清空现有内容
-        resourcesContainer.innerHTML = '';
+                // 清空现有内容
+                resourcesContainer.innerHTML = '';
 
-        // 添加资源数据
-        resources.forEach(resource => {
-            const resourceItem = document.createElement('div');
-            resourceItem.className = 'bg-dark rounded-lg p-4 border border-white/10 card-hover';
+                // 添加资源数据
+                resources.forEach(resource => {
+                    const resourceItem = document.createElement('div');
+                    resourceItem.className = 'bg-dark rounded-lg p-4 border border-white/10 card-hover';
 
-            resourceItem.innerHTML = `
-                <div class="flex justify-between items-start">
-                    <h4 class="font-bold text-lg">${resource.title}</h4>
-                    <span class="status-badge status-active">${resource.category || '未分类'}</span>
-                </div>
-                <p class="text-gray-400 mt-1">${resource.description || '无描述'}</p>
-                <div class="flex justify-between items-center mt-3">
-                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                        <span><i class="fas fa-file-alt mr-1"></i>${resource.type || '文件'}</span>
-                        <span><i class="fas fa-calendar mr-1"></i>${new Date(resource.created_at).toLocaleDateString()}</span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="text-primary hover:text-primary/80" title="编辑">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="text-red-500 hover:text-red-400" title="删除">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
+                    resourceItem.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-lg">${resource.title}</h4>
+                            <span class="status-badge status-active">${resource.category || '未分类'}</span>
+                        </div>
+                        <p class="text-gray-400 mt-1">${resource.description || '无描述'}</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <span><i class="fas fa-file-alt mr-1"></i>${resource.type || '文件'}</span>
+                                <span><i class="fas fa-eye mr-1"></i>${resource.views || 0}次查看</span>
+                                <span><i class="fas fa-download mr-1"></i>${resource.downloads || 0}次下载</span>
+                                <span><i class="fas fa-calendar mr-1"></i>${new Date(resource.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-primary hover:text-primary/80" title="编辑">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-400" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
 
-            resourcesContainer.appendChild(resourceItem);
-        });
-    }
+                    resourcesContainer.appendChild(resourceItem);
+                });
+            }
 
     // 渲染项目列表
-    function renderProjects(projects) {
-        const projectsContainer = document.getElementById('projects-container');
-        if (!projectsContainer) return;
+            function renderProjects(projects) {
+                const projectsContainer = document.getElementById('projects-container');
+                if (!projectsContainer) return;
 
-        // 清空现有内容
-        projectsContainer.innerHTML = '';
+                // 清空现有内容
+                projectsContainer.innerHTML = '';
 
-        // 添加项目数据
-        projects.forEach(project => {
-            const projectItem = document.createElement('div');
-            projectItem.className = 'bg-dark rounded-lg p-4 border border-white/10 card-hover';
+                // 添加项目数据
+                projects.forEach(project => {
+                    const projectItem = document.createElement('div');
+                    projectItem.className = 'bg-dark rounded-lg p-4 border border-white/10 card-hover';
 
-            projectItem.innerHTML = `
-                <div class="flex justify-between items-start">
-                    <h4 class="font-bold text-lg">${project.title}</h4>
-                    <span class="status-badge ${project.status === 'active' ? 'status-active' : project.status === 'in_progress' ? 'status-pending' : 'status-inactive'}">
-                        ${project.status === 'active' ? '活跃' : project.status === 'in_progress' ? '进行中' : '已完成'}
-                    </span>
-                </div>
-                <p class="text-gray-400 mt-1">${project.description || '无描述'}</p>
-                <div class="flex justify-between items-center mt-3">
-                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                        <span><i class="fas fa-user mr-1"></i>${project.author || '未知作者'}</span>
-                        <span><i class="fas fa-calendar mr-1"></i>${new Date(project.created_at).toLocaleDateString()}</span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="text-primary hover:text-primary/80" title="编辑">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="text-red-500 hover:text-red-400" title="删除">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
+                    projectItem.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-lg">${project.title}</h4>
+                            <span class="status-badge ${project.status === 'planning' ? 'status-pending' : project.status === 'in_progress' ? 'status-active' : 'status-inactive'}">
+                                ${project.status === 'planning' ? '计划中' : project.status === 'in_progress' ? '进行中' : '已完成'}
+                            </span>
+                        </div>
+                        <p class="text-gray-400 mt-1">${project.description || '无描述'}</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                <span><i class="fas fa-users mr-1"></i>${project.members ? project.members.length : 0}人参与</span>
+                                <span><i class="fas fa-calendar mr-1"></i>${new Date(project.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-primary hover:text-primary/80" title="编辑">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-400" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
 
-            projectsContainer.appendChild(projectItem);
-        });
-    }
+                    projectsContainer.appendChild(projectItem);
+                });
+            }
 
     // 更新项目数量
     function updateProjectCount(count) {

@@ -695,8 +695,8 @@
                         <div class="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
                             <i class="fas fa-project-diagram text-6xl text-white opacity-20"></i>
                             <div class="absolute top-4 left-4">
-                                <span class="bg-${project.status === 'active' ? 'primary' : project.status === 'in_progress' ? 'secondary' : 'gray-500'} text-${project.status === 'active' || project.status === 'in_progress' ? 'dark' : 'white'} text-sm font-bold px-3 py-1 rounded-full">
-                                    ${project.status === 'active' ? '活跃' : project.status === 'in_progress' ? '进行中' : '已完成'}
+                                <span class="bg-${project.status === 'planning' ? 'yellow-500/20' : project.status === 'in_progress' ? 'primary/20' : 'gray-500/20'} text-${project.status === 'planning' ? 'yellow-500' : project.status === 'in_progress' ? 'primary' : 'gray-500'} text-sm font-bold px-3 py-1 rounded-full">
+                                    ${project.status === 'planning' ? '计划中' : project.status === 'in_progress' ? '进行中' : '已完成'}
                                 </span>
                             </div>
                         </div>
@@ -732,23 +732,23 @@
                         id: 1,
                         title: '智能机器人',
                         description: '基于Arduino的智能机器人，可实现避障和自动导航',
-                        author: '张明',
-                        status: 'active',
+                        members: ['张明', '李华'],
+                        status: 'in_progress',
                         created_at: new Date('2024-02-01')
                     },
                     {
                         id: 2,
                         title: '智能家居控制系统',
                         description: '使用ESP8266构建的智能家居控制系统，可远程控制家电',
-                        author: '李华',
-                        status: 'in_progress',
+                        members: ['李华', '王强'],
+                        status: 'planning',
                         created_at: new Date('2024-02-05')
                     },
                     {
                         id: 3,
                         title: '环保监测系统',
                         description: '基于树莓派的环境监测系统，可监测温度、湿度和空气质量',
-                        author: '王强',
+                        members: ['王强', '张明'],
                         status: 'completed',
                         created_at: new Date('2024-01-20')
                     }

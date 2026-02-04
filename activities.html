@@ -685,7 +685,7 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-${activity.status === 'ongoing' ? 'primary' : activity.status === 'upcoming' ? 'secondary' : 'gray-500'} text-sm font-semibold">
-                                    <i class="fas fa-users mr-1"></i>${activity.participants || 0}人参与
+                                    <i class="fas fa-user mr-1"></i>${activity.organizer || '未知'}组织
                                 </span>
                                 <button class="activity-detail-btn bg-${activity.status === 'ongoing' ? 'primary' : activity.status === 'upcoming' ? 'secondary' : 'gray-600'} hover:bg-${activity.status === 'ongoing' ? 'primary/90' : activity.status === 'upcoming' ? 'secondary/90' : 'gray-500'} text-${activity.status === 'ongoing' || activity.status === 'upcoming' ? 'dark' : 'white'} font-bold px-4 py-2 rounded-full transition-colors" data-activity-id="${activity.id}">
                                     查看详情
@@ -711,7 +711,7 @@
                         location: '科技楼创客空间',
                         status: 'ongoing',
                         category: 'competition',
-                        participants: 25
+                        organizer: '张明'
                     },
                     {
                         id: 2,
@@ -721,7 +721,7 @@
                         location: '学校电脑室',
                         status: 'upcoming',
                         category: 'training',
-                        participants: 20
+                        organizer: '李华'
                     },
                     {
                         id: 3,
@@ -731,7 +731,7 @@
                         location: '科技楼创客空间',
                         status: 'upcoming',
                         category: 'workshop',
-                        participants: 15
+                        organizer: '王强'
                     },
                     {
                         id: 4,
@@ -741,7 +741,7 @@
                         location: '科技楼大厅',
                         status: 'ongoing',
                         category: 'exhibition',
-                        participants: 30
+                        organizer: '社团理事会'
                     },
                     {
                         id: 5,
@@ -751,7 +751,7 @@
                         location: '学校电脑室',
                         status: 'past',
                         category: 'training',
-                        participants: 18
+                        organizer: '王强'
                     },
                     {
                         id: 6,
@@ -761,7 +761,7 @@
                         location: '科技楼创客空间',
                         status: 'past',
                         category: 'workshop',
-                        participants: 22
+                        organizer: '李华'
                     }
                 ];
                 
