@@ -405,18 +405,7 @@
             }
         });
 
-        // 检查用户是否已登录
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const user = await auth.getCurrentUser();
-                if (user) {
-                    // 用户已登录，跳转到社员中心
-                    window.location.href = 'member-center.html';
-                }
-            } catch (err) {
-                // 忽略错误
-            }
-        });
+
     </script>
 </body>
 </html>
