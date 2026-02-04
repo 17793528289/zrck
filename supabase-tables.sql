@@ -111,6 +111,21 @@ CREATE TABLE chat_members (
   UNIQUE(chat_id, user_id)
 );
 
+-- 资源表 (resources)
+CREATE TABLE resources (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('document', 'image', 'video', 'link', 'other')),
+  url TEXT NOT NULL,
+  category TEXT NOT NULL,
+  uploader UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  tags JSONB DEFAULT '[]',
+  views INTEGER DEFAULT 0,
+  downloads INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- 创建索引
 CREATE INDEX idx_profiles_role ON profiles(role);
 CREATE INDEX idx_activities_status ON activities(status);
@@ -125,6 +140,11 @@ CREATE INDEX idx_chat_messages_sender_id ON chat_messages(sender_id);
 CREATE INDEX idx_chat_members_chat_id ON chat_members(chat_id);
 CREATE INDEX idx_chat_members_user_id ON chat_members(user_id);
 
+-- 资源表索引
+CREATE INDEX idx_resources_category ON resources(category);
+CREATE INDEX idx_resources_type ON resources(type);
+CREATE INDEX idx_resources_uploader ON resources(uploader);
+
 -- 启用实时功能
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE activities ENABLE ROW LEVEL SECURITY;
@@ -136,6 +156,7 @@ ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chats ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE resources ENABLE ROW LEVEL SECURITY;
 
 -- 创建策略
 -- 仅允许用户查看自己的个人资料
@@ -270,3 +291,30 @@ CREATE POLICY "Users can view own chat memberships" ON chat_members
 -- 允许用户创建自己的聊天成员记录
 CREATE POLICY "Users can create own chat memberships" ON chat_members
   FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- 资源表策略
+-- 允许所有人查看资源
+CREATE POLICY "Everyone can view resources" ON resources
+  FOR SELECT USING (true);
+
+-- 允许用户上传资源
+CREATE POLICY "Users can upload resources" ON resources
+  FOR INSERT WITH CHECK (
+    auth.uid() = uploader
+  );
+
+-- 允许上传者管理自己的资源
+CREATE POLICY "Uploaders can manage own resources" ON resources
+  FOR UPDATE USING (
+    auth.uid() = uploader
+  );
+
+-- 允许教师和管理员管理所有资源
+CREATE POLICY "Teachers and admins can manage all resources" ON resources
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM profiles 
+      WHERE id = auth.uid() 
+      AND role IN ('teacher', 'admin')
+    )
+  );
