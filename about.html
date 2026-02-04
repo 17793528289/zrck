@@ -3,255 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社团简介 - 卓然创客</title>
+    <title>社团简介 - 卓然创客社团</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义 Tailwind 配置 -->
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: '#121212',
-                        secondary: '#1E1E1E',
-                        accent1: '#03fc90',
-                        accent2: '#fc03f8',
-                        neutral: {
-                            100: '#F5F5F5',
-                            200: '#E5E5E5',
-                            300: '#D4D4D4',
-                            400: '#A3A3A3',
-                            500: '#737373',
-                            600: '#525252',
-                            700: '#404040',
-                            800: '#262626',
-                            900: '#171717',
-                        }
+                        primary: '#03fc90',
+                        secondary: '#fc03f8',
+                        dark: '#121212',
+                        'dark-light': '#1e1e1e',
+                        'dark-lighter': '#2a2a2a'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
+                        sans: ['Inter', 'Roboto', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .text-shadow {
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            }
-            .glow {
-                box-shadow: 0 0 15px rgba(3, 252, 144, 0.5);
-            }
-            .glow-pink {
-                box-shadow: 0 0 15px rgba(252, 3, 248, 0.5);
-            }
-            .bg-gradient {
-                background: linear-gradient(135deg, #121212 0%, #1E1E1E 100%);
-            }
             .text-gradient {
-                background-clip: text;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-image: linear-gradient(90deg, #03fc90, #fc03f8);
+                @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+            }
+            .bg-glass {
+                @apply bg-dark/80 backdrop-blur-md border border-white/10;
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1;
             }
         }
     </style>
 </head>
-<body class="bg-primary text-neutral-100 min-h-screen">
+<body class="bg-dark text-white min-h-screen">
     <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-primary/90 backdrop-blur-md border-b border-neutral-800">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-glass">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <a href="index.html" class="flex items-center space-x-2">
-                    <div class="w-10 h-10 rounded-full bg-gradient flex items-center justify-center">
-                        <i class="fa fa-cogs text-white text-xl"></i>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                        <i class="fas fa-robot text-dark text-xl font-bold"></i>
                     </div>
-                    <span class="text-xl font-bold">卓然创客</span>
+                    <span class="text-xl font-bold text-gradient">卓然创客</span>
                 </a>
-                
-                <!-- 桌面导航 -->
+
+                <!-- 桌面端导航 -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="hover:text-accent1 transition-colors">首页</a>
-                    <a href="club-showcase.html" class="hover:text-accent1 transition-colors">社团展示</a>
-                    <a href="activities.html" class="hover:text-accent1 transition-colors">社团活动</a>
-                    <a href="about.html" class="text-accent1">社团简介</a>
-                    <a href="login.html" class="px-4 py-2 rounded-full border border-accent1 text-accent1 hover:bg-accent1 hover:text-primary transition-all duration-300 hover:scale-105">登录</a>
+                    <a href="index.html" class="font-medium hover:text-primary transition-colors">首页</a>
+                    <a href="about.html" class="font-medium text-primary border-b-2 border-primary">社团简介</a>
+                    <a href="activities.html" class="font-medium hover:text-primary transition-colors">社团活动</a>
+                    <a href="showcase.html" class="font-medium hover:text-primary transition-colors">社团展示</a>
+                    <a href="visitor-center.html" class="font-medium hover:text-primary transition-colors">访客中心</a>
+                    <a href="chat.html" class="font-medium hover:text-primary transition-colors">聊天系统</a>
+                    <a href="login.html" class="px-4 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-dark font-medium hover:opacity-90 transition-opacity">登录</a>
                 </div>
-                
-                <!-- 移动端菜单按钮 -->
+
+                <!-- 移动端汉堡菜单 -->
                 <div class="md:hidden">
-                    <button id="menu-toggle" class="text-neutral-100">
-                        <i class="fa fa-bars text-xl"></i>
+                    <button id="menu-toggle" class="text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
-        </div>
-        
-        <!-- 移动端导航菜单 -->
-        <div id="mobile-menu" class="md:hidden hidden bg-secondary border-t border-neutral-800">
-            <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
-                <a href="index.html" class="py-2 hover:text-accent1 transition-colors">首页</a>
-                <a href="club-showcase.html" class="py-2 hover:text-accent1 transition-colors">社团展示</a>
-                <a href="activities.html" class="py-2 hover:text-accent1 transition-colors">社团活动</a>
-                <a href="about.html" class="py-2 text-accent1">社团简介</a>
-                <a href="login.html" class="px-4 py-2 rounded-full border border-accent1 text-accent1 hover:bg-accent1 hover:text-primary transition-all duration-300 text-center">登录</a>
+
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="index.html" class="font-medium hover:text-primary transition-colors py-2">首页</a>
+                    <a href="about.html" class="font-medium text-primary border-l-4 border-primary pl-2">社团简介</a>
+                    <a href="activities.html" class="font-medium hover:text-primary transition-colors py-2">社团活动</a>
+                    <a href="showcase.html" class="font-medium hover:text-primary transition-colors py-2">社团展示</a>
+                    <a href="visitor-center.html" class="font-medium hover:text-primary transition-colors py-2">访客中心</a>
+                    <a href="chat.html" class="font-medium hover:text-primary transition-colors py-2">聊天系统</a>
+                    <a href="login.html" class="px-4 py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-dark font-medium hover:opacity-90 transition-opacity text-center">登录</a>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- 页面标题 -->
-    <section class="pt-32 pb-16">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4 text-shadow">
-                社团简介
-            </h1>
-            <p class="text-lg text-neutral-400 max-w-3xl mx-auto">
-                了解卓然创客社团的历史、宗旨、组织结构和发展愿景
-            </p>
+    <section class="pt-32 pb-16 px-4">
+        <div class="container mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">社团简介</h1>
+            <p class="text-gray-400 text-lg">了解卓然创客社团的发展历程、宗旨目标和组织架构</p>
         </div>
     </section>
 
     <!-- 社团历史 -->
-    <section class="py-16 bg-secondary">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-10">社团历史</h2>
-            <div class="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12">
-                <div class="md:w-1/2">
-                    <div class="aspect-video bg-gradient rounded-xl flex items-center justify-center">
-                        <i class="fa fa-history text-6xl text-accent1 opacity-30"></i>
+    <section class="py-20 px-4 bg-dark-light">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">社团历史</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <!-- 时间线 -->
+                <div class="relative">
+                    <!-- 时间线中轴线 -->
+                    <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-secondary"></div>
+
+                    <!-- 时间点 1 -->
+                    <div class="relative mb-12">
+                        <div class="flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 md:pr-12 md:text-right mb-6 md:mb-0">
+                                <h3 class="text-xl font-bold text-primary mb-2">2020年9月</h3>
+                                <h4 class="text-lg font-semibold mb-3">社团成立</h4>
+                                <p class="text-gray-400">
+                                    武威第十八中学卓然创客社团正式成立，由学校信息技术教师发起，首批成员20人。
+                                </p>
+                            </div>
+                            <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-gradient-to-r from-primary to-secondary z-10"></div>
+                            <div class="md:w-1/2 md:pl-12 hidden md:block">
+                                <div class="h-24 bg-dark-lighter rounded-lg border border-white/10"></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="md:w-1/2">
-                    <p class="text-neutral-400 mb-6 leading-relaxed">
-                        卓然创客社团成立于2020年，是武威第十八中学响应国家"大众创业、万众创新"号召，
-                        为培养学生创新精神和实践能力而设立的科技社团。
-                    </p>
-                    <p class="text-neutral-400 mb-6 leading-relaxed">
-                        自成立以来，社团始终坚持"创新、实践、协作、成长"的理念，
-                        积极开展各类科技活动，培养学生的动手能力和创新思维。
-                    </p>
-                    <p class="text-neutral-400 leading-relaxed">
-                        经过几年的发展，社团已成为学校的特色社团之一，拥有完善的组织架构和丰富的活动经验，
-                        在各类科技竞赛中取得了优异成绩，为学校赢得了荣誉。
-                    </p>
+
+                    <!-- 时间点 2 -->
+                    <div class="relative mb-12">
+                        <div class="flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 md:pr-12 hidden md:block">
+                                <div class="h-24 bg-dark-lighter rounded-lg border border-white/10"></div>
+                            </div>
+                            <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-gradient-to-r from-primary to-secondary z-10"></div>
+                            <div class="md:w-1/2 md:pl-12 mb-6 md:mb-0">
+                                <h3 class="text-xl font-bold text-primary mb-2">2021年3月</h3>
+                                <h4 class="text-lg font-semibold mb-3">首次参加竞赛</h4>
+                                <p class="text-gray-400">
+                                    社团成员首次参加市级机器人竞赛，获得二等奖，为社团赢得了荣誉。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 时间点 3 -->
+                    <div class="relative mb-12">
+                        <div class="flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 md:pr-12 md:text-right mb-6 md:mb-0">
+                                <h3 class="text-xl font-bold text-primary mb-2">2021年9月</h3>
+                                <h4 class="text-lg font-semibold mb-3">创客空间建成</h4>
+                                <p class="text-gray-400">
+                                    学校投资建设了专门的创客空间，配备了3D打印机、Arduino开发板等设备。
+                                </p>
+                            </div>
+                            <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-gradient-to-r from-primary to-secondary z-10"></div>
+                            <div class="md:w-1/2 md:pl-12 hidden md:block">
+                                <div class="h-24 bg-dark-lighter rounded-lg border border-white/10"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 时间点 4 -->
+                    <div class="relative mb-12">
+                        <div class="flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 md:pr-12 hidden md:block">
+                                <div class="h-24 bg-dark-lighter rounded-lg border border-white/10"></div>
+                            </div>
+                            <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-gradient-to-r from-primary to-secondary z-10"></div>
+                            <div class="md:w-1/2 md:pl-12 mb-6 md:mb-0">
+                                <h3 class="text-xl font-bold text-primary mb-2">2022年5月</h3>
+                                <h4 class="text-lg font-semibold mb-3">成员突破50人</h4>
+                                <p class="text-gray-400">
+                                    社团成员数量突破50人，成为学校最受欢迎的科技社团之一。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 时间点 5 -->
+                    <div class="relative">
+                        <div class="flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 md:pr-12 md:text-right mb-6 md:mb-0">
+                                <h3 class="text-xl font-bold text-primary mb-2">2023年10月</h3>
+                                <h4 class="text-lg font-semibold mb-3">省级获奖</h4>
+                                <p class="text-gray-400">
+                                    社团成员在省级科技创新大赛中获得一等奖，进一步提升了社团的影响力。
+                                </p>
+                            </div>
+                            <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full bg-gradient-to-r from-primary to-secondary z-10"></div>
+                            <div class="md:w-1/2 md:pl-12 hidden md:block">
+                                <div class="h-24 bg-dark-lighter rounded-lg border border-white/10"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- 社团宗旨 -->
-    <section class="py-16">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-10">社团宗旨</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- 核心价值观 -->
-                <div class="bg-secondary rounded-xl p-6">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center space-x-2">
-                        <i class="fa fa-heart text-accent1"></i>
-                        <span>核心价值观</span>
-                    </h3>
-                    <ul class="space-y-4">
-                        <li class="flex items-start space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-accent1/20 flex items-center justify-center mt-1 flex-shrink-0">
-                                <i class="fa fa-lightbulb-o text-accent1"></i>
+    <section class="py-20 px-4">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">社团宗旨</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-dark-light rounded-2xl p-8 border border-white/10 mb-12">
+                    <h3 class="text-2xl font-bold mb-6 text-gradient">核心价值观</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- 价值观 1 -->
+                        <div class="bg-dark-lighter p-6 rounded-xl border border-white/10 card-hover">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                                <i class="fas fa-lightbulb text-primary text-xl"></i>
                             </div>
-                            <div>
-                                <h4 class="font-bold">创新</h4>
-                                <p class="text-neutral-400 text-sm">
-                                    鼓励学生大胆想象，勇于尝试，培养创新思维和创新能力
-                                </p>
+                            <h4 class="text-lg font-semibold mb-3">创新精神</h4>
+                            <p class="text-gray-400">
+                                鼓励学生大胆想象，勇于创新，培养创造性思维能力。
+                            </p>
+                        </div>
+                        <!-- 价值观 2 -->
+                        <div class="bg-dark-lighter p-6 rounded-xl border border-white/10 card-hover">
+                            <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center mb-4">
+                                <i class="fas fa-hands-helping text-secondary text-xl"></i>
                             </div>
-                        </li>
-                        <li class="flex items-start space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-accent1/20 flex items-center justify-center mt-1 flex-shrink-0">
-                                <i class="fa fa-cogs text-accent1"></i>
+                            <h4 class="text-lg font-semibold mb-3">团队协作</h4>
+                            <p class="text-gray-400">
+                                强调团队合作，培养学生的沟通能力和协作精神。
+                            </p>
+                        </div>
+                        <!-- 价值观 3 -->
+                        <div class="bg-dark-lighter p-6 rounded-xl border border-white/10 card-hover">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center mb-4">
+                                <i class="fas fa-tools text-dark text-xl"></i>
                             </div>
-                            <div>
-                                <h4 class="font-bold">实践</h4>
-                                <p class="text-neutral-400 text-sm">
-                                    通过动手操作，将理论知识转化为实际应用，提高实践能力
-                                </p>
-                            </div>
-                        </li>
-                        <li class="flex items-start space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-accent1/20 flex items-center justify-center mt-1 flex-shrink-0">
-                                <i class="fa fa-users text-accent1"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">协作</h4>
-                                <p class="text-neutral-400 text-sm">
-                                    培养团队合作精神，学会与他人协作完成项目
-                                </p>
-                            </div>
-                        </li>
-                        <li class="flex items-start space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-accent1/20 flex items-center justify-center mt-1 flex-shrink-0">
-                                <i class="fa fa-line-chart text-accent1"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold">成长</h4>
-                                <p class="text-neutral-400 text-sm">
-                                    在活动中不断学习，提升自我，实现全面发展
-                                </p>
-                            </div>
-                        </li>
-                    </ul>
+                            <h4 class="text-lg font-semibold mb-3">实践能力</h4>
+                            <p class="text-gray-400">
+                                注重动手实践，通过项目制作提升学生的实际操作能力。
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                
-                <!-- 发展目标 -->
-                <div class="bg-secondary rounded-xl p-6">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center space-x-2">
-                        <i class="fa fa-bullseye text-accent2"></i>
-                        <span>发展目标</span>
-                    </h3>
+
+                <div class="bg-dark-light rounded-2xl p-8 border border-white/10">
+                    <h3 class="text-2xl font-bold mb-6 text-gradient">发展目标</h3>
                     <ul class="space-y-4">
-                        <li class="flex items-start space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-accent2/20 flex items-center justify-center mt-1 flex-shrink-0">
-                                <i class="fa fa-graduation-cap text-accent2"></i>
+                        <li class="flex items-start space-x-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fas fa-check text-primary"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold">培养科技人才</h4>
-                                <p class="text-neutral-400 text-sm">
-                                    为学生提供科技学习和实践的平台，培养未来的科技人才
+                                <h4 class="text-lg font-semibold mb-2">培养科技人才</h4>
+                                <p class="text-gray-400">
+                                    为学校培养具有创新精神和实践能力的科技人才，为未来的科技创新储备力量。
                                 </p>
                             </div>
                         </li>
-                        <li class="flex items-start space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-accent2/20 flex items-center justify-center mt-1 flex-shrink-0">
-                                <i class="fa fa-trophy text-accent2"></i>
+                        <li class="flex items-start space-x-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fas fa-check text-primary"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold">提升竞赛成绩</h4>
-                                <p class="text-neutral-400 text-sm">
-                                    在各类科技竞赛中取得优异成绩，为学校争光
+                                <h4 class="text-lg font-semibold mb-2">提升竞赛成绩</h4>
+                                <p class="text-gray-400">
+                                    在各级科技竞赛中取得优异成绩，为学校争光添彩。
                                 </p>
                             </div>
                         </li>
-                        <li class="flex items-start space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-accent2/20 flex items-center justify-center mt-1 flex-shrink-0">
-                                <i class="fa fa-globe text-accent2"></i>
+                        <li class="flex items-start space-x-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fas fa-check text-primary"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold">扩大影响力</h4>
-                                <p class="text-neutral-400 text-sm">
-                                    成为学校的特色品牌，在全市乃至全省范围内具有一定影响力
+                                <h4 class="text-lg font-semibold mb-2">丰富校园文化</h4>
+                                <p class="text-gray-400">
+                                    通过举办科技活动，丰富校园文化生活，营造浓厚的科技氛围。
                                 </p>
                             </div>
                         </li>
-                        <li class="flex items-start space-x-3">
-                            <div class="w-10 h-10 rounded-full bg-accent2/20 flex items-center justify-center mt-1 flex-shrink-0">
-                                <i class="fa fa-handshake-o text-accent2"></i>
+                        <li class="flex items-start space-x-4">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fas fa-check text-primary"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold">加强交流合作</h4>
-                                <p class="text-neutral-400 text-sm">
-                                    与其他学校的创客社团建立联系，加强交流与合作
+                                <h4 class="text-lg font-semibold mb-2">搭建交流平台</h4>
+                                <p class="text-gray-400">
+                                    为学生搭建与其他学校、企业的交流平台，拓展视野。
                                 </p>
                             </div>
                         </li>
@@ -262,100 +297,101 @@
     </section>
 
     <!-- 组织结构 -->
-    <section class="py-16 bg-secondary">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-10">组织结构</h2>
-            <div class="flex flex-col items-center">
-                <!-- 社长 -->
-                <div class="text-center mb-12">
-                    <div class="w-24 h-24 rounded-full bg-gradient mx-auto mb-4 flex items-center justify-center">
-                        <i class="fa fa-user-circle text-4xl text-white"></i>
-                    </div>
-                    <h3 class="text-xl font-bold">社长</h3>
-                    <p class="text-accent1">张明</p>
-                </div>
-                
-                <!-- 管理层 -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-                    <!-- 副社长 -->
-                    <div class="text-center">
-                        <div class="w-20 h-20 rounded-full bg-accent1/20 mx-auto mb-3 flex items-center justify-center">
-                            <i class="fa fa-user text-3xl text-accent1"></i>
+    <section class="py-20 px-4 bg-dark-light">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">组织结构</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+            </div>
+            <div class="max-w-5xl mx-auto">
+                <!-- 组织结构图 -->
+                <div class="relative">
+                    <!-- 社长 -->
+                    <div class="text-center mb-16">
+                        <div class="bg-gradient-to-r from-primary to-secondary rounded-xl p-1 inline-block">
+                            <div class="bg-dark-lighter rounded-lg px-8 py-6 min-w-[200px]">
+                                <h3 class="text-xl font-bold mb-2">社长</h3>
+                                <p class="text-gray-400">统筹社团全面工作</p>
+                            </div>
                         </div>
-                        <h4 class="font-bold">副社长</h4>
-                        <p class="text-neutral-400">李华</p>
                     </div>
-                    
-                    <!-- 技术部长 -->
-                    <div class="text-center">
-                        <div class="w-20 h-20 rounded-full bg-accent1/20 mx-auto mb-3 flex items-center justify-center">
-                            <i class="fa fa-code text-3xl text-accent1"></i>
+
+                    <!-- 副社长和部门 -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+                        <!-- 副社长 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-6 border border-white/10 card-hover">
+                                <h3 class="text-lg font-bold mb-2">副社长</h3>
+                                <p class="text-gray-400">协助社长管理社团</p>
+                            </div>
                         </div>
-                        <h4 class="font-bold">技术部长</h4>
-                        <p class="text-neutral-400">王芳</p>
-                    </div>
-                    
-                    <!-- 活动部长 -->
-                    <div class="text-center">
-                        <div class="w-20 h-20 rounded-full bg-accent1/20 mx-auto mb-3 flex items-center justify-center">
-                            <i class="fa fa-calendar text-3xl text-accent1"></i>
+                        <!-- 软件部 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-6 border border-white/10 card-hover">
+                                <h3 class="text-lg font-bold mb-2">软件部</h3>
+                                <p class="text-gray-400">负责编程和软件项目</p>
+                            </div>
                         </div>
-                        <h4 class="font-bold">活动部长</h4>
-                        <p class="text-neutral-400">赵强</p>
-                    </div>
-                    
-                    <!-- 宣传部长 -->
-                    <div class="text-center">
-                        <div class="w-20 h-20 rounded-full bg-accent1/20 mx-auto mb-3 flex items-center justify-center">
-                            <i class="fa fa-bullhorn text-3xl text-accent1"></i>
+                        <!-- 硬件部 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-6 border border-white/10 card-hover">
+                                <h3 class="text-lg font-bold mb-2">硬件部</h3>
+                                <p class="text-gray-400">负责电子和硬件项目</p>
+                            </div>
                         </div>
-                        <h4 class="font-bold">宣传部长</h4>
-                        <p class="text-neutral-400">陈丽</p>
+                        <!-- 竞赛部 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-6 border border-white/10 card-hover">
+                                <h3 class="text-lg font-bold mb-2">竞赛部</h3>
+                                <p class="text-gray-400">负责竞赛组织和培训</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- 部门 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- 软件部 -->
-                    <div class="bg-primary rounded-xl p-6">
-                        <h4 class="text-lg font-bold mb-4 flex items-center space-x-2">
-                            <i class="fa fa-laptop-code text-accent1"></i>
-                            <span>软件部</span>
-                        </h4>
-                        <p class="text-neutral-400 text-sm mb-4">
-                            负责学习和研究各类软件技术，如Web开发、移动应用开发、人工智能等
-                        </p>
-                        <p class="text-neutral-500 text-sm">
-                            部长：李华
-                        </p>
-                    </div>
-                    
-                    <!-- 硬件部 -->
-                    <div class="bg-primary rounded-xl p-6">
-                        <h4 class="text-lg font-bold mb-4 flex items-center space-x-2">
-                            <i class="fa fa-microchip text-accent2"></i>
-                            <span>硬件部</span>
-                        </h4>
-                        <p class="text-neutral-400 text-sm mb-4">
-                            负责学习和研究各类硬件技术，如嵌入式开发、机器人制作、电子电路等
-                        </p>
-                        <p class="text-neutral-500 text-sm">
-                            部长：王芳
-                        </p>
-                    </div>
-                    
-                    <!-- 竞赛部 -->
-                    <div class="bg-primary rounded-xl p-6">
-                        <h4 class="text-lg font-bold mb-4 flex items-center space-x-2">
-                            <i class="fa fa-trophy text-accent1"></i>
-                            <span>竞赛部</span>
-                        </h4>
-                        <p class="text-neutral-400 text-sm mb-4">
-                            负责组织和参与各类科技竞赛，如创新杯、机器人大赛等
-                        </p>
-                        <p class="text-neutral-500 text-sm">
-                            部长：赵强
-                        </p>
+
+                    <!-- 干事层 -->
+                    <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+                        <!-- 干事 1 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-4 border border-white/10 card-hover">
+                                <h3 class="text-sm font-bold mb-1">软件干事</h3>
+                                <p class="text-gray-500 text-xs">编程爱好者</p>
+                            </div>
+                        </div>
+                        <!-- 干事 2 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-4 border border-white/10 card-hover">
+                                <h3 class="text-sm font-bold mb-1">软件干事</h3>
+                                <p class="text-gray-500 text-xs">编程爱好者</p>
+                            </div>
+                        </div>
+                        <!-- 干事 3 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-4 border border-white/10 card-hover">
+                                <h3 class="text-sm font-bold mb-1">硬件干事</h3>
+                                <p class="text-gray-500 text-xs">电子爱好者</p>
+                            </div>
+                        </div>
+                        <!-- 干事 4 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-4 border border-white/10 card-hover">
+                                <h3 class="text-sm font-bold mb-1">硬件干事</h3>
+                                <p class="text-gray-500 text-xs">电子爱好者</p>
+                            </div>
+                        </div>
+                        <!-- 干事 5 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-4 border border-white/10 card-hover">
+                                <h3 class="text-sm font-bold mb-1">竞赛干事</h3>
+                                <p class="text-gray-500 text-xs">竞赛参与者</p>
+                            </div>
+                        </div>
+                        <!-- 干事 6 -->
+                        <div class="text-center">
+                            <div class="bg-dark-lighter rounded-xl p-4 border border-white/10 card-hover">
+                                <h3 class="text-sm font-bold mb-1">竞赛干事</h3>
+                                <p class="text-gray-500 text-xs">竞赛参与者</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -363,51 +399,81 @@
     </section>
 
     <!-- 指导教师 -->
-    <section class="py-16">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-10">指导教师</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- 教师1 -->
-                <div class="bg-secondary rounded-xl p-6 flex items-center space-x-6">
-                    <div class="w-24 h-24 rounded-full bg-gradient flex items-center justify-center flex-shrink-0">
-                        <i class="fa fa-user text-4xl text-white"></i>
+    <section class="py-20 px-4">
+        <div class="container mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">指导教师</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 教师 1 -->
+                <div class="bg-dark-light rounded-xl overflow-hidden border border-white/10 card-hover">
+                    <div class="relative">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20male%20teacher%20in%20his%2030s%20with%20glasses%20and%20friendly%20smile%20in%20a%20classroom%20setting&image_size=square" alt="张老师" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-dark to-transparent p-4">
+                            <h3 class="text-xl font-bold">张老师</h3>
+                            <p class="text-primary">信息技术教师</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-bold">王老师</h3>
-                        <p class="text-accent1 mb-3">信息技术教师</p>
-                        <p class="text-neutral-400 mb-3">
-                            计算机科学专业，拥有丰富的教学经验和项目开发经验，
-                            擅长Web开发和人工智能领域。
+                    <div class="p-6">
+                        <p class="text-gray-400 mb-4">
+                            计算机科学专业硕士，具有丰富的编程和机器人教学经验，
+                            指导学生在多项科技竞赛中获奖。
                         </p>
-                        <div class="flex items-center space-x-4">
-                            <a href="#" class="text-neutral-400 hover:text-accent1 transition-colors">
-                                <i class="fa fa-envelope"></i>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fas fa-envelope"></i>
                             </a>
-                            <a href="#" class="text-neutral-400 hover:text-accent1 transition-colors">
-                                <i class="fa fa-phone"></i>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fab fa-weixin"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-                
-                <!-- 教师2 -->
-                <div class="bg-secondary rounded-xl p-6 flex items-center space-x-6">
-                    <div class="w-24 h-24 rounded-full bg-gradient flex items-center justify-center flex-shrink-0">
-                        <i class="fa fa-user text-4xl text-white"></i>
+                <!-- 教师 2 -->
+                <div class="bg-dark-light rounded-xl overflow-hidden border border-white/10 card-hover">
+                    <div class="relative">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20female%20teacher%20in%20her%2030s%20with%20friendly%20expression%20in%20a%20classroom%20setting&image_size=square" alt="李老师" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-dark to-transparent p-4">
+                            <h3 class="text-xl font-bold">李老师</h3>
+                            <p class="text-primary">物理教师</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-bold">李老师</h3>
-                        <p class="text-accent1 mb-3">物理教师</p>
-                        <p class="text-neutral-400 mb-3">
-                            物理学专业，擅长电子电路和嵌入式系统，
-                            指导学生在机器人大赛中取得优异成绩。
+                    <div class="p-6">
+                        <p class="text-gray-400 mb-4">
+                            物理学硕士，擅长电子电路和嵌入式系统教学，
+                            为社团提供硬件技术指导。
                         </p>
-                        <div class="flex items-center space-x-4">
-                            <a href="#" class="text-neutral-400 hover:text-accent1 transition-colors">
-                                <i class="fa fa-envelope"></i>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fas fa-envelope"></i>
                             </a>
-                            <a href="#" class="text-neutral-400 hover:text-accent1 transition-colors">
-                                <i class="fa fa-phone"></i>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fab fa-weixin"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 教师 3 -->
+                <div class="bg-dark-light rounded-xl overflow-hidden border border-white/10 card-hover">
+                    <div class="relative">
+                        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20male%20teacher%20in%20his%2040s%20with%20confident%20pose%20in%20a%20classroom%20setting&image_size=square" alt="王老师" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-dark to-transparent p-4">
+                            <h3 class="text-xl font-bold">王老师</h3>
+                            <p class="text-primary">数学教师</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-400 mb-4">
+                            数学教育硕士，擅长算法和逻辑思维训练，
+                            为社团提供数学建模和算法设计指导。
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fab fa-weixin"></i>
                             </a>
                         </div>
                     </div>
@@ -417,104 +483,97 @@
     </section>
 
     <!-- 加入我们 -->
-    <section class="py-16 bg-gradient">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">加入我们</h2>
-            <p class="text-neutral-400 max-w-2xl mx-auto mb-10">
-                无论你是对编程感兴趣，还是喜欢硬件制作，或是想参加科技竞赛，
-                卓然创客社团都欢迎你的加入！
+    <section class="py-20 px-4 bg-gradient-to-r from-dark to-dark-light">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">加入卓然创客社团</h2>
+            <p class="text-gray-400 mb-10 max-w-2xl mx-auto">
+                如果你对科技充满热情，喜欢动手实践，
+                想要结交志同道合的朋友，那么卓然创客社团欢迎你的加入！
             </p>
-            <a href="login.html" class="px-8 py-3 rounded-full bg-accent1 text-primary font-bold hover:scale-105 transition-all duration-300 inline-block">
-                立即申请
+            <a href="visitor-center.html#join-us" class="px-8 py-4 rounded-full bg-gradient-to-r from-primary to-secondary text-dark font-medium hover:opacity-90 transition-opacity inline-block">
+                申请加入
             </a>
         </div>
     </section>
 
     <!-- 页脚 -->
-    <footer class="bg-primary border-t border-neutral-800 py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+    <footer class="bg-dark py-12 px-4 border-t border-white/10">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- 社团信息 -->
                 <div>
                     <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 rounded-full bg-gradient flex items-center justify-center">
-                            <i class="fa fa-cogs text-white text-sm"></i>
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                            <i class="fas fa-robot text-dark text-sm font-bold"></i>
                         </div>
-                        <span class="text-lg font-bold">卓然创客</span>
+                        <span class="text-lg font-bold text-gradient">卓然创客</span>
                     </div>
-                    <p class="text-neutral-400 text-sm">
-                        武威第十八中学卓然创客社团，致力于培养学生的创新精神和实践能力。
+                    <p class="text-gray-400 mb-4">
+                        武威第十八中学卓然创客社团
+                        培养创新精神，提升实践能力
                     </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fab fa-qq text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </a>
+                    </div>
                 </div>
-                
                 <!-- 快速链接 -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="index.html" class="text-neutral-400 hover:text-accent1 transition-colors">首页</a></li>
-                        <li><a href="club-showcase.html" class="text-neutral-400 hover:text-accent1 transition-colors">社团展示</a></li>
-                        <li><a href="activities.html" class="text-neutral-400 hover:text-accent1 transition-colors">社团活动</a></li>
-                        <li><a href="about.html" class="text-neutral-400 hover:text-accent1 transition-colors">社团简介</a></li>
+                    <h3 class="text-white font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-primary transition-colors">首页</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-primary transition-colors">社团简介</a></li>
+                        <li><a href="activities.html" class="text-gray-400 hover:text-primary transition-colors">社团活动</a></li>
+                        <li><a href="showcase.html" class="text-gray-400 hover:text-primary transition-colors">社团展示</a></li>
+                        <li><a href="visitor-center.html" class="text-gray-400 hover:text-primary transition-colors">访客中心</a></li>
                     </ul>
                 </div>
-                
                 <!-- 联系我们 -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4">联系我们</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li class="flex items-center space-x-2 text-neutral-400">
-                            <i class="fa fa-map-marker"></i>
-                            <span>武威第十八中学</span>
+                    <h3 class="text-white font-bold mb-4">联系我们</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>武威第十八中学科技楼</span>
                         </li>
-                        <li class="flex items-center space-x-2 text-neutral-400">
-                            <i class="fa fa-envelope"></i>
-                            <span>zrck@ww18z.com</span>
-                        </li>
-                        <li class="flex items-center space-x-2 text-neutral-400">
-                            <i class="fa fa-phone"></i>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-phone mr-2"></i>
                             <span>0935-1234567</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span>zrck@ww18zx.com</span>
                         </li>
                     </ul>
                 </div>
-                
-                <!-- 作者信息 -->
+                <!-- 订阅 -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4">作者信息</h3>
-                    <p class="text-neutral-400 text-sm">
-                        设计与开发：专业网页设计团队
+                    <h3 class="text-white font-bold mb-4">订阅通知</h3>
+                    <p class="text-gray-400 mb-4">
+                        输入邮箱订阅社团最新活动和通知
                     </p>
-                    <p class="text-neutral-400 text-sm mt-2">
-                        © 2024 卓然创客社团. 保留所有权利.
-                    </p>
+                    <div class="flex">
+                        <input type="email" placeholder="你的邮箱" class="flex-1 bg-dark-light border border-white/10 rounded-l-full px-4 py-2 focus:outline-none focus:border-primary text-white">
+                        <button class="bg-primary text-dark font-bold px-4 py-2 rounded-r-full hover:opacity-90 transition-opacity">
+                            订阅
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="border-t border-neutral-800 pt-8 text-center text-neutral-500 text-sm">
-                <p>武威第十八中学卓然创客社团官方网站</p>
+            <div class="border-t border-white/10 mt-12 pt-8 text-center text-gray-500">
+                <p>&copy; 2024 武威第十八中学卓然创客社团. 保留所有权利.</p>
             </div>
         </div>
     </footer>
 
     <!-- JavaScript -->
-    <script>
-        // 移动端菜单切换
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // 平滑滚动
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

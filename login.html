@@ -3,318 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社员登录 - 卓然创客</title>
+    <title>登录 - 卓然创客社团</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- 自定义 Tailwind 配置 -->
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: '#121212',
-                        secondary: '#1E1E1E',
-                        accent1: '#03fc90',
-                        accent2: '#fc03f8',
-                        neutral: {
-                            100: '#F5F5F5',
-                            200: '#E5E5E5',
-                            300: '#D4D4D4',
-                            400: '#A3A3A3',
-                            500: '#737373',
-                            600: '#525252',
-                            700: '#404040',
-                            800: '#262626',
-                            900: '#171717',
-                        }
+                        primary: '#03fc90',
+                        secondary: '#fc03f8',
+                        dark: '#121212',
+                        'dark-light': '#1e1e1e',
+                        'dark-lighter': '#2a2a2a'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
+                        sans: ['Inter', 'Roboto', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
     <style type="text/tailwindcss">
+        /* Tailwind CSS directives */
         @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .text-shadow {
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            }
-            .glow {
-                box-shadow: 0 0 15px rgba(3, 252, 144, 0.5);
-            }
-            .glow-pink {
-                box-shadow: 0 0 15px rgba(252, 3, 248, 0.5);
-            }
-            .bg-gradient {
-                background: linear-gradient(135deg, #121212 0%, #1E1E1E 100%);
-            }
             .text-gradient {
-                background-clip: text;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-image: linear-gradient(90deg, #03fc90, #fc03f8);
+                @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+            }
+            .bg-glass {
+                @apply bg-dark/80 backdrop-blur-md border border-white/10;
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1;
+            }
+            .form-input {
+                @apply w-full px-4 py-3 bg-dark-lighter border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white transition-colors;
+            }
+            .btn-primary {
+                @apply w-full py-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-dark font-bold hover:opacity-90 transition-opacity;
+            }
+            .btn-secondary {
+                @apply w-full py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary/10 transition-colors;
             }
         }
     </style>
 </head>
-<body class="bg-primary text-neutral-100 min-h-screen">
-    <!-- 导航栏 -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-primary/90 backdrop-blur-md border-b border-neutral-800">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <!-- Logo -->
-                <a href="index.html" class="flex items-center space-x-2">
-                    <div class="w-10 h-10 rounded-full bg-gradient flex items-center justify-center">
-                        <i class="fa fa-cogs text-white text-xl"></i>
+<body class="bg-dark text-white min-h-screen flex items-center justify-center py-12 px-4">
+    <!-- 登录卡片 -->
+    <div class="w-full max-w-md">
+        <div class="relative">
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-xl opacity-70"></div>
+            <div class="relative bg-dark-light rounded-2xl p-8 border border-white/10">
+                <!-- Logo 和标题 -->
+                <div class="text-center mb-8">
+                    <div class="flex justify-center items-center space-x-2 mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                            <i class="fas fa-robot text-dark text-xl font-bold"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-gradient">卓然创客</span>
                     </div>
-                    <span class="text-xl font-bold">卓然创客</span>
-                </a>
-                
-                <!-- 桌面导航 -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="hover:text-accent1 transition-colors">首页</a>
-                    <a href="club-showcase.html" class="hover:text-accent1 transition-colors">社团展示</a>
-                    <a href="activities.html" class="hover:text-accent1 transition-colors">社团活动</a>
-                    <a href="about.html" class="hover:text-accent1 transition-colors">社团简介</a>
-                    <a href="login.html" class="text-accent1">登录</a>
+                    <h2 class="text-2xl font-bold">用户登录</h2>
+                    <p class="text-gray-400 mt-2">登录后访问社员中心和聊天系统</p>
                 </div>
-                
-                <!-- 移动端菜单按钮 -->
-                <div class="md:hidden">
-                    <button id="menu-toggle" class="text-neutral-100">
-                        <i class="fa fa-bars text-xl"></i>
+
+                <!-- 登录表单 -->
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-2">邮箱</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="请输入邮箱地址" required>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="password" class="block text-sm font-medium text-gray-300">密码</label>
+                            <a href="#" id="forgot-password-link" class="text-sm text-primary hover:underline">忘记密码？</a>
+                        </div>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="请输入密码" required>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-600 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-400">记住我</label>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn-primary">
+                            登录
+                        </button>
+                    </div>
+                </form>
+
+                <!-- 分割线 -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-700"></div>
+                    </div>
+                    <div class="relative flex justify-center">
+                        <span class="bg-dark-light px-4 text-sm text-gray-500">或</span>
+                    </div>
+                </div>
+
+                <!-- 注册按钮 -->
+                <div>
+                    <button id="register-btn" class="btn-secondary">
+                        注册新账号
                     </button>
                 </div>
-            </div>
-        </div>
-        
-        <!-- 移动端导航菜单 -->
-        <div id="mobile-menu" class="md:hidden hidden bg-secondary border-t border-neutral-800">
-            <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
-                <a href="index.html" class="py-2 hover:text-accent1 transition-colors">首页</a>
-                <a href="club-showcase.html" class="py-2 hover:text-accent1 transition-colors">社团展示</a>
-                <a href="activities.html" class="py-2 hover:text-accent1 transition-colors">社团活动</a>
-                <a href="about.html" class="py-2 hover:text-accent1 transition-colors">社团简介</a>
-                <a href="login.html" class="py-2 text-accent1">登录</a>
-            </div>
-        </div>
-    </nav>
 
-    <!-- 登录区域 -->
-    <section class="pt-32 pb-16">
-        <div class="container mx-auto px-4">
-            <div class="max-w-md mx-auto">
-                <div class="text-center mb-10">
-                    <h1 class="text-3xl font-bold mb-4">社员登录</h1>
-                    <p class="text-neutral-400">
-                        登录后即可访问社员中心，参与社团活动
-                    </p>
+                <!-- 错误提示 -->
+                <div id="error-message" class="mt-4 hidden">
+                    <div class="bg-red-500/20 border border-red-500/40 rounded-lg p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                            <span id="error-text" class="text-red-400"></span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="bg-secondary rounded-xl p-8 shadow-lg">
-                    <!-- 登录表单 -->
-                    <form id="login-form" class="space-y-6">
+            </div>
+        </div>
+
+        <!-- 注册模态框 -->
+        <div id="register-modal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+            <div class="relative z-10 flex items-center justify-center min-h-screen px-4">
+                <div class="bg-dark-light rounded-2xl p-8 border border-white/10 w-full max-w-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold">注册新账号</h3>
+                        <button id="close-register-modal" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <form id="register-form" class="space-y-6">
                         <div>
-                            <label for="email" class="block text-sm font-medium mb-2">邮箱</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fa fa-envelope text-neutral-500"></i>
-                                </div>
-                                <input type="email" id="email" name="email" required
-                                    class="block w-full pl-10 pr-3 py-3 bg-primary border border-neutral-700 rounded-full focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors"
-                                    placeholder="请输入邮箱地址">
-                            </div>
+                            <label for="register-name" class="block text-sm font-medium text-gray-300 mb-2">姓名</label>
+                            <input type="text" id="register-name" name="name" class="form-input" placeholder="请输入姓名" required>
                         </div>
-                        
                         <div>
-                            <label for="password" class="block text-sm font-medium mb-2">密码</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fa fa-lock text-neutral-500"></i>
-                                </div>
-                                <input type="password" id="password" name="password" required
-                                    class="block w-full pl-10 pr-3 py-3 bg-primary border border-neutral-700 rounded-full focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors"
-                                    placeholder="请输入密码">
-                            </div>
+                            <label for="register-email" class="block text-sm font-medium text-gray-300 mb-2">邮箱</label>
+                            <input type="email" id="register-email" name="email" class="form-input" placeholder="请输入邮箱地址" required>
                         </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <input id="remember-me" name="remember-me" type="checkbox"
-                                    class="h-4 w-4 text-accent1 focus:ring-accent1 border-neutral-700 rounded">
-                                <label for="remember-me" class="ml-2 block text-sm text-neutral-400">
-                                    记住我
-                                </label>
-                            </div>
-                            <div class="text-sm">
-                                <a href="#" class="font-medium text-accent1 hover:text-accent2 transition-colors">
-                                    忘记密码？
-                                </a>
-                            </div>
-                        </div>
-                        
                         <div>
-                            <button type="submit" id="login-button"
-                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-sm font-bold text-primary bg-accent1 hover:bg-accent1/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent1 transition-all duration-300 hover:scale-105">
-                                登录
+                            <label for="register-password" class="block text-sm font-medium text-gray-300 mb-2">密码</label>
+                            <input type="password" id="register-password" name="password" class="form-input" placeholder="请输入密码（至少6位）" required minlength="6">
+                        </div>
+                        <div>
+                            <label for="register-confirm-password" class="block text-sm font-medium text-gray-300 mb-2">确认密码</label>
+                            <input type="password" id="register-confirm-password" name="confirm-password" class="form-input" placeholder="请再次输入密码" required minlength="6">
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-primary">
+                                注册
                             </button>
                         </div>
                     </form>
-                    
-                    <div class="mt-8">
-                        <div class="relative">
-                            <div class="absolute inset-0 flex items-center">
-                                <div class="w-full border-t border-neutral-700"></div>
+                    <div id="register-error" class="mt-4 hidden">
+                        <div class="bg-red-500/20 border border-red-500/40 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                                <span id="register-error-text" class="text-red-400"></span>
                             </div>
-                            <div class="relative flex justify-center text-sm">
-                                <span class="px-2 bg-secondary text-neutral-500">
-                                    或
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6">
-                            <a href="#" id="register-link"
-                                class="w-full flex justify-center py-3 px-4 border border-neutral-700 rounded-full shadow-sm text-sm font-bold text-neutral-100 bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent2 transition-all duration-300 hover:scale-105">
-                                注册新账号
-                            </a>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-8 text-center">
-                    <p class="text-neutral-500 text-sm">
-                        还不是社员？<a href="#" class="text-accent1 hover:text-accent2 transition-colors">申请加入</a>
-                    </p>
-                </div>
             </div>
         </div>
-    </section>
 
-    <!-- 页脚 -->
-    <footer class="bg-primary border-t border-neutral-800 py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <!-- 社团信息 -->
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 rounded-full bg-gradient flex items-center justify-center">
-                            <i class="fa fa-cogs text-white text-sm"></i>
-                        </div>
-                        <span class="text-lg font-bold">卓然创客</span>
+        <!-- 忘记密码模态框 -->
+        <div id="forgot-modal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+            <div class="relative z-10 flex items-center justify-center min-h-screen px-4">
+                <div class="bg-dark-light rounded-2xl p-8 border border-white/10 w-full max-w-md">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold">忘记密码</h3>
+                        <button id="close-forgot-modal" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
                     </div>
-                    <p class="text-neutral-400 text-sm">
-                        武威第十八中学卓然创客社团，致力于培养学生的创新精神和实践能力。
-                    </p>
+                    <p class="text-gray-400 mb-6">请输入您的邮箱地址，我们将发送密码重置链接</p>
+                    <form id="forgot-form" class="space-y-6">
+                        <div>
+                            <label for="forgot-email" class="block text-sm font-medium text-gray-300 mb-2">邮箱</label>
+                            <input type="email" id="forgot-email" name="email" class="form-input" placeholder="请输入邮箱地址" required>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn-primary">
+                                发送重置链接
+                            </button>
+                        </div>
+                    </form>
+                    <div id="forgot-error" class="mt-4 hidden">
+                        <div class="bg-red-500/20 border border-red-500/40 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                                <span id="forgot-error-text" class="text-red-400"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="forgot-success" class="mt-4 hidden">
+                        <div class="bg-green-500/20 border border-green-500/40 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span id="forgot-success-text" class="text-green-400">重置链接已发送到您的邮箱</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <!-- 快速链接 -->
-                <div>
-                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="index.html" class="text-neutral-400 hover:text-accent1 transition-colors">首页</a></li>
-                        <li><a href="club-showcase.html" class="text-neutral-400 hover:text-accent1 transition-colors">社团展示</a></li>
-                        <li><a href="activities.html" class="text-neutral-400 hover:text-accent1 transition-colors">社团活动</a></li>
-                        <li><a href="about.html" class="text-neutral-400 hover:text-accent1 transition-colors">社团简介</a></li>
-                    </ul>
-                </div>
-                
-                <!-- 联系我们 -->
-                <div>
-                    <h3 class="text-lg font-bold mb-4">联系我们</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li class="flex items-center space-x-2 text-neutral-400">
-                            <i class="fa fa-map-marker"></i>
-                            <span>武威第十八中学</span>
-                        </li>
-                        <li class="flex items-center space-x-2 text-neutral-400">
-                            <i class="fa fa-envelope"></i>
-                            <span>zrck@ww18z.com</span>
-                        </li>
-                        <li class="flex items-center space-x-2 text-neutral-400">
-                            <i class="fa fa-phone"></i>
-                            <span>0935-1234567</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- 作者信息 -->
-                <div>
-                    <h3 class="text-lg font-bold mb-4">作者信息</h3>
-                    <p class="text-neutral-400 text-sm">
-                        设计与开发：专业网页设计团队
-                    </p>
-                    <p class="text-neutral-400 text-sm mt-2">
-                        © 2024 卓然创客社团. 保留所有权利.
-                    </p>
-                </div>
-            </div>
-            <div class="border-t border-neutral-800 pt-8 text-center text-neutral-500 text-sm">
-                <p>武威第十八中学卓然创客社团官方网站</p>
             </div>
         </div>
-    </footer>
+    </div>
 
-    <!-- JavaScript -->
+    <!-- Supabase 配置 -->
+    <script src="lib/supabase.js"></script>
+    <!-- 登录脚本 -->
     <script>
-        // 移动端菜单切换
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        });
+        // DOM 元素
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const forgotForm = document.getElementById('forgot-form');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const registerModal = document.getElementById('register-modal');
+        const forgotModal = document.getElementById('forgot-modal');
+        const registerBtn = document.getElementById('register-btn');
+        const closeRegisterModal = document.getElementById('close-register-modal');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const closeForgotModal = document.getElementById('close-forgot-modal');
+        const registerError = document.getElementById('register-error');
+        const registerErrorText = document.getElementById('register-error-text');
+        const forgotError = document.getElementById('forgot-error');
+        const forgotErrorText = document.getElementById('forgot-error-text');
+        const forgotSuccess = document.getElementById('forgot-success');
 
-        // 初始化Supabase
-        const supabaseUrl = 'YOUR_SUPABASE_URL';
-        const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+        // 显示错误信息
+        function showError(element, text) {
+            element.classList.remove('hidden');
+            element.querySelector('span').textContent = text;
+        }
+
+        // 隐藏错误信息
+        function hideError(element) {
+            element.classList.add('hidden');
+        }
 
         // 登录表单提交
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const rememberMe = document.getElementById('remember-me').checked;
-            
-            const loginButton = document.getElementById('login-button');
-            const originalText = loginButton.textContent;
-            
-            // 显示加载状态
-            loginButton.disabled = true;
-            loginButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 登录中...';
-            
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-                
-                if (error) {
-                    throw error;
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideError(errorMessage);
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    // 调用登录函数
+                    const { data, error } = await window.App.auth.signIn(email, password);
+                    
+                    if (error) {
+                        showError(errorMessage, error.message);
+                        return;
+                    }
+
+                    // 登录成功，跳转到社员中心
+                    window.location.href = 'member-center.html';
+                } catch (err) {
+                    showError(errorMessage, '登录失败，请稍后重试');
                 }
-                
-                // 登录成功，跳转到社员中心
-                window.location.href = 'member-center.html';
-            } catch (error) {
-                // 显示错误信息
-                alert('登录失败：' + error.message);
-            } finally {
-                // 恢复按钮状态
-                loginButton.disabled = false;
-                loginButton.textContent = originalText;
+            });
+        }
+
+        // 注册表单提交
+        if (registerForm) {
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideError(registerError);
+
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+
+                // 验证密码
+                if (password !== confirmPassword) {
+                    showError(registerError, '两次输入的密码不一致');
+                    return;
+                }
+
+                try {
+                    // 调用注册函数
+                    const { data, error } = await window.App.auth.signUp(email, password, {
+                        full_name: name,
+                        role: 'member'
+                    });
+
+                    if (error) {
+                        showError(registerError, error.message);
+                        return;
+                    }
+
+                    // 注册成功，显示提示并关闭模态框
+                    alert('注册成功！请检查邮箱并登录');
+                    registerModal.classList.add('hidden');
+                    registerForm.reset();
+                } catch (err) {
+                    showError(registerError, '注册失败，请稍后重试');
+                }
+            });
+        }
+
+        // 忘记密码表单提交
+        if (forgotForm) {
+            forgotForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideError(forgotError);
+                forgotSuccess.classList.add('hidden');
+
+                const email = document.getElementById('forgot-email').value;
+
+                try {
+                    // 调用重置密码函数
+                    const { data, error } = await window.App.auth.resetPassword(email);
+
+                    if (error) {
+                        showError(forgotError, error.message);
+                        return;
+                    }
+
+                    // 发送成功
+                    forgotSuccess.classList.remove('hidden');
+                    setTimeout(() => {
+                        forgotModal.classList.add('hidden');
+                        forgotForm.reset();
+                    }, 3000);
+                } catch (err) {
+                    showError(forgotError, '发送失败，请稍后重试');
+                }
+            });
+        }
+
+        // 检查用户是否已登录
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const user = await window.App.auth.getCurrentUser();
+                if (user) {
+                    // 用户已登录，跳转到社员中心
+                    window.location.href = 'member-center.html';
+                }
+            } catch (err) {
+                // 忽略错误
             }
         });
 
-        // 注册链接点击
-        document.getElementById('register-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            // 这里可以实现注册功能，或者跳转到注册页面
-            alert('注册功能开发中...');
+        // 打开注册模态框
+        if (registerBtn) {
+            registerBtn.addEventListener('click', () => {
+                registerModal.classList.remove('hidden');
+            });
+        }
+
+        // 关闭注册模态框
+        if (closeRegisterModal) {
+            closeRegisterModal.addEventListener('click', () => {
+                registerModal.classList.add('hidden');
+                hideError(registerError);
+                registerForm.reset();
+            });
+        }
+
+        // 打开忘记密码模态框
+        if (forgotPasswordLink) {
+            forgotPasswordLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                forgotModal.classList.remove('hidden');
+            });
+        }
+
+        // 关闭忘记密码模态框
+        if (closeForgotModal) {
+            closeForgotModal.addEventListener('click', () => {
+                forgotModal.classList.add('hidden');
+                hideError(forgotError);
+                forgotSuccess.classList.add('hidden');
+                forgotForm.reset();
+            });
+        }
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            if (e.target === registerModal) {
+                registerModal.classList.add('hidden');
+                hideError(registerError);
+                registerForm.reset();
+            }
+            if (e.target === forgotModal) {
+                forgotModal.classList.add('hidden');
+                hideError(forgotError);
+                forgotSuccess.classList.add('hidden');
+                forgotForm.reset();
+            }
+        });
+
+        // 检查用户是否已登录
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const user = await auth.getCurrentUser();
+                if (user) {
+                    // 用户已登录，跳转到社员中心
+                    window.location.href = 'member-center.html';
+                }
+            } catch (err) {
+                // 忽略错误
+            }
         });
     </script>
 </body>

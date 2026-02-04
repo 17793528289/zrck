@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天系统 - 武威第十八中学卓然创客社团</title>
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#6366f1',
+                        dark: '#1e293b',
+                        'dark-light': '#334155',
+                        accent: '#f43f5e'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .text-gradient {
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+    </style>
+    <!-- 页面样式 -->
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .message-animation {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .chat-list-item:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .chat-list-item.active {
+            background-color: rgba(59, 130, 246, 0.2);
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                    <i class="fas fa-microchip text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold bg-gradient-to-r from-primary to-secondary text-gradient">卓然创客</span>
+            </a>
+            
+            <!-- 导航链接 - 桌面版 -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="text-gray-300 hover:text-white transition-colors">首页</a>
+                <a href="about.html" class="text-gray-300 hover:text-white transition-colors">社团简介</a>
+                <a href="activities.html" class="text-gray-300 hover:text-white transition-colors">社团活动</a>
+                <a href="showcase.html" class="text-gray-300 hover:text-white transition-colors">社团展示</a>
+                <a href="visitor-center.html" class="text-gray-300 hover:text-white transition-colors">访客中心</a>
+                <a href="chat.html" class="text-white font-medium bg-gradient-to-r from-primary to-secondary px-4 py-2 rounded-lg">聊天系统</a>
+            </nav>
+            
+            <!-- 用户菜单 -->
+            <div class="flex items-center space-x-4">
+                <button id="userMenuBtn" class="flex items-center space-x-2 focus:outline-none">
+                    <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-300"></i>
+                    </div>
+                    <span class="hidden md:inline text-gray-300">登录</span>
+                </button>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="menuToggle" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="md:hidden hidden bg-gray-800 border-t border-gray-700">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+                <a href="index.html" class="text-gray-300 hover:text-white transition-colors py-2">首页</a>
+                <a href="about.html" class="text-gray-300 hover:text-white transition-colors py-2">社团简介</a>
+                <a href="activities.html" class="text-gray-300 hover:text-white transition-colors py-2">社团活动</a>
+                <a href="showcase.html" class="text-gray-300 hover:text-white transition-colors py-2">社团展示</a>
+                <a href="visitor-center.html" class="text-gray-300 hover:text-white transition-colors py-2">访客中心</a>
+                <a href="chat.html" class="text-white font-medium bg-gradient-to-r from-primary to-secondary px-4 py-2 rounded-lg text-center">聊天系统</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 container mx-auto px-4 py-6">
+        <!-- 页面标题 -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold mb-2">聊天系统</h1>
+            <p class="text-gray-400">仅限社团成员使用的实时通讯平台</p>
+        </div>
+        
+        <!-- 聊天系统主容器 -->
+        <div class="flex flex-col md:flex-row gap-4 h-[calc(100vh-200px)] min-h-[500px]">
+            <!-- 左侧聊天列表 -->
+            <div class="w-full md:w-1/3 bg-gray-800 rounded-lg flex flex-col overflow-hidden border border-gray-700">
+                <!-- 聊天列表头部 -->
+                <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                    <h2 class="font-semibold">消息</h2>
+                    <div class="flex space-x-2">
+                        <button id="newChatBtn" class="p-2 rounded-full hover:bg-gray-700">
+                            <i class="fas fa-plus text-gray-300"></i>
+                        </button>
+                        <button id="chatSettingsBtn" class="p-2 rounded-full hover:bg-gray-700">
+                            <i class="fas fa-cog text-gray-300"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 搜索框 -->
+                <div class="p-3 border-b border-gray-700">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索聊天..." class="w-full bg-gray-700 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- 聊天列表 -->
+                <div id="chatList" class="flex-1 overflow-y-auto scrollbar-hide p-2">
+                    <!-- 聊天项示例 -->
+                    <div class="chat-list-item active p-3 rounded-lg cursor-pointer mb-2 flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center relative">
+                            <i class="fas fa-users text-gray-300"></i>
+                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-medium text-sm truncate">社团群聊</h3>
+                                <span class="text-xs text-gray-400">10:30</span>
+                            </div>
+                            <p class="text-xs text-gray-400 truncate">张老师: 本周六活动正常进行</p>
+                        </div>
+                        <span class="bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">2</span>
+                    </div>
+                    
+                    <div class="chat-list-item p-3 rounded-lg cursor-pointer mb-2 flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center relative">
+                            <i class="fas fa-user text-gray-300"></i>
+                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-medium text-sm truncate">李小明</h3>
+                                <span class="text-xs text-gray-400">昨天</span>
+                            </div>
+                            <p class="text-xs text-gray-400 truncate">好的，我会准备好材料</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-list-item p-3 rounded-lg cursor-pointer mb-2 flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center relative">
+                            <i class="fas fa-user text-gray-300"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-medium text-sm truncate">王小红</h3>
+                                <span class="text-xs text-gray-400">昨天</span>
+                            </div>
+                            <p class="text-xs text-gray-400 truncate">项目进展如何了？</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-list-item p-3 rounded-lg cursor-pointer mb-2 flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center relative">
+                            <i class="fas fa-users text-gray-300"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-medium text-sm truncate">项目小组</h3>
+                                <span class="text-xs text-gray-400">周一</span>
+                            </div>
+                            <p class="text-xs text-gray-400 truncate">赵小强: 我已经完成了代码部分</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧聊天窗口 -->
+            <div class="w-full md:w-2/3 bg-gray-800 rounded-lg flex flex-col overflow-hidden border border-gray-700">
+                <!-- 聊天窗口头部 -->
+                <div class="p-4 border-b border-gray-700 flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center relative">
+                        <i class="fas fa-users text-gray-300"></i>
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">社团群聊</h3>
+                        <p class="text-xs text-gray-400">8人在线</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="p-2 rounded-full hover:bg-gray-700">
+                            <i class="fas fa-phone text-gray-300"></i>
+                        </button>
+                        <button class="p-2 rounded-full hover:bg-gray-700">
+                            <i class="fas fa-video text-gray-300"></i>
+                        </button>
+                        <button class="p-2 rounded-full hover:bg-gray-700">
+                            <i class="fas fa-ellipsis-v text-gray-300"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 聊天消息区域 -->
+                <div id="chatMessages" class="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4">
+                    <!-- 系统消息 -->
+                    <div class="flex justify-center">
+                        <span class="text-xs text-gray-500 bg-gray-700 px-3 py-1 rounded-full">今天 10:00</span>
+                    </div>
+                    
+                    <!-- 他人消息 -->
+                    <div class="flex items-start space-x-3 message-animation">
+                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user text-gray-300 text-sm"></i>
+                        </div>
+                        <div class="flex-1 max-w-[70%]">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="text-xs font-medium">张老师</span>
+                                <span class="text-xs text-gray-500">10:05</span>
+                            </div>
+                            <div class="bg-gray-700 rounded-lg p-3">
+                                <p class="text-sm">同学们，本周六的活动主题是「人工智能入门」，请大家提前准备好笔记本电脑。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 他人消息 -->
+                    <div class="flex items-start space-x-3 message-animation">
+                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user text-gray-300 text-sm"></i>
+                        </div>
+                        <div class="flex-1 max-w-[70%]">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="text-xs font-medium">李小明</span>
+                                <span class="text-xs text-gray-500">10:10</span>
+                            </div>
+                            <div class="bg-gray-700 rounded-lg p-3">
+                                <p class="text-sm">老师，需要安装什么软件吗？</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 自己的消息 -->
+                    <div class="flex items-start justify-end space-x-3 message-animation">
+                        <div class="flex-1 max-w-[70%]">
+                            <div class="flex items-center justify-end space-x-2 mb-1">
+                                <span class="text-xs text-gray-500">10:15</span>
+                                <span class="text-xs font-medium">我</span>
+                            </div>
+                            <div class="bg-primary rounded-lg p-3">
+                                <p class="text-sm">同问，需要提前准备什么材料？</p>
+                            </div>
+                        </div>
+                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user text-gray-300 text-sm"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- 他人消息 -->
+                    <div class="flex items-start space-x-3 message-animation">
+                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user text-gray-300 text-sm"></i>
+                        </div>
+                        <div class="flex-1 max-w-[70%]">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="text-xs font-medium">张老师</span>
+                                <span class="text-xs text-gray-500">10:30</span>
+                            </div>
+                            <div class="bg-gray-700 rounded-lg p-3">
+                                <p class="text-sm">主要需要安装Python和Jupyter Notebook，我会在群里发安装教程。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 消息输入区域 -->
+                <div class="p-4 border-t border-gray-700">
+                    <div class="flex items-center space-x-3">
+                        <button class="p-2 rounded-full hover:bg-gray-700">
+                            <i class="fas fa-smile text-gray-300"></i>
+                        </button>
+                        <button class="p-2 rounded-full hover:bg-gray-700">
+                            <i class="fas fa-image text-gray-300"></i>
+                        </button>
+                        <button class="p-2 rounded-full hover:bg-gray-700">
+                            <i class="fas fa-paperclip text-gray-300"></i>
+                        </button>
+                        <div class="flex-1 relative">
+                            <input type="text" id="messageInput" placeholder="输入消息..." class="w-full bg-gray-700 rounded-full py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <button id="sendMessageBtn" class="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-primary/90 transition-colors">
+                            <i class="fas fa-paper-plane text-white"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <div class="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                        <i class="fas fa-microchip text-white"></i>
+                    </div>
+                    <span class="font-bold bg-gradient-to-r from-primary to-secondary text-gradient">卓然创客</span>
+                </div>
+                <div class="text-gray-400 text-sm">
+                    &copy; 2026 武威第十八中学卓然创客社团. 保留所有权利.
+                </div>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-weixin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-qq text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- 新聊天模态框 -->
+    <div id="newChatModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="bg-gray-800 rounded-lg w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold">新聊天</h3>
+                <button id="closeNewChatModal" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="p-3 rounded-lg hover:bg-gray-700 cursor-pointer flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">
+                        <i class="fas fa-users text-gray-300"></i>
+                    </div>
+                    <span>创建群聊</span>
+                </div>
+                <div class="border-t border-gray-700 pt-4">
+                    <h4 class="text-sm text-gray-400 mb-3">选择联系人</h4>
+                    <div class="space-y-2">
+                        <div class="p-3 rounded-lg hover:bg-gray-700 cursor-pointer flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gray-300 text-sm"></i>
+                            </div>
+                            <span>李小明</span>
+                        </div>
+                        <div class="p-3 rounded-lg hover:bg-gray-700 cursor-pointer flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gray-300 text-sm"></i>
+                            </div>
+                            <span>王小红</span>
+                        </div>
+                        <div class="p-3 rounded-lg hover:bg-gray-700 cursor-pointer flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-gray-300 text-sm"></i>
+                            </div>
+                            <span>赵小强</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 登录提示模态框 -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="bg-gray-800 rounded-lg w-full max-w-md p-6 text-center">
+            <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-lock text-gray-400 text-2xl"></i>
+            </div>
+            <h3 class="font-bold text-xl mb-2">需要登录</h3>
+            <p class="text-gray-400 mb-6">聊天系统仅限社团成员使用，请先登录</p>
+            <a href="login.html" class="block w-full bg-gradient-to-r from-primary to-secondary py-3 rounded-lg font-medium hover:opacity-90 transition-opacity">
+                去登录
+            </a>
+        </div>
+    </div>
+    
+    <!-- Supabase客户端 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase配置 -->
+    <script src="lib/supabase.js"></script>
+    <!-- 主JavaScript -->
+    <script>
+        // DOM元素
+        const chatList = document.getElementById('chatList');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const newChatBtn = document.getElementById('newChatBtn');
+        const newChatModal = document.getElementById('newChatModal');
+        const closeNewChatModal = document.getElementById('closeNewChatModal');
+        const loginModal = document.getElementById('loginModal');
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        
+        // 检查用户登录状态
+        async function checkUserStatus() {
+            const user = await window.App.auth.getCurrentUser();
+            if (!user) {
+                // 显示登录提示
+                loginModal.classList.remove('hidden');
+                loginModal.classList.add('flex');
+                return false;
+            }
+            return true;
+        }
+        
+        // 加载聊天列表
+        async function loadChats() {
+            const user = await window.App.auth.getCurrentUser();
+            if (!user) return;
+            
+            const { data: chats, error } = await window.App.chat.getChats(user.id);
+            if (error) {
+                console.error('加载聊天列表失败:', error);
+                return;
+            }
+            
+            // 渲染聊天列表
+            chatList.innerHTML = '';
+            chats.forEach(chat => {
+                const chatItem = document.createElement('div');
+                chatItem.className = 'chat-list-item p-3 rounded-lg cursor-pointer mb-2 flex items-center space-x-3';
+                chatItem.dataset.chatId = chat.id;
+                
+                // 聊天头像
+                const avatar = document.createElement('div');
+                avatar.className = 'w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center relative';
+                avatar.innerHTML = chat.type === 'group' ? 
+                    '<i class="fas fa-users text-gray-300"></i>' : 
+                    '<i class="fas fa-user text-gray-300"></i>';
+                
+                // 在线状态
+                const onlineStatus = document.createElement('span');
+                onlineStatus.className = 'absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800';
+                avatar.appendChild(onlineStatus);
+                
+                // 聊天信息
+                const chatInfo = document.createElement('div');
+                chatInfo.className = 'flex-1 min-w-0';
+                
+                const chatHeader = document.createElement('div');
+                chatHeader.className = 'flex justify-between items-center mb-1';
+                
+                const chatName = document.createElement('h3');
+                chatName.className = 'font-medium text-sm truncate';
+                chatName.textContent = chat.name || '私聊';
+                
+                const chatTime = document.createElement('span');
+                chatTime.className = 'text-xs text-gray-400';
+                chatTime.textContent = chat.last_message_time ? new Date(chat.last_message_time).toLocaleTimeString() : '';
+                
+                chatHeader.appendChild(chatName);
+                chatHeader.appendChild(chatTime);
+                
+                const chatMessage = document.createElement('p');
+                chatMessage.className = 'text-xs text-gray-400 truncate';
+                chatMessage.textContent = chat.last_message || '暂无消息';
+                
+                chatInfo.appendChild(chatHeader);
+                chatInfo.appendChild(chatMessage);
+                
+                // 未读消息数
+                const unreadCount = document.createElement('span');
+                unreadCount.className = 'bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center';
+                unreadCount.textContent = '0';
+                
+                chatItem.appendChild(avatar);
+                chatItem.appendChild(chatInfo);
+                chatItem.appendChild(unreadCount);
+                
+                // 点击事件
+                chatItem.addEventListener('click', () => {
+                    // 移除其他活跃状态
+                    document.querySelectorAll('.chat-list-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    // 添加活跃状态
+                    chatItem.classList.add('active');
+                    // 加载聊天消息
+                    loadChatMessages(chat.id);
+                });
+                
+                chatList.appendChild(chatItem);
+            });
+        }
+        
+        // 加载聊天消息
+        async function loadChatMessages(chatId) {
+            const user = await window.App.auth.getCurrentUser();
+            if (!user) return;
+            
+            const { data: messages, error } = await window.App.chat.getChatMessages(chatId);
+            if (error) {
+                console.error('加载聊天消息失败:', error);
+                return;
+            }
+            
+            // 渲染聊天消息
+            chatMessages.innerHTML = '';
+            
+            // 添加系统消息
+            const systemMessage = document.createElement('div');
+            systemMessage.className = 'flex justify-center';
+            systemMessage.innerHTML = `<span class="text-xs text-gray-500 bg-gray-700 px-3 py-1 rounded-full">${new Date().toLocaleDateString()}</span>`;
+            chatMessages.appendChild(systemMessage);
+            
+            // 添加聊天消息
+            messages.forEach(message => {
+                const isOwnMessage = message.sender_id === user.id;
+                const messageElement = document.createElement('div');
+                messageElement.className = `flex items-start ${isOwnMessage ? 'justify-end' : ''} space-x-3 message-animation`;
+                
+                if (!isOwnMessage) {
+                    const avatar = document.createElement('div');
+                    avatar.className = 'w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0';
+                    avatar.innerHTML = '<i class="fas fa-user text-gray-300 text-sm"></i>';
+                    messageElement.appendChild(avatar);
+                }
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = `flex-1 max-w-[70%]`;
+                
+                const messageHeader = document.createElement('div');
+                messageHeader.className = `flex items-center ${isOwnMessage ? 'justify-end' : ''} space-x-2 mb-1`;
+                
+                if (!isOwnMessage) {
+                    const senderName = document.createElement('span');
+                    senderName.className = 'text-xs font-medium';
+                    senderName.textContent = '用户';
+                    messageHeader.appendChild(senderName);
+                }
+                
+                const messageTime = document.createElement('span');
+                messageTime.className = 'text-xs text-gray-500';
+                messageTime.textContent = new Date(message.created_at).toLocaleTimeString();
+                messageHeader.appendChild(messageTime);
+                
+                if (isOwnMessage) {
+                    const senderName = document.createElement('span');
+                    senderName.className = 'text-xs font-medium';
+                    senderName.textContent = '我';
+                    messageHeader.appendChild(senderName);
+                }
+                
+                const messageBody = document.createElement('div');
+                messageBody.className = `rounded-lg p-3 ${isOwnMessage ? 'bg-primary' : 'bg-gray-700'}`;
+                
+                const messageText = document.createElement('p');
+                messageText.className = 'text-sm';
+                messageText.textContent = message.content;
+                
+                messageBody.appendChild(messageText);
+                messageContent.appendChild(messageHeader);
+                messageContent.appendChild(messageBody);
+                messageElement.appendChild(messageContent);
+                
+                if (isOwnMessage) {
+                    const avatar = document.createElement('div');
+                    avatar.className = 'w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0';
+                    avatar.innerHTML = '<i class="fas fa-user text-gray-300 text-sm"></i>';
+                    messageElement.appendChild(avatar);
+                }
+                
+                chatMessages.appendChild(messageElement);
+            });
+            
+            // 滚动到底部
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // 发送消息
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            const user = await window.App.auth.getCurrentUser();
+            if (!user) return;
+            
+            // 获取当前活跃的聊天
+            const activeChat = document.querySelector('.chat-list-item.active');
+            if (!activeChat) return;
+            
+            const chatId = activeChat.dataset.chatId;
+            
+            // 发送消息
+            const { data, error } = await window.App.chat.sendMessage(chatId, user.id, message);
+            if (error) {
+                console.error('发送消息失败:', error);
+                return;
+            }
+            
+            // 清空输入框
+            messageInput.value = '';
+            
+            // 重新加载聊天消息
+            loadChatMessages(chatId);
+        }
+        
+        // 事件监听器
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 检查用户登录状态
+            const isLoggedIn = await checkUserStatus();
+            if (isLoggedIn) {
+                // 加载聊天列表
+                await loadChats();
+                
+                // 默认选择第一个聊天
+                const firstChat = chatList.querySelector('.chat-list-item');
+                if (firstChat) {
+                    firstChat.click();
+                }
+            }
+            
+            // 发送消息按钮点击
+            sendMessageBtn.addEventListener('click', sendMessage);
+            
+            // 输入框回车发送
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // 新聊天按钮点击
+            newChatBtn.addEventListener('click', () => {
+                newChatModal.classList.remove('hidden');
+                newChatModal.classList.add('flex');
+            });
+            
+            // 关闭新聊天模态框
+            closeNewChatModal.addEventListener('click', () => {
+                newChatModal.classList.add('hidden');
+                newChatModal.classList.remove('flex');
+            });
+            
+            // 点击模态框外部关闭
+            newChatModal.addEventListener('click', (e) => {
+                if (e.target === newChatModal) {
+                    newChatModal.classList.add('hidden');
+                    newChatModal.classList.remove('flex');
+                }
+            });
+            
+            // 登录模态框点击外部关闭
+            loginModal.addEventListener('click', (e) => {
+                if (e.target === loginModal) {
+                    loginModal.classList.add('hidden');
+                    loginModal.classList.remove('flex');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
