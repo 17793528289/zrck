@@ -341,17 +341,20 @@
                         if (data) {
                             showSuccess('登录成功！', 'success');
                             
-                            // 保存登录状态
-                            if (document.getElementById('remember-me').checked) {
-                                localStorage.setItem('rememberMe', 'true');
+                            // 保存登录状态（使用try-catch避免存储访问被阻止的问题）
+                            try {
+                                if (document.getElementById('remember-me').checked) {
+                                    localStorage.setItem('rememberMe', 'true');
+                                }
+                            } catch (storageError) {
+                                console.warn('存储登录状态失败:', storageError.message);
                             }
                             
                             // 跳转到用户中心
                             setTimeout(() => {
                                 // 检查用户角色，跳转到相应页面
-                                if (data.user.role === 'admin') {
-                                    window.location.href = 'admin.html';
-                                } else if (data.user.role === 'teacher') {
+                                const userRole = data.user?.role || data.user?.user_metadata?.role;
+                                if (userRole === 'admin' || userRole === 'teacher') {
                                     window.location.href = 'admin.html';
                                 } else {
                                     window.location.href = 'member-center.html';
@@ -365,13 +368,13 @@
                     console.error('登录失败:', error);
                     let errorMessage = '登录失败，请稍后重试';
                     
-                    if (error.message.includes('Invalid login credentials')) {
+                    if (error.message.includes('Invalid login credentials') || error.message.includes('账号或密码错误')) {
                         errorMessage = '账号或密码错误';
                     } else if (error.message.includes('Email not confirmed')) {
                         errorMessage = '请先验证您的邮箱';
                     } else if (error.message.includes('Too many requests')) {
                         errorMessage = '请求过于频繁，请稍后重试';
-                    } else if (error.message.includes('Account not found')) {
+                    } else if (error.message.includes('Account not found') || error.message.includes('账号不存在')) {
                         errorMessage = '账号不存在';
                     }
                     
