@@ -537,21 +537,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // 加载用户数据
     async function loadUsers() {
         try {
-            if (window.App && window.App.db) {
+            if (window.DataService) {
                 console.log('Loading users...');
-                const { data, error } = await window.App.db.getUsers();
+                const { data, error, source } = await window.DataService.getUsers();
                 
                 if (error) {
                     throw error;
                 }
 
                 if (data) {
-                    console.log('Users loaded:', data);
+                    console.log(`Users loaded from ${source}:`, data);
                     renderUsers(data);
                     updateUserCount(data.length);
                 }
             } else {
-                console.warn('数据库功能未初始化，使用模拟数据');
+                console.warn('数据服务未初始化，使用模拟数据');
                 useMockData();
             }
         } catch (error) {
@@ -611,21 +611,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // 加载活动数据
     async function loadActivities() {
         try {
-            if (window.App && window.App.db) {
+            if (window.DataService) {
                 console.log('Loading activities...');
-                const { data, error } = await window.App.db.getActivities();
+                const { data, error, source } = await window.DataService.getActivities();
                 
                 if (error) {
                     throw error;
                 }
 
                 if (data) {
-                    console.log('Activities loaded:', data);
+                    console.log(`Activities loaded from ${source}:`, data);
                     renderActivities(data);
                     updateActivityCount(data.length);
                 }
             } else {
-                console.warn('数据库功能未初始化，使用模拟数据');
+                console.warn('数据服务未初始化，使用模拟数据');
                 useMockData();
             }
         } catch (error) {
@@ -704,21 +704,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // 加载资源数据
     async function loadResources() {
         try {
-            if (window.App && window.App.db) {
+            if (window.DataService) {
                 console.log('Loading resources...');
-                const { data, error } = await window.App.db.getResources();
+                const { data, error, source } = await window.DataService.getResources();
                 
                 if (error) {
                     throw error;
                 }
 
                 if (data) {
-                    console.log('Resources loaded:', data);
+                    console.log(`Resources loaded from ${source}:`, data);
                     renderResources(data);
-                    updateProjectCount(data.length);
                 }
             } else {
-                console.warn('数据库功能未初始化，使用模拟数据');
+                console.warn('数据服务未初始化，使用模拟数据');
                 useMockData();
             }
         } catch (error) {
@@ -731,21 +730,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // 加载项目数据
     async function loadProjects() {
         try {
-            if (window.App && window.App.db) {
+            if (window.DataService) {
                 console.log('Loading projects...');
-                const { data, error } = await window.App.db.getProjects();
+                const { data, error, source } = await window.DataService.getProjects();
                 
                 if (error) {
                     throw error;
                 }
 
                 if (data) {
-                    console.log('Projects loaded:', data);
+                    console.log(`Projects loaded from ${source}:`, data);
                     renderProjects(data);
                     updateProjectCount(data.length);
                 }
             } else {
-                console.warn('数据库功能未初始化，使用模拟数据');
+                console.warn('数据服务未初始化，使用模拟数据');
                 useMockData();
             }
         } catch (error) {

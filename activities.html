@@ -616,20 +616,20 @@
             // 加载活动数据
             async function loadActivities() {
                 try {
-                    if (window.App && window.App.db) {
+                    if (window.DataService) {
                         console.log('Loading activities...');
-                        const { data, error } = await window.App.db.getActivities();
+                        const { data, error, source } = await window.DataService.getActivities();
                         
                         if (error) {
                             throw error;
                         }
 
                         if (data) {
-                            console.log('Activities loaded:', data);
+                            console.log(`Activities loaded from ${source}:`, data);
                             renderActivities(data);
                         }
                     } else {
-                        console.warn('数据库功能未初始化，使用模拟数据');
+                        console.warn('数据服务未初始化，使用模拟数据');
                         useMockActivities();
                     }
                 } catch (error) {

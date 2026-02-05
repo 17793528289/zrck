@@ -138,8 +138,8 @@
                 <!-- 登录表单 -->
                 <form id="login-form" class="space-y-6">
                     <div>
-                        <label for="login-email" class="block text-sm font-medium text-gray-300 mb-2">账号</label>
-                        <input type="text" id="login-email" name="email" class="form-input" placeholder="请输入您的账号" required>
+                        <label for="login-account" class="block text-sm font-medium text-gray-300 mb-2">账号</label>
+                        <input type="text" id="login-account" name="account" class="form-input" placeholder="请输入您的账号（例如：2025020101）" required>
                         <div id="login-email-error" class="text-red-500 text-sm mt-1 hidden"></div>
                     </div>
                     
@@ -312,13 +312,13 @@
                 clearErrors();
                 
                 const formData = new FormData(loginForm);
-                const email = formData.get('email').trim();
+                const account = formData.get('account').trim();
                 const password = formData.get('password');
                 const submitButton = loginForm.querySelector('button[type="submit"]');
 
                 // 基本验证
-                if (!email) {
-                    showError('login-email-error', '请输入邮箱地址');
+                if (!account) {
+                    showError('login-email-error', '请输入账号');
                     return;
                 }
 
@@ -327,19 +327,12 @@
                     return;
                 }
 
-                // 邮箱格式验证
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    showError('login-email-error', '请输入有效的邮箱地址');
-                    return;
-                }
-
                 setLoading(submitButton, true);
 
                 try {
-                    // 使用Supabase进行登录
-                    if (window.App && window.App.auth) {
-                        const { data, error } = await window.App.auth.signIn(email, password);
+                    // 使用AuthService进行登录
+                    if (window.AuthService) {
+                        const { data, error } = await window.AuthService.signIn(account, password);
                         
                         if (error) {
                             throw error;
@@ -356,7 +349,13 @@
                             // 跳转到用户中心
                             setTimeout(() => {
                                 // 检查用户角色，跳转到相应页面
-                                window.location.href = 'member-center.html';
+                                if (data.user.role === 'admin') {
+                                    window.location.href = 'admin.html';
+                                } else if (data.user.role === 'teacher') {
+                                    window.location.href = 'admin.html';
+                                } else {
+                                    window.location.href = 'member-center.html';
+                                }
                             }, 1000);
                         }
                     } else {
@@ -367,11 +366,13 @@
                     let errorMessage = '登录失败，请稍后重试';
                     
                     if (error.message.includes('Invalid login credentials')) {
-                        errorMessage = '邮箱或密码错误';
+                        errorMessage = '账号或密码错误';
                     } else if (error.message.includes('Email not confirmed')) {
                         errorMessage = '请先验证您的邮箱';
                     } else if (error.message.includes('Too many requests')) {
                         errorMessage = '请求过于频繁，请稍后重试';
+                    } else if (error.message.includes('Account not found')) {
+                        errorMessage = '账号不存在';
                     }
                     
                     showError('login-password-error', errorMessage);

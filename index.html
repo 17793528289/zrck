@@ -605,20 +605,20 @@
             // 加载最新活动
             async function loadLatestActivities() {
                 try {
-                    if (window.App && window.App.db) {
+                    if (window.DataService) {
                         console.log('Loading latest activities...');
-                        const { data, error } = await window.App.db.getActivities({ limit: 3 });
+                        const { data, error, source } = await window.DataService.getActivities({ limit: 3 });
                         
                         if (error) {
                             throw error;
                         }
 
                         if (data) {
-                            console.log('Latest activities loaded:', data);
+                            console.log(`Latest activities loaded from ${source}:`, data);
                             renderLatestActivities(data);
                         }
                     } else {
-                        console.warn('数据库功能未初始化，使用模拟数据');
+                        console.warn('数据服务未初始化，使用模拟数据');
                         useMockActivities();
                     }
                 } catch (error) {

@@ -631,20 +631,20 @@
             // 加载项目数据
             async function loadProjects() {
                 try {
-                    if (window.App && window.App.db) {
+                    if (window.DataService) {
                         console.log('Loading projects...');
-                        const { data, error } = await window.App.db.getProjects();
+                        const { data, error, source } = await window.DataService.getProjects();
                         
                         if (error) {
                             throw error;
                         }
 
                         if (data) {
-                            console.log('Projects loaded:', data);
+                            console.log(`Projects loaded from ${source}:`, data);
                             renderProjects(data);
                         }
                     } else {
-                        console.warn('数据库功能未初始化，使用模拟数据');
+                        console.warn('数据服务未初始化，使用模拟数据');
                         useMockProjects();
                     }
                 } catch (error) {
@@ -656,20 +656,20 @@
             // 加载资源数据
             async function loadResources() {
                 try {
-                    if (window.App && window.App.db) {
+                    if (window.DataService) {
                         console.log('Loading resources...');
-                        const { data, error } = await window.App.db.getResources();
+                        const { data, error, source } = await window.DataService.getResources();
                         
                         if (error) {
                             throw error;
                         }
 
                         if (data) {
-                            console.log('Resources loaded:', data);
+                            console.log(`Resources loaded from ${source}:`, data);
                             renderResources(data);
                         }
                     } else {
-                        console.warn('数据库功能未初始化，使用模拟数据');
+                        console.warn('数据服务未初始化，使用模拟数据');
                         useMockResources();
                     }
                 } catch (error) {
