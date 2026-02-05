@@ -278,9 +278,9 @@
                                     <input type="text" placeholder="搜索用户..." class="bg-dark border border-white/10 text-white px-4 py-2 rounded-full pl-10 focus:outline-none focus:border-primary">
                                     <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 </div>
-                                <button class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
-                                    <i class="fas fa-plus mr-2"></i>添加用户
-                                </button>
+                                <button data-open-modal="add-user-modal" class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
+                                <i class="fas fa-plus mr-2"></i>添加用户
+                            </button>
                             </div>
                         </div>
                         
@@ -328,7 +328,7 @@
                     <div class="bg-dark-light rounded-2xl p-6 border border-white/10">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">活动管理</h3>
-                            <button class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
+                            <button data-open-modal="add-activity-modal" class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
                                 <i class="fas fa-plus mr-2"></i>创建活动
                             </button>
                         </div>
@@ -344,7 +344,7 @@
                     <div class="bg-dark-light rounded-2xl p-6 border border-white/10">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">内容管理</h3>
-                            <button class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
+                            <button data-open-modal="add-resource-modal" class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
                                 <i class="fas fa-plus mr-2"></i>添加内容
                             </button>
                         </div>
@@ -374,9 +374,14 @@
                             <div id="projects-content" class="content-tab-pane hidden">
                                 <div class="flex justify-between items-center mb-4">
                                     <h4 class="font-bold">项目列表</h4>
-                                    <div class="relative">
-                                        <input type="text" placeholder="搜索项目..." class="bg-dark border border-white/10 text-white px-4 py-2 rounded-full pl-10 focus:outline-none focus:border-primary">
-                                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <div class="flex space-x-4">
+                                        <div class="relative">
+                                            <input type="text" placeholder="搜索项目..." class="bg-dark border border-white/10 text-white px-4 py-2 rounded-full pl-10 focus:outline-none focus:border-primary">
+                                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        </div>
+                                        <button data-open-modal="add-project-modal" class="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-2 px-6 rounded-full transition-all transform hover:scale-105">
+                                            <i class="fas fa-plus mr-2"></i>添加项目
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="space-y-4" id="projects-container">
@@ -456,6 +461,175 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- 模态框 -->
+<!-- 添加用户模态框 -->
+<div id="add-user-modal" class="modal fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-dark-light rounded-2xl p-6 border border-white/10 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold">添加用户</h3>
+            <button data-close-modal class="text-gray-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <form id="add-user-form">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">用户名（数字账号）</label>
+                    <input type="text" name="username" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">邮箱</label>
+                    <input type="email" name="email" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">角色</label>
+                    <select name="role" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                        <option value="admin">管理员</option>
+                        <option value="teacher">教师</option>
+                        <option value="member">社员</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">密码</label>
+                    <input type="password" name="password" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-3 px-6 rounded-full transition-all transform hover:scale-105">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 创建活动模态框 -->
+<div id="add-activity-modal" class="modal fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-dark-light rounded-2xl p-6 border border-white/10 max-w-2xl w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold">创建活动</h3>
+            <button data-close-modal class="text-gray-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <form id="add-activity-form">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">活动标题</label>
+                    <input type="text" name="title" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">活动描述</label>
+                    <textarea name="description" rows="3" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">开始日期</label>
+                    <input type="date" name="start_date" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">活动地点</label>
+                    <input type="text" name="location" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">活动状态</label>
+                    <select name="status" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                        <option value="upcoming">即将开始</option>
+                        <option value="ongoing">进行中</option>
+                        <option value="past">已结束</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">组织者</label>
+                    <input type="text" name="organizer" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-3 px-6 rounded-full transition-all transform hover:scale-105">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 添加资源模态框 -->
+<div id="add-resource-modal" class="modal fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-dark-light rounded-2xl p-6 border border-white/10 max-w-2xl w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold">添加资源</h3>
+            <button data-close-modal class="text-gray-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <form id="add-resource-form">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">资源标题</label>
+                    <input type="text" name="title" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">资源描述</label>
+                    <textarea name="description" rows="3" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">分类</label>
+                    <input type="text" name="category" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">类型</label>
+                    <input type="text" name="type" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-3 px-6 rounded-full transition-all transform hover:scale-105">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 添加项目模态框 -->
+<div id="add-project-modal" class="modal fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-dark-light rounded-2xl p-6 border border-white/10 max-w-2xl w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold">添加项目</h3>
+            <button data-close-modal class="text-gray-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <form id="add-project-form">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">项目标题</label>
+                    <input type="text" name="title" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">项目描述</label>
+                    <textarea name="description" rows="3" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">参与成员（逗号分隔）</label>
+                    <input type="text" name="members" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full" placeholder="例如：张明, 李华">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">项目状态</label>
+                    <select name="status" required class="bg-dark border border-white/10 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-primary w-full">
+                        <option value="planning">计划中</option>
+                        <option value="in_progress">进行中</option>
+                        <option value="completed">已完成</option>
+                    </select>
+                </div>
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-dark font-bold py-3 px-6 rounded-full transition-all transform hover:scale-105">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -964,6 +1138,126 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('加载初始数据失败:', error);
         }
     }
+
+    // 表单提交事件处理
+    function initForms() {
+        // 添加用户表单
+        const addUserForm = document.getElementById('add-user-form');
+        if (addUserForm) {
+            addUserForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const userData = {
+                    username: formData.get('username'),
+                    email: formData.get('email'),
+                    role: formData.get('role'),
+                    password: formData.get('password')
+                };
+                
+                try {
+                    showNotification('正在添加用户...', 'info');
+                    const { data, error } = await window.DataService.addUser(userData);
+                    if (error) throw error;
+                    showNotification('用户添加成功', 'success');
+                    this.reset();
+                    document.getElementById('add-user-modal').classList.add('hidden');
+                    loadUsers();
+                } catch (error) {
+                    console.error('添加用户失败:', error);
+                    showNotification('添加用户失败: ' + error.message, 'error');
+                }
+            });
+        }
+        
+        // 添加活动表单
+        const addActivityForm = document.getElementById('add-activity-form');
+        if (addActivityForm) {
+            addActivityForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const activityData = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    start_date: new Date(formData.get('start_date')),
+                    location: formData.get('location'),
+                    status: formData.get('status'),
+                    organizer: formData.get('organizer')
+                };
+                
+                try {
+                    showNotification('正在创建活动...', 'info');
+                    const { data, error } = await window.DataService.addActivity(activityData);
+                    if (error) throw error;
+                    showNotification('活动创建成功', 'success');
+                    this.reset();
+                    document.getElementById('add-activity-modal').classList.add('hidden');
+                    loadActivities();
+                } catch (error) {
+                    console.error('创建活动失败:', error);
+                    showNotification('创建活动失败: ' + error.message, 'error');
+                }
+            });
+        }
+        
+        // 添加资源表单
+        const addResourceForm = document.getElementById('add-resource-form');
+        if (addResourceForm) {
+            addResourceForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const resourceData = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    category: formData.get('category'),
+                    type: formData.get('type')
+                };
+                
+                try {
+                    showNotification('正在添加资源...', 'info');
+                    const { data, error } = await window.DataService.addResource(resourceData);
+                    if (error) throw error;
+                    showNotification('资源添加成功', 'success');
+                    this.reset();
+                    document.getElementById('add-resource-modal').classList.add('hidden');
+                    loadResources();
+                } catch (error) {
+                    console.error('添加资源失败:', error);
+                    showNotification('添加资源失败: ' + error.message, 'error');
+                }
+            });
+        }
+        
+        // 添加项目表单
+        const addProjectForm = document.getElementById('add-project-form');
+        if (addProjectForm) {
+            addProjectForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const projectData = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    members: formData.get('members').split(',').map(m => m.trim()),
+                    status: formData.get('status')
+                };
+                
+                try {
+                    showNotification('正在添加项目...', 'info');
+                    const { data, error } = await window.DataService.addProject(projectData);
+                    if (error) throw error;
+                    showNotification('项目添加成功', 'success');
+                    this.reset();
+                    document.getElementById('add-project-modal').classList.add('hidden');
+                    loadProjects();
+                } catch (error) {
+                    console.error('添加项目失败:', error);
+                    showNotification('添加项目失败: ' + error.message, 'error');
+                }
+            });
+        }
+    }
+    
+    // 初始化表单
+    initForms();
 
     // 加载初始数据
     loadInitialData();
