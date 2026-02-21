@@ -225,6 +225,8 @@
     <!-- 消息提示容器 -->
     <div id="notification-container" class="fixed top-4 right-4 z-50 space-y-2 max-w-sm"></div>
 
+    <!-- 配置文件 -->
+    <script src="lib/config.js"></script>
     <!-- Supabase 配置 -->
     <script src="lib/supabase.js"></script>
     <!-- 工具函数 -->
@@ -361,13 +363,6 @@
                                                data.user.user_metadata?.role || 
                                                data.user.app_metadata?.role || 
                                                'member';
-                                }
-                                
-                                // 对于后端账号，尝试从模拟账号映射中获取角色
-                                const account = formData.get('account').trim();
-                                const mockUser = window.accountMap?.[account];
-                                if (mockUser) {
-                                    userRole = mockUser.role;
                                 }
                                 
                                 console.log('用户角色:', userRole);

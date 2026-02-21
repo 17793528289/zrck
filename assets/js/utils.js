@@ -277,11 +277,19 @@ window.App.utils = {
                 <div class="flex items-center">
                     <i class="fas ${icons[type]} mr-3"></i>
                     <span>${message}</span>
-                    <button class="ml-auto close-btn" onclick="this.parentElement.parentElement.remove()">
+                    <button class="ml-auto close-btn">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             `;
+            
+            // 添加关闭按钮事件
+            const closeBtn = notification.querySelector('.close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    notification.remove();
+                });
+            }
             
             container.appendChild(notification);
             
@@ -380,22 +388,22 @@ window.App.utils = {
     http: {
         // GET请求
         get: async (url, options = {}) => {
-            return this.request('GET', url, null, options);
+            return window.App.utils.http.request('GET', url, null, options);
         },
 
         // POST请求
         post: async (url, data, options = {}) => {
-            return this.request('POST', url, data, options);
+            return window.App.utils.http.request('POST', url, data, options);
         },
 
         // PUT请求
         put: async (url, data, options = {}) => {
-            return this.request('PUT', url, data, options);
+            return window.App.utils.http.request('PUT', url, data, options);
         },
 
         // DELETE请求
         delete: async (url, options = {}) => {
-            return this.request('DELETE', url, null, options);
+            return window.App.utils.http.request('DELETE', url, null, options);
         },
 
         // 通用请求方法
@@ -442,27 +450,73 @@ function createNotificationContainer() {
 // 添加通知样式
 const notificationStyles = `
 .notification {
-    @apply p-4 rounded-lg shadow-lg border-l-4;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-left: 4px solid;
+    margin-bottom: 0.5rem;
 }
 
 .notification-success {
-    @apply bg-green-50 border-green-400 text-green-700 dark:bg-green-900 dark:text-green-300;
+    background-color: #f0fff4;
+    border-left-color: #4ade80;
+    color: #166534;
 }
 
 .notification-error {
-    @apply bg-red-50 border-red-400 text-red-700 dark:bg-red-900 dark:text-red-300;
+    background-color: #fef2f2;
+    border-left-color: #f87171;
+    color: #b91c1c;
 }
 
 .notification-warning {
-    @apply bg-yellow-50 border-yellow-400 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300;
+    background-color: #fffbeb;
+    border-left-color: #fbbf24;
+    color: #92400e;
 }
 
 .notification-info {
-    @apply bg-blue-50 border-blue-400 text-blue-700 dark:bg-blue-900 dark:text-blue-300;
+    background-color: #eff6ff;
+    border-left-color: #60a5fa;
+    color: #1e40af;
 }
 
 .notification .close-btn {
-    @apply opacity-70 hover:opacity-100 transition-opacity;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    padding: 0;
+    font-size: 1rem;
+}
+
+.notification .close-btn:hover {
+    opacity: 1;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .notification-success {
+        background-color: #166534;
+        color: #bbf7d0;
+    }
+    
+    .notification-error {
+        background-color: #b91c1c;
+        color: #fecaca;
+    }
+    
+    .notification-warning {
+        background-color: #92400e;
+        color: #fef08a;
+    }
+    
+    .notification-info {
+        background-color: #1e40af;
+        color: #bfdbfe;
+    }
 }
 `;
 

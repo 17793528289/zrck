@@ -580,6 +580,8 @@
         </div>
     </footer>
 
+    <!-- 配置文件 -->
+    <script src="lib/config.js"></script>
     <!-- Supabase 配置 -->
     <script src="lib/supabase.js"></script>
     <!-- 主脚本 -->
@@ -618,24 +620,41 @@
                 try {
                     if (window.DataService) {
                         console.log('Loading activities...');
-                        const { data, error, source } = await window.DataService.getActivities();
+                        const { data, error } = await window.DataService.getActivities();
                         
                         if (error) {
-                            throw error;
+                            console.error('获取活动数据失败:', error);
+                            showError('获取活动数据失败');
+                            return;
                         }
 
                         if (data) {
-                            console.log(`Activities loaded from ${source}:`, data);
+                            console.log('Activities loaded:', data);
                             renderActivities(data);
+                        } else {
+                            showError('暂无活动数据');
                         }
                     } else {
-                        console.warn('数据服务未初始化，使用模拟数据');
-                        useMockActivities();
+                        console.error('数据服务未初始化');
+                        showError('系统正在初始化，请稍后重试');
                     }
                 } catch (error) {
                     console.error('加载活动数据失败:', error);
-                    useMockActivities();
+                    showError('加载活动数据失败，请稍后重试');
                 }
+            }
+
+            // 显示错误信息
+            function showError(message) {
+                const activitiesContainer = document.querySelector('.grid.grid-cols-1.lg\:grid-cols-3.gap-8');
+                if (!activitiesContainer) return;
+
+                activitiesContainer.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-4xl text-secondary mb-4"></i>
+                        <p class="text-gray-400 text-lg">${message}</p>
+                    </div>
+                `;
             }
 
             // 渲染活动列表
@@ -698,75 +717,7 @@
                 });
             }
 
-            // 使用模拟活动数据
-            function useMockActivities() {
-                console.log('Using mock activities data');
-                
-                const mockActivities = [
-                    {
-                        id: 1,
-                        title: '机器人设计与编程竞赛',
-                        description: '社团成员组队参加市级机器人竞赛，展示创意和技术实力，在规定时间内设计、制作和编程机器人完成指定任务。',
-                        start_date: new Date('2024-03-15'),
-                        location: '科技楼创客空间',
-                        status: 'ongoing',
-                        category: 'competition',
-                        organizer: '张明'
-                    },
-                    {
-                        id: 2,
-                        title: 'Python编程基础培训',
-                        description: '为新成员提供Python编程入门培训，包括基础语法、函数和简单项目实践，帮助快速掌握编程技能。',
-                        start_date: new Date('2024-03-20'),
-                        location: '学校电脑室',
-                        status: 'upcoming',
-                        category: 'training',
-                        organizer: '李华'
-                    },
-                    {
-                        id: 3,
-                        title: '3D打印技术工作坊',
-                        description: '学习3D建模和3D打印技术，制作创意模型和实用物品，体验从设计到成品的完整制作流程。',
-                        start_date: new Date('2024-03-25'),
-                        location: '科技楼创客空间',
-                        status: 'upcoming',
-                        category: 'workshop',
-                        organizer: '王强'
-                    },
-                    {
-                        id: 4,
-                        title: '社团项目展示日',
-                        description: '展示社团成员的优秀项目，邀请学校领导和其他社团成员参观交流，分享创新成果和经验。',
-                        start_date: new Date('2024-03-18'),
-                        location: '科技楼大厅',
-                        status: 'ongoing',
-                        category: 'exhibition',
-                        organizer: '社团理事会'
-                    },
-                    {
-                        id: 5,
-                        title: 'Web前端开发培训',
-                        description: '学习HTML、CSS和JavaScript基础知识，开发简单的网页应用，掌握现代Web开发技术。',
-                        start_date: new Date('2024-03-05'),
-                        location: '学校电脑室',
-                        status: 'past',
-                        category: 'training',
-                        organizer: '王强'
-                    },
-                    {
-                        id: 6,
-                        title: 'Arduino创意项目工作坊',
-                        description: '使用Arduino开发板制作创意电子项目，如智能小车、环境监测设备等，学习电子电路和嵌入式系统知识。',
-                        start_date: new Date('2024-03-10'),
-                        location: '科技楼创客空间',
-                        status: 'past',
-                        category: 'workshop',
-                        organizer: '李华'
-                    }
-                ];
-                
-                renderActivities(mockActivities);
-            }
+
 
             // 加载数据
             loadActivities();

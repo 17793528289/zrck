@@ -1,244 +1,137 @@
-# 武威第十八中学卓然创客社团网站
+# 卓然创客社团网站
 
-## 项目概述
-
-本项目是武威第十八中学卓然创客社团的官方网站，旨在展示社团风采、管理社团活动、促进社员交流。网站采用现代化的技术栈和设计风格，为社团成员和访客提供良好的用户体验。
-
-## 技术栈
-
-- **前端**：HTML5 + Tailwind CSS v4 + 原生JavaScript
-- **后端**：Supabase (用户认证、数据存储、API、实时数据库)
-- **图标**：Font Awesome
-- **图表**：Chart.js (用于后台管理数据统计)
-- **部署**：静态网站托管（如GitHub Pages、Vercel等）
+武威第十八中学卓然创客社团官方网站，使用HTML、Tailwind CSS和Supabase构建。
 
 ## 项目结构
 
 ```
-zrck2/
-├── index.html              # 首页
-├── about.html              # 社团简介页
-├── activities.html         # 社团活动页
-├── showcase.html           # 社团展示页
-├── login.html              # 登录/注册页
-├── member-center.html      # 社员中心
-├── teacher-center.html     # 教师中心
-├── admin.html              # 后台管理
-├── visitor-center.html     # 访客中心
-├── chat.html               # 社员聊天系统
-├── assets/
-│   ├── js/
-│   │   └── main.js         # 通用脚本
-├── lib/
-│   └── supabase.js         # Supabase配置和工具函数
-└── README.md               # 项目说明
+├── assets/          # 静态资源
+│   └── js/          # JavaScript文件
+├── lib/             # 库文件
+│   └── supabase.js  # Supabase配置和服务
+├── index.html       # 首页
+├── about.html       # 社团简介
+├── activities.html  # 社团活动
+├── showcase.html    # 社团展示
+├── admin.html       # 后台管理
+├── login.html       # 登录页面
+├── member-center.html  # 社员中心
+├── teacher-center.html # 教师中心
+├── visitor-center.html # 访客中心
+├── chat.html        # 聊天系统
+└── supabase-tables.sql # 数据库表结构
 ```
 
-## 核心功能
+## 部署说明
 
-### 1. 公共页面
-- **首页**：社团概览、核心功能展示、最新活动、社团风采
-- **社团简介**：社团历史、宗旨、组织结构、指导教师
-- **社团活动**：活动列表、活动详情、报名功能
-- **社团展示**：活动展示、成果展示、成员介绍、设备资源
-- **访客中心**：社团信息浏览、活动查看、留言板、加入我们
+### GitHub Pages部署
 
-### 2. 认证系统
-- **登录/注册**：账号密码登录、新用户注册
-- **忘记密码**：密码重置功能
-- **权限控制**：不同角色（社员、教师、管理员）的访问权限
+1. **准备工作**
+   - 确保仓库中包含所有必要文件
+   - 确保`index.html`是网站的主页
 
-### 3. 社员功能
-- **社员中心**：个人信息管理、活动参与记录、项目管理、通知中心、签到功能
-- **聊天系统**：实时聊天、社团群聊、项目组聊天、私信功能
+2. **部署步骤**
+   - 登录GitHub，进入仓库页面
+   - 点击"Settings"选项卡
+   - 在左侧菜单中选择"Pages"
+   - 在"Source"部分，选择"main"分支和"/(root)"目录
+   - 点击"Save"按钮
+   - 等待GitHub Pages构建完成（通常需要1-2分钟）
 
-### 4. 教师功能
-- **教师中心**：活动管理、成员管理、项目指导、资源管理、签到管理
+3. **常见问题及解决方案**
 
-### 5. 管理员功能
-- **后台管理**：用户管理、内容管理、活动管理、系统设置、数据统计
+   **问题1：功能无法使用**
+   - **原因**：GitHub Pages部署后，路径和环境与本地开发不同
+   - **解决方案**：
+     1. 确保所有资源引用使用相对路径
+     2. 检查Supabase配置是否正确
+     3. 确保所有脚本正确加载
 
-## 安装和运行
+   **问题2：Supabase相关功能失败**
+   - **原因**：
+     - 存储访问被跟踪保护阻止
+     - API请求被CORS策略阻止
+     - SDK加载失败
+   - **解决方案**：
+     1. 确保Supabase项目的设置允许GitHub Pages域名
+     2. 检查浏览器控制台是否有相关错误信息
+     3. 网站会自动使用模拟数据作为fallback
 
-### 1. 克隆项目
+   **问题3：Chart.js加载失败**
+   - **原因**：CDN资源加载被阻止
+   - **解决方案**：
+     1. 确保网络连接正常
+     2. 网站会在Chart.js加载失败时使用静态数据
 
-```bash
-git clone https://github.com/yourusername/zrck2.git
-cd zrck2
-```
+## 本地开发
 
-### 2. 配置Supabase
+1. **克隆仓库**
+   ```bash
+   git clone https://github.com/yourusername/zrck2.git
+   cd zrck2
+   ```
 
-1. 访问 [Supabase](https://supabase.com/) 注册账号并创建项目
-2. 在项目设置中获取 `SUPABASE_URL` 和 `SUPABASE_ANON_KEY`
-3. 修改 `lib/supabase.js` 文件，填入你的Supabase配置
+2. **启动本地服务器**
+   - 使用VS Code的Live Server扩展
+   - 或使用Python内置服务器：
+     ```bash
+     python -m http.server 8000
+     ```
+   - 或使用Node.js的http-server：
+     ```bash
+     npx http-server .
+     ```
 
-### 3. 启动本地服务器
+3. **访问网站**
+   打开浏览器，访问 `http://localhost:8000`
 
-使用VS Code的Live Server插件或其他本地服务器工具启动项目：
+## 技术栈
 
-```bash
-# 使用Python 3
-python -m http.server 8000
+- **前端**：HTML5, Tailwind CSS, JavaScript
+- **后端**：Supabase (数据库和认证)
+- **图表**：Chart.js
+- **图标**：Font Awesome
 
-# 或使用Node.js的http-server
-npm install -g http-server
-http-server -p 8000
-```
+## 功能模块
 
-然后在浏览器中访问 `http://localhost:8000`
+- 首页展示
+- 社团简介
+- 社团活动
+- 社团展示
+- 后台管理
+- 用户登录/注册
+- 社员中心
+- 教师中心
+- 访客中心
+- 聊天系统
 
-### 4. 部署
+## 管理员登录
 
-可以部署到任何静态网站托管服务，如：
+- **账号**：2025020101
+- **密码**：admin123
 
-- **GitHub Pages**：将代码推送到GitHub仓库，开启GitHub Pages功能
-- **Vercel**：连接GitHub仓库，自动部署
-- **Netlify**：连接GitHub仓库，自动部署
+## 教师登录
 
-## 数据库设计
+- **账号**：2025020102
+- **密码**：teacher123
 
-### 1. 用户表 (profiles)
-- id (主键)
-- username (用户名)
-- full_name (姓名)
-- email (邮箱)
-- avatar_url (头像)
-- role (角色: member, teacher, admin)
-- joined_at (加入时间)
-- bio (个人简介)
+## 学生登录
 
-### 2. 活动表 (activities)
-- id (主键)
-- title (标题)
-- description (描述)
-- start_date (开始时间)
-- end_date (结束时间)
-- location (地点)
-- organizer (组织者)
-- status (状态: upcoming, ongoing, past)
-- category (分类)
-- images (图片URL数组)
-- created_at (创建时间)
+- **账号**：2025020103
+- **密码**：student123
 
-### 3. 活动报名表 (activity_registrations)
-- id (主键)
-- activity_id (活动ID)
-- user_id (用户ID)
-- status (状态: registered, attended, cancelled)
-- registered_at (报名时间)
+## 注意事项
 
-### 4. 项目表 (projects)
-- id (主键)
-- title (标题)
-- description (描述)
-- members (成员ID数组)
-- mentor (指导教师ID)
-- status (状态: planning, in_progress, completed)
-- images (图片URL数组)
-- created_at (创建时间)
+1. 网站使用Tailwind CSS CDN，在生产环境中建议安装为PostCSS插件
+2. 网站会在Supabase不可用时自动使用模拟数据
+3. 登录系统支持数字账号和邮箱格式
+4. 后台管理需要管理员或教师权限
 
-### 5. 签到表 (checkins)
-- id (主键)
-- activity_id (活动ID)
-- user_id (用户ID)
-- checkin_time (签到时间)
-- location (签到地点，可选)
+## 故障排查
 
-### 6. 留言表 (messages)
-- id (主键)
-- name (姓名)
-- email (邮箱)
-- content (内容)
-- is_approved (是否审核通过)
-- created_at (创建时间)
+1. **页面无法加载**：检查网络连接和文件路径
+2. **功能无法使用**：检查浏览器控制台错误信息
+3. **登录失败**：确保使用正确的账号密码
+4. **数据不显示**：检查Supabase连接状态
 
-### 7. 通知表 (notifications)
-- id (主键)
-- title (标题)
-- content (内容)
-- recipient_ids (接收者ID数组)
-- is_read (是否已读)
-- created_at (创建时间)
-
-### 8. 聊天表 (chats)
-- id (主键)
-- type (类型: group, private)
-- name (群聊名称，私聊可为空)
-- participants (参与者ID数组)
-- last_message (最后一条消息内容)
-- last_message_time (最后一条消息时间)
-- created_at (创建时间)
-
-### 9. 聊天消息表 (chat_messages)
-- id (主键)
-- chat_id (聊天ID)
-- sender_id (发送者ID)
-- content (消息内容)
-- type (类型: text, image, file)
-- status (状态: sent, delivered, read)
-- created_at (创建时间)
-
-### 10. 聊天成员表 (chat_members)
-- id (主键)
-- chat_id (聊天ID)
-- user_id (用户ID)
-- joined_at (加入时间)
-- last_read_at (最后阅读时间)
-
-## 开发说明
-
-### 1. 响应式设计
-
-网站采用移动优先的响应式设计，使用Tailwind CSS的断点系统适配不同设备尺寸：
-- `sm`: 640px
-- `md`: 768px
-- `lg`: 1024px
-- `xl`: 1280px
-
-### 2. 主题设计
-
-- **配色方案**：深色背景 (#121212)，强调色 #03fc90 和 #fc03f8
-- **字体**：中文使用无衬线字体，英文使用 Inter 或 Roboto
-- **风格**：科技感与教育属性结合，简洁现代
-
-### 3. Supabase集成
-
-网站使用Supabase进行后端功能实现，主要包括：
-- 用户认证和授权
-- 数据存储和查询
-- 实时数据库（用于聊天系统）
-- 文件存储（用于头像、活动图片等）
-
-### 4. 性能优化
-
-- **图片优化**：使用适当的图片格式和大小
-- **代码优化**：减少不必要的JavaScript，优化DOM操作
-- **资源加载**：合理使用缓存，减少重复请求
-- **Supabase优化**：使用适当的查询方法，优化实时订阅
-
-## 贡献指南
-
-欢迎社团成员和开发者贡献代码和建议。贡献流程：
-
-1. Fork本仓库
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开Pull Request
-
-## 许可证
-
-本项目采用MIT许可证。详见LICENSE文件。
-
-## 联系方式
-
-- **社团邮箱**：contact@example.com
-- **项目维护**：社团技术部
-
----
-
-**武威第十八中学卓然创客社团**
-**官网**：[https://example.com](https://example.com)
-**成立时间**：2018年
-**宗旨**：培养创新能力，实践科学精神
+如果问题持续存在，请查看浏览器控制台的详细错误信息，并根据错误信息进行修复。

@@ -595,6 +595,8 @@
         </div>
     </footer>
 
+    <!-- 配置文件 -->
+    <script src="lib/config.js"></script>
     <!-- Supabase 配置 -->
     <script src="lib/supabase.js"></script>
     <!-- 主脚本 -->
@@ -607,23 +609,27 @@
                 try {
                     if (window.DataService) {
                         console.log('Loading latest activities...');
-                        const { data, error, source } = await window.DataService.getActivities({ limit: 3 });
+                        const { data, error } = await window.DataService.getActivities({ limit: 3 });
                         
                         if (error) {
-                            throw error;
+                            console.error('获取活动数据失败:', error);
+                            showError('获取活动数据失败，请稍后重试');
+                            return;
                         }
 
                         if (data) {
-                            console.log(`Latest activities loaded from ${source}:`, data);
+                            console.log('Latest activities loaded:', data);
                             renderLatestActivities(data);
+                        } else {
+                            showError('暂无活动数据');
                         }
                     } else {
-                        console.warn('数据服务未初始化，使用模拟数据');
-                        useMockActivities();
+                        console.error('数据服务未初始化');
+                        showError('系统正在初始化，请稍后重试');
                     }
                 } catch (error) {
                     console.error('加载最新活动失败:', error);
-                    useMockActivities();
+                    showError('加载活动失败，请稍后重试');
                 }
             }
 
@@ -676,38 +682,17 @@
                 });
             }
 
-            // 使用模拟活动数据
-            function useMockActivities() {
-                console.log('Using mock activities data');
-                
-                const mockActivities = [
-                    {
-                        id: 1,
-                        title: '机器人设计与编程竞赛',
-                        description: '社团成员组队参加市级机器人竞赛，展示创意和技术实力',
-                        start_date: new Date('2024-03-15'),
-                        location: '科技楼创客空间',
-                        status: 'ongoing'
-                    },
-                    {
-                        id: 2,
-                        title: 'Python编程基础培训',
-                        description: '为新成员提供Python编程入门培训，包括基础语法、函数和简单项目实践',
-                        start_date: new Date('2024-03-20'),
-                        location: '学校电脑室',
-                        status: 'upcoming'
-                    },
-                    {
-                        id: 3,
-                        title: '3D打印技术工作坊',
-                        description: '学习3D建模和3D打印技术，制作创意模型和实用物品',
-                        start_date: new Date('2024-03-10'),
-                        location: '科技楼创客空间',
-                        status: 'past'
-                    }
-                ];
-                
-                renderLatestActivities(mockActivities);
+            // 显示错误信息
+            function showError(message) {
+                const activitiesContainer = document.querySelector('.grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3.gap-8');
+                if (!activitiesContainer) return;
+
+                activitiesContainer.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-exclamation-triangle text-4xl text-secondary mb-4"></i>
+                        <p class="text-gray-400 text-lg">${message}</p>
+                    </div>
+                `;
             }
 
             // 加载数据
